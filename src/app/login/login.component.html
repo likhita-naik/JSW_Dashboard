@@ -1,0 +1,46 @@
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!---Logo-->
+        <div class="fadeIn first">
+            <img src="assets/images/logo.svg" id="icon">
+        </div>
+        <!-- <div class="mb-3 mt-4" class="text-muted" style="font-family: 'Times New Roman', Times, serif;"><h5><b>Admin</b></h5></div> -->
+
+        <!-------->
+        <form #authForm="ngForm" (ngSubmit)="OnSubmit(authForm)">
+         <input 
+          type="text" 
+          id="login" 
+          class="fadeIn second" 
+          ngModel 
+          name="userName" 
+          placeholder="User name"  
+          required>
+          <!-- <p *ngIf="email.invalid&&email.touched" class="help-block mb-2"><small style="color: red;">*Email is
+          required</small></p> -->
+
+         <input 
+          type="password" 
+          id="password" 
+          class="fadeIn third"  
+          ngModel name="password" 
+          placeholder="Password" 
+          required>
+
+         <!-- <p *ngIf="password.invalid&&password.touched" class="help-block mb-2"><small style="color: red;">*password is
+        required</small></p> -->
+
+      <!-- <small><a (click)="ForgotFunction()" style="cursor: pointer;" class="underlineHover" *ngIf="emailName.valid"><u>forgot password?</u></a></small><br> -->
+
+      <p *ngIf="fail" style="color:red"><small>email or password is incorrect</small></p>
+      <input type="submit" [disabled]="!authForm.valid" class="fadeIn fourth"  value="Log In">
+      
+      
+    </form> 
+    
+    </div>  
+
+  </div>
+          
+          

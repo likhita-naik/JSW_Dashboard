@@ -1,0 +1,115 @@
+#dateSpan input{
+    border: none;
+    width: inherit;
+}
+#dateSpan input:focus{
+    border: none !important;
+    box-sizing:unset !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border-radius:5px;
+    width: inherit;
+    
+}
+#dateSpan input::placeholder{
+  content: '\f10c';
+      color:var(--label-color)
+}
+
+.statusGrid{
+    width: 100%;
+    position:relative;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+   
+}
+.statusGrid h1:hover{
+    border-bottom: 2px solid var(primary-color);
+    cursor: pointer;
+
+}
+
+#cameraStatus .card{
+    max-height: 150px;
+    min-height: 150px;
+
+}
+
+#violationCount .card{
+    max-height: 150px;
+    min-height: 150px;
+
+}
+#cameraStatus .card.card-body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#violationCount .card.card-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.iconImage{
+    width: 5em;
+    height: 5em;
+    object-fit: cover;
+}
+
+#ecCamera .modal-content{
+
+    left:30em !important;
+}
+::ng-deep #ecCamera .modal-content{
+    left:500px !important
+}
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    background-color:  #f8f8f8 !important;
+    border-radius: 5px !important;
+    /* border: 1px solid var(--label-color) !important; */
+    color: var(--label-color) !important;
+    box-shadow: none;
+  }
+  
+  ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: var(--label-color) !important;
+    border-radius: 5px !important;
+    border: 1px solid var(--label-color) !important;
+  
+    box-shadow: none;
+  
+  }
+
+  #dateRange{
+    width: 290px;
+  }
+
+  #dateRange input{
+    width:inherit
+  }
+  .search-form{
+    width: 15rem;
+    height: inherit;
+    /* border: var(--border); */
+    display: flex;
+    background: #ffff;
+    align-items: center;
+    overflow: hidden;
+    /* justify-content: space-between; */
+    
+    border-radius: 0.5rem;
+    }
+
+.search-form input{
+    padding:0 1.2rem;
+    height: 100%;
+    width: 100%;
+    /* color:var(--black); */
+    }
+    
+    /* styles for search icon */
+    .search-form label{
+        /* font-size: 2rem; */
+        padding-right: 1rem;
+        cursor: pointer;
+    }
