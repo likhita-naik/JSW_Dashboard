@@ -45,16 +45,18 @@
                         <button class="me-2 btn success"  (click)="AddNewROI()">
                             <fa-icon icon="plus" class="me-1"></fa-icon>RA ROI
                         </button>
-                      <button class="me-2 btn success" (click)="AddNewLine()" style="background-color: #B15F7F !important;"> <fa-icon icon="plus" class="me-1"></fa-icon> 
-                             Traffic Count ROI</button>
-                        <!--   <button class="btn default me-2" style="background-color:#42a8a8 !important"  (click)="AddCCRoi()"> <fa-icon icon="plus" class="me-1"></fa-icon>  Crowd Count ROI</button> -->
+                    <button class="me-2 btn success" (click)="AddNewLine()"
+                            style="background-color: #B15F7F !important;">
+                            <fa-icon icon="plus" class="me-1"></fa-icon>
+                            Traffic Count ROI
+                        </button>  
+                         <button class="btn default me-2" style="background-color:#42a8a8 !important"  (click)="AddCCRoi()"> <fa-icon icon="plus" class="me-1"></fa-icon>  Crowd Count ROI</button>
 
                       
                     </div>
                     <!-- <div class="col-4 p-2 border-bottom">
-                        <button class="me-2 btnn danger" (click)="DeleteNewTCRoi()">
-                           success" (click)="AddNewLine()">Add Traffic Count ROI</button>
-                        <button class="me-2 bt  <fa-icon icon="trash" class="me-1"></fa-icon>Delete
+                
+                        <button class="me-2 btn"> <fa-icon icon="trash" class="me-1"></fa-icon>Delete
                         </button>
 
                     </div> -->
@@ -133,10 +135,11 @@
                     </table>
                 </div>
                 <!--traffic count details  -->
-                <!-- <div class="class-header">Traffic Count Details</div>
+                <div class="class-header">Traffic Count Details</div>
                 <table>
                     <thead>
                         <tr>
+                            
                             <th scope="col">Index</th>
                             <th scope="col">Name</th>
                             <th scope="col">Class Id</th>
@@ -147,9 +150,9 @@
                     <tbody>
                         <tr *ngFor="let tc of cameraData[0].tc_data;let in=index">
                             <td>{{in+1}}</td>
-                            <td>{{tc.label}}</td>
+                            <td>{{tc.area_name}}</td>
                             <td>
-                                <div *ngFor="let class of tc.classes">{{class}}
+                                <div *ngFor="let class of tc.class_name">{{class}}
 
                                 </div>
                             </td>
@@ -159,7 +162,7 @@
                             <hr />
                         </tr>
                     </tbody>
-                </table> -->
+                </table>
             </div>
         </div>
         <ng-template #noRoi>
@@ -182,13 +185,13 @@
                     <ul class="list-group  list-group-flush">
                       
                         <li class="list-group-item">
-                            <h5 class="" style="color: #178489;" >RA Details</h5>
+                            <h5 class="" style="color: #178489;" >RA Details:</h5>
                             <table class="table" *ngIf="cameraData[0].roi_data.length>0">
                                 <thead>
                                     <tr style="text-align:center;">
                                         <th scope="col">SI no</th>
                                         <th scope="col">ROI name</th>
-                                        <th scope="col">Class id</th>
+                                        <th scope="col">Objects</th>
                                         <th scope="col">
                                             <fa-icon class="me-2" icon="cog"></fa-icon>Settings
                                         </th>
@@ -219,18 +222,18 @@
 
                                     <div class="input-group">
                                         <span class="row col-2">
-                                            <h5 class="" style="color: #178489;">PPE:</h5>
+                                            <h5 class="" style="color: #178489;">PPE :</h5>
                                         </span>
                                         <div class="" [formGroup]="ppeForm" style="pointer-events:all;">
                                             <div class="form-check form-check-inline" id="custome">
                                                 <input type="checkbox" id="helmet" value="helmet" defaultValue=""
-                                                    (change)="PPE_Config($event)" formControlName="helmet"
+                                                    (change)="PPE_Config($event)" [checked]="ppeConfig.helemt" formControlName="helmet"
                                                     class="form-check-input">
                                                 <label for="helmet" class="form-check-label text-muted">Helmet</label>
                                             </div>
                                             <div class="form-check form-check-inline" id="custome">
                                                 <input type="checkbox" formControlName="vest" name="" value="vest"
-                                                    (change)="PPE_Config($event)" defaultValue="vest" id="vest"
+                                                    (change)="PPE_Config($event)" [checked]="ppeConfig.vest" defaultValue="vest" id="vest"
                                                     class="form-check-input">
                                                 <label for="vest" class="form-check-label text-muted">Vest</label>
                                             </div>
@@ -244,6 +247,40 @@
                             </div> -->
                             </div>
                         </li>
+
+  <!-- fire and smoke ai analytics settings -->
+ <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-10">
+
+
+                                    <div class="input-group">
+                                        <span class="row col-2">
+                                            <h5 class="" style="color: #178489;">Fire/Smoke</h5>
+                                        </span>
+                                        <div class="" [formGroup]="fireSmokeForm" style="pointer-events:all;">
+                                            <div class="form-check form-check-inline" id="custome">
+                                                <input type="checkbox" id="fire" value="fire" defaultValue="helmet"
+                                                    (change)="PPE_Config($event)" formControlName="fire"
+                                                    class="form-check-input">
+                                                <label for="fire" class="form-check-label text-muted">Fire</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" id="custome">
+                                                <input type="checkbox" formControlName="smoke" name="" value="smoke"
+                                                    (change)="PPE_Config($event)" defaultValue="smoke" id="smoke"
+                                                    class="form-check-input">
+                                                <label for="smoke" class="form-check-label text-muted">Smoke</label>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+
+
 
                         <!-- Vehicle crowd settings -->
                         <!-- <li class="list-group-item">
@@ -270,7 +307,7 @@
 
                         </li> -->
                         <!-- person  crowd settings -->
-                        <!-- <li class="list-group-item">
+                        <li class="list-group-item">
                             <div class="">
                                 <span class="row col-sm-2">
                                     <h5 class="" style="color: #178489;">Crowd Count Details</h5>
@@ -304,11 +341,11 @@
                                         <tbody>
                                             <tr *ngFor="let cr_data of CcRois;let i=index">
                                                 <td>{{i+1}}</td>
-                                                <td>{{cr_data.cr_data.label_name}}</td>
+                                                <td>{{cr_data.cr_data.area_name}}</td>
                                                 <td>Min Count:{{cr_data.cr_data.min_count}}<br />Max
                                                     Count:{{cr_data.cr_data.max_count}}</td>
                                                 <td>
-                                                    <div *ngFor="let class of cr_data.cr_data.class_id">{{class}}<br />
+                                                    <div *ngFor="let class of cr_data.cr_data.class_name">{{class}}<br />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -316,7 +353,7 @@
                                     </table>
                                 </div>
                                 </div>
-                        </li> -->
+                        </li>
                         <!-- vehicle crowd settings -->
                         <!-- <li class="list-group-item">
                 <div class="class-header"><h5 style="color: #178489;"> Traffic Count Details</h5></div>
@@ -349,12 +386,98 @@
                         </tr>
                     </tbody>
                 </table>
-                        </li> -->
+                        </li> --> 
+                        <!-- <li class="list-group-item">
+                <div class="class-header"><h5 style="color: #178489;"> Traffic Count Details</h5></div>
+                <div class="col-4 p-2 border-bottom">
+                    
+                   </div>
+               <table class="table" *ngIf="cameraData[0].tc_data.length>0">
+                   <thead>
+                       <tr>
+                           <th scope="col">Index</th>
+                           <th scope="col">Name</th>
+                           <th scope="col">Class Id</th>
+                           <th></th>
+
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr *ngFor="let tc of cameraData[0].tc_data;let in=index">
+                           <td>{{in+1}}</td>
+                           <td>{{tc.label}}</td>
+                           <td>
+                               <div *ngFor="let class of tc.classes">{{class}}
+
+                               </div>
+                           </td>
+                           <td><button (click)="OnDeleteTCROI(in)" class="btn btn-default">
+                                   <fa-icon icon="trash"></fa-icon>
+                               </button> </td>
+                           <hr />
+                       </tr>
+                   </tbody>
+               </table>
+                       </li> -->
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+
+
+ <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <li class="list-group-item">
+                    <div class="row mb-3">
+                        <span class="row col-2">
+                            <h5 class="" style="color: #178489;">Alert Settings</h5>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="input-group">
+                            <span class="me-2"><b>Hooter/Relay/Voice Alert :</b></span>
+
+                            <div class="" [formGroup]="ppeForm" style="pointer-events:all;">
+                                <div class="form-check form-check-inline" id="custome">
+                                    <input type="checkbox" id="RAalert" value="RA" defaultValue=""
+                                        (change)="PPE_Config($event)" formControlName="helmet" class="form-check-input">
+                                    <label for="RAalert" class="form-check-label text-muted">RA</label>
+                                </div>
+                                <div class="form-check form-check-inline" id="custome">
+                                    <input type="checkbox" formControlName="vest" name="" value="PPE"
+                                        (change)="PPE_Config($event)" defaultValue="PPE" id="PPEalert"
+                                        class="form-check-input">
+                                    <label for="PPEalert" class="form-check-label text-muted">PPE</label>
+                                </div>
+                                <div class="form-check form-check-inline" id="custome">
+                                    <input type="checkbox" formControlName="vest" name="" value="fire"
+                                        (change)="PPE_Config($event)" defaultValue="fire" id="fireAlert"
+                                        class="form-check-input">
+                                    <label for="fireAlert" class="form-check-label text-muted">Fire</label>
+                                </div>
+                                <div class="form-check form-check-inline" id="custome">
+                                    <input type="checkbox" formControlName="vest" name="" value="smoke"
+                                        (change)="PPE_Config($event)" defaultValue="smoke" id="smokeAlert"
+                                        class="form-check-input">
+                                    <label for="smokeAlert" class="form-check-label text-muted">Smoke</label>
+                                </div>
+
+                            </div>
+                        </span>
+                    </div>
+
+
+
+                </li>
+
+
+            </div>
+        </div>
+    </div>
+
 
     <div class="row mt-3">
         <div class="col-12">

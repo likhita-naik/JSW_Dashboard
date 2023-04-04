@@ -8,7 +8,7 @@ import { isDate, Moment } from 'moment';
 import { DaterangepickerComponent, DaterangepickerDirective, LocaleService, NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { SideEnum } from 'ngx-daterangepicker-material/daterangepicker.component';
 import { Lightbox, LightboxConfig } from 'ngx-lightbox';
-import { from } from 'rxjs';
+import { from, interval } from 'rxjs';
 import { ServerService } from 'src/app/Services/server.service';
 
 @Component({
@@ -39,6 +39,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   chartOptionsPie: any;
   chartOptionsline: any;
   isDatewise: boolean
+  Interval1:any
+  Interval2:any
+Interval3:any
   allViolationDetails: any[] = []
   images: any[] = []
   ranges: any = {
@@ -77,7 +80,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     })
     this.ChartDraw()
 
-    setInterval(() => {
+  this.Interval1=  setInterval(() => {
       this.server.GetCamerasStatus().subscribe((data: any) => {
         console.log(data)
         this.cameraStatus = data.message[0]
@@ -516,6 +519,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.modalService.dismissAll()
+    clearInterval(this.Interval1)
   }
 
 

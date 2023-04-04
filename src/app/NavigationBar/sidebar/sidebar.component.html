@@ -13,7 +13,7 @@
         </strong>
 
         <div id="CollapseImg" class="p-1" >
-            <img src="assets/images/svg" class="logo" alt="">
+            <img src="assets/images/icons/docketrun_icon.ico" class="logo" alt="">
 
         </div>
         </div>
@@ -51,13 +51,13 @@
             <li class="mt-4">
                 <a  [ngbPopover]="isCollapse?'Violations':''" popoverTitle="" popoverClass="custom-popover" triggers="mouseenter:mouseleave" routerLink="/app/violations" routerLinkActive="active" >
                     <!-- <fa-icon icon="exclamation-triangle" class="me-2"></fa-icon> -->
-                    <fa-icon icon="list" class="me-2"></fa-icon>
+                    <fa-icon icon="triangle-exclamation" class="me-2"></fa-icon>
 
                    <span> Violations</span></a>
             </li>
             <li class="mt-4">
                 <a [ngbPopover]="isCollapse?'Camera Settings':''" popoverTitle="" popoverClass="custom-popover" triggers="mouseenter:mouseleave" routerLink="/app/CameraSettings" routerLinkActive="active">
-                    <fa-icon icon="cogs" class="me-2"></fa-icon>
+                    <fa-icon icon="camera" class="me-2"></fa-icon>
 
                 <span>  Camera Settings</span>  </a>
             </li>

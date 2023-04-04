@@ -666,7 +666,7 @@ Submit() {
       this.total = of(0)
       table?.classList.remove('loading')
       table?.classList.remove('loading')
-      this.notification("No violations found for entered date and time")
+      this.notification("No violations found")
       this.loading = false
     }
 

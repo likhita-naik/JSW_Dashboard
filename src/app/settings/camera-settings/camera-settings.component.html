@@ -38,9 +38,31 @@
     </div>
   </div>
 
+<!-- <div class="row mb-3">
+  <h5 class="sub-header mb-2 ms-3">Upload Excel</h5>
+
+  <div class="mt-2 row">
+
+    <div class="container" >
+      <div>
+      <p class="mb-2 text-muted">Select excel sheet of camera's IP and RTSP to check cameras status</p>
+
+      <div id="ExcelContainer" class="mb-2">
+      <input class="form-control form-control-lg" id="formFileLg"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (change)="OnFileSelect($event)" type="file">
+      </div>
+      <div class="d-flex justify-centent-center mt-2" style="width:100%"> 
+        <button class="btn default" style="width:inherit;" (click)="DownloadCameraExcel()" *ngIf="isDownload"><fa-icon class="me-2"  *ngIf="!isDownloading" icon="download"></fa-icon>               
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" *ngIf="isDownloading"></span>
+        Download</button>
+      </div> 
+    </div>
+    </div>
+  </div>
+</div>   -->
+
   <div class="col-12">
 
-    <div class="card" id="data-table">
+    <div class="card" id="dataTable">
       <div class="card-header">
         <h5 class="float-start"><b>Camera Details</b></h5>
         <div class="col-xl-2 col-lg-2 col-sm-6 col-xs-6 col-md-6 float-end">
@@ -91,7 +113,7 @@
                   <fa-icon icon="cog" class="text-dark"></fa-icon>
                 </button>
                 <!-- &nbsp;&nbsp; -->
-                <button class="btn" (click)="isDelete(deleteModal,i)">
+                <button class="btn" (click)="isDelete(deleteModal,camera.SNo)">
                   <fa-icon class="text-danger" icon="trash"></fa-icon>
                 </button>
               </td>
@@ -155,32 +177,7 @@
               id="Area">
             <label for="Area">Area</label>
           </div>
-          <div class="form-floating form-control p-3">
-            <div class="form-check form-check-inline" id="custome">
-              <input type="radio" formControlName="isHooter" value="hooter" (change)="hooterOrRelayConfig($event)"
-                defaultValue="hooter" id="hooter" class="form-check-input">
-              <label for="hooter" class="form-check-label text-muted">Hooter</label>
-            </div>
-            <div class="form-check form-check-inline" id="custome">
-              <input type="radio" formControlName="isHooter" value="relay" (change)="hooterOrRelayConfig($event)"
-                defaultValue="relay" id="relay" class="form-check-input">
-              <label for="relay" class="form-check-label text-muted">Relay</label>
-            </div>
           </div>
-          <div class="form-floating" *ngIf="isHooter">
-            <input type="text" formControlName="hooterIp" placeholder="User name" class="form-control"
-              [ngClass]="AddCameraForm.get('hooterIp').invalid && AddCameraForm.get('hooterIp').touched?'is-invalid':''"
-              id="hooterIp">
-            <label for="hooterIp">Hooter IP</label>
-          </div>
-          <div class="form-floating" *ngIf="isRelay">
-
-            <input type="text" formControlName="relayIp" placeholder="User name" class="form-control"
-              [ngClass]="AddCameraForm.get('relayIp').invalid && AddCameraForm.get('relayIp').touched?'is-invalid':''"
-              id="relayIp">
-            <label for="relayIp">Relay IP</label>
-          </div>
-        </div>
         <!-- <div class="form-control p-3 mb-3" id="hooterConfig" *ngIf="isHooter||isRelay">
           
           <label for="hooterConfig" style="color:#3a5b72;"> Hooter/Relay Enabled Violations : &nbsp; &nbsp;</label>
@@ -248,8 +245,55 @@
               id="port">
             <label for="port">Port</label>
           </div>
+          </div>
+           
+          <div class="d-flex justify-centent-center align-items-center mt-3">
+            <h5 class="sub-header me-2 ms-2" style="font-size:1.5rem"> <span class="ms-2">Alert settings</span></h5>
+          </div>
+          <div class="wrapper-two">
 
+        
+          <div class="form-floating form-control p-3">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="hooter" (change)="hooterOrRelayConfig($event)"
+                defaultValue="hooter" id="hooter" class="form-check-input">
+              <label for="hooter" class="form-check-label text-muted">Hooter</label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="relay" (change)="hooterOrRelayConfig($event)"
+                defaultValue="relay" id="relay" class="form-check-input">
+              <label for="relay" class="form-check-label text-muted">Relay</label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
+                defaultValue="voiceAlert" id="voiceAlert" class="form-check-input">
+              <label for="voiceAlert" class="form-check-label text-muted">Voice Alert</label>
+            </div>
+          </div>
+          <div class="form-floating" *ngIf="isHooter">
+            <input type="text" formControlName="hooterIp" placeholder="User name" class="form-control"
+              [ngClass]="AddCameraForm.get('hooterIp').invalid && AddCameraForm.get('hooterIp').touched?'is-invalid':''"
+              id="hooterIp">
+            <label for="hooterIp">Hooter IP</label>
+          </div>
+          <div class="form-floating" *ngIf="isRelay">
+
+            <input type="text" formControlName="relayIp" placeholder="User name" class="form-control"
+              [ngClass]="AddCameraForm.get('relayIp').invalid && AddCameraForm.get('relayIp').touched?'is-invalid':''"
+              id="relayIp">
+            <label for="relayIp">Relay IP</label>
+          </div>
+          <!-- altered -->
+          <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
+            <ng-multiselect-dropdown #singleSelect [placeholder]="'Language'" [settings]="dropdownSettings2|async"
+            [data]="voiceLanguages|async" formControlName="voiceLang" >
+          </ng-multiselect-dropdown>
+
+          </div>
         </div>
+    
+
+        
         <!-- </div> -->
         <div class="alert alert-success mb-2 mt-2" *ngIf="isSuccess" role="alert">
           {{responseMessage}}

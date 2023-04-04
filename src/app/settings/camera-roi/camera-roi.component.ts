@@ -75,6 +75,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   isAddCC: boolean = false
   tempTCCanvas: any[] = []
    CCpoints:any[]=[]
+   fireAndSmoke={
+    fire:false,
+    smoke:false,
+   }
   crowdCountRoiName: FormControl = new FormControl('', Validators.required)
   @ViewChild('roiInfo') infoModal: ElementRef<any>
   @ViewChild('crowdCount') CCNameModal: ElementRef<any>
@@ -127,6 +131,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
     helmet: new FormControl('helmet'),
     vest: new FormControl('person')
   })
+
+  fireSmokeForm:FormGroup=new FormGroup({
+    fire:new FormControl(false,Validators.requiredTrue),
+    smoke:new FormControl(false,Validators.requiredTrue)
+  })
   vehicleForm: FormGroup = new FormGroup({
     type: new FormControl(),
     make: new FormControl()
@@ -177,38 +186,51 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
         this.isCameraData = true
 
         if (this.cameraData[0].ppe_data.length > 0) {
-          this.ppeConfig.helmet = this.cameraData[0].ppe_data[0].helmet
-          this.ppeConfig.vest = this.cameraData[0].ppe_data[0].vest
-          if (this.ppeConfig.helmet) {
+          this.ppeForm.get('helmet').valueChanges.subscribe((value:any)=>{
+            console.log(value)
+          })
+          this.ppeConfig =  this.cameraData[0].ppe_data[0]
+          console.log(this.ppeConfig)
+          if (this.cameraData[0].ppe_data[0].helmet) {
             //this.ppeForm.get('helmet').
+            this.ppeForm.get('helmet').setValue(true)
             this.ppeForm.get('helmet').markAsUntouched()
             var temp: any = document.getElementById('helmet')
             temp.checked = true
 
           }
           else {
-            var temp: any = document.getElementById('helmet')
-            temp.checked = false
+            console.log('ppe not vest')
+            this.ppeForm.get('helmet').setValue(false)
+
+            // var temp: any = document.getElementById('helmet')
+            // temp.checked = false
 
           }
-          if (this.ppeConfig.vest) {
+          if (this.cameraData[0].ppe_data[0].vest) {
             //this.ppeForm.get('helmet').
-            this.ppeForm.get('helmet').markAsUntouched()
-            var temp: any = document.getElementById('vest')
-            temp.checked = true
+            // this.ppeForm.get('helmet').markAsUntouched()
+          
+            this.ppeForm.get('vest').setValue(true)
 
           }
           else {
-            var temp: any = document.getElementById('vest')
-            temp.checked = false
+            console.log('ppe not vest')
+            this.ppeForm.get('vest').setValue(false)
+
+
+            // var temp: any = document.getElementById('vest')
+            // temp.checked = false
 
           }
         }
         else {
-          var temp: any = document.getElementById('vest')
-          temp.checked = false
-          var temp: any = document.getElementById('helmet')
-          temp.checked = false
+          console.log('ppe not vest')
+         
+          this.ppeForm.get('vest').setValue(false)
+          this.ppeForm.get('helmet').setValue(false)
+
+
 
 
         }
@@ -579,7 +601,7 @@ onSaveCCFrame(){
     roi_canvas: null,
     roi_id: null,
     roi_name: null,
-    cr_data: { bb_box: '',roi_id:this.CcRois.length, label_name: '', class_id: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
+    cr_data: { bb_box: '',roi_id:this.CcRois.length, area_name: '', class_name: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
   }
     this.CcRois.push(tempObj)
     // this.CameraData[0].ROI_data.push(tempObj.ROI_data)
@@ -738,7 +760,7 @@ onSaveCCFrame(){
           roi_canvas: currentROI,
           roi_id: ccName,
           roi_name: ccName,
-          cr_data: { bb_box: roiPointsString,roi_id:this.CcRois.length, label_name: ccName, class_id: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
+          cr_data: { bb_box: roiPointsString,roi_id:this.CcRois.length, area_name: ccName, class_name: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
         }
       }
       console.log(roiPointsString)
@@ -1010,7 +1032,7 @@ onSaveCCFrame(){
   }
 
 
-
+// delete ra roi
   DeleteROI() {
     var id = this.deleteID
     //var confirmDelete=confirm('Do you want to delete this ROI?')
@@ -1043,6 +1065,10 @@ onSaveCCFrame(){
 
   }
 
+//delete roi in backend 
+  DeleteTCROI(){
+
+  }
   AlterROIName(id: number) {
     this.isEditText = !this.isEditText
     this.selectedId = id
@@ -1204,8 +1230,7 @@ onSaveCCFrame(){
       this.roiPoints.push(tempObj)
       console.log(tempObj)
     });
-    //this.GetTCPoints()
-   // this.GetCCRoiPoints()
+   this.GetCCRoiPoints()
 
     this.DrawExistPanels()
   }
@@ -1228,24 +1253,25 @@ onSaveCCFrame(){
       var tempObj = {
         min_count:points.min_count,
         max_count:points.max_count,
-        class_id:points.class_id,
+        class_name:points.class_name,
         bbox_points: polyGon,
-        cc_name: points.label_name
+        area_name: points.area_name
       }
       this.CCpoints.push(tempObj)
       console.log(tempObj)
     });
     //this.GetTCPoints()
-    //this.DrawExistCCRois()
+    this.DrawExistCCRois()
   }
   DrawExistCCRois(){
     this.CCpoints.forEach((element: any, id: number) => {
+      console.log(element)
       console.log(element.roi)
       this.polygonOptions.stroke='rgb(0, 255, 255)'
       var Polygon = new fabric.Polygon(element.bbox_points, this.polygonOptions)
       // Polygon.id = uuid()
       console.log(Polygon)
-      var text = new fabric.Text(element.cc_name, {
+      var text = new fabric.Text(element.area_name, {
         fontSize: 20,
         // bottom:5
         backgroundColor: 'black',
@@ -1269,7 +1295,7 @@ onSaveCCFrame(){
         roi_name_canvas: text,
         roi_canvas: Polygon,
         roi_id: id,
-        roi_name: this.cameraData[0].cr_data[id].label_name,
+        roi_name: this.cameraData[0].cr_data[id].area_name,
         cr_data: this.cameraData[0].cr_data[id]
 
       }
@@ -1280,14 +1306,16 @@ onSaveCCFrame(){
       this.canvas.add(Polygon, text);
       // console.log(this.canvas.get)
       this.canvas.renderAll()
-      this.GetTCPoints()
     }
-    )}
+    )
+    this.GetTCPoints()
+  }
   
   GetTCPoints() {
     var temp = {}
     this.trafficCountData = this.cameraData[0].tc_data
     this.cameraData[0].tc_data.forEach((points: any, index: number) => {
+      console.log(points)
       var tempPoints = points.line_bbox.line.split(';')
       var tempArrowPoints = points.line_bbox.arrow.split(';')
       // var tempELPoints = points.line_bbox.exit_line.split(';')
@@ -1296,8 +1324,8 @@ onSaveCCFrame(){
       //   const element = tempPoints[index];
       console.log(Number(tempPoints[index]))
       temp = [
-        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', label: points.label },
-        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', label: points.label },
+        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', area_name: points.area_name },
+        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', area_name: points.area_name },
 
       ]
       this.tempTCData.push(temp)
@@ -1310,7 +1338,7 @@ onSaveCCFrame(){
 
     );
     console.log(this.tempTCData)
-   // this.drawExistTCRois(this.tempTCData)
+   this.drawExistTCRois(this.tempTCData)
   }
 
   DrawExistPanels() {
@@ -1440,7 +1468,7 @@ onSaveCCFrame(){
           //   top:this.triangle.transparentCorners
           // })
           this.canvas.add(line, triangle);
-          var text = new fabric.Text(pointer.label, {
+          var text = new fabric.Text(pointer.area_name, {
             fontSize: 16,
             // bottom:5
             backgroundColor: 'black',
@@ -1597,6 +1625,7 @@ onSaveCCFrame(){
 
     }
     this.savePpeConfig()
+    console.log('fire',this.fireSmokeForm.get('fire').value,'smoke',this.fireSmokeForm.get('smoke').value)
     console.log(this.ppeConfig)
 
   }
@@ -1670,7 +1699,7 @@ onSaveCCFrame(){
     temp.line = Math.fround(this.trafficCountLineROIS[0].x1).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].y1).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].x2).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].y2).toString() + ';'
     temp.arrow = this.trafficCountLineROIS[1].x1.toString() + ';' + this.trafficCountLineROIS[1].y1.toString() + ';' + this.trafficCountLineROIS[1].x2.toString() + ';' + this.trafficCountLineROIS[1].y2.toString() + ';'
 
-    var tempObj = { classes: this.classIds, line_bbox: temp, label: this.tcName.value }
+    var tempObj = { class_name: this.classIds, line_bbox: temp, area_name: this.tcName.value }
     fabric.util.resetObjectTransform(this.newROI)
     var dimensionsLeft = this.line._getLeftToOriginX()
     var dimensionsTop = this.line._getTopToOriginY()

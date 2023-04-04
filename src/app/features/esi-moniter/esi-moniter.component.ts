@@ -1346,7 +1346,7 @@ else {
   }
 
   isDeleteJob(modal: any, d: any) {
-    this.selectedEditIndex = d.sl_no
+    this.selectedEditIndex = d._id.$oid
     this.deleteJob=d
     this.modalService.open(modal, { backdrop: 'static' })
 
@@ -1354,7 +1354,7 @@ else {
   DeleteJob() {
     if(this.deleteJob.type=='HT'){
     var index = this.tempData.findIndex((data: any) => {
-      return data.sl_no === this.selectedEditIndex
+      return data._oid.$oid === this.selectedEditIndex
     })
     console.log(index)
     var tempData = this.tempData[index]

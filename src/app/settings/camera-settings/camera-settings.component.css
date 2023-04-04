@@ -301,7 +301,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
   box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
 }
 input:checked + .switch {
-  background: #72da67;
+  background:var(--bg-success);
 }
 input:checked + .switch::before {
   left: 27px;
@@ -311,3 +311,47 @@ input:checked + .switch:active::before {
   box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
 }
 
+.container{
+  width: inherit;
+  line-height:2em ;
+  /* border-left:3px solid var(--primary-color); */
+  margin: 0.25em;
+  padding:1em;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc ;
+  border-right: 1px solid #ccc ;
+  border-bottom: 1px solid #ccc ;
+ border-radius: 10px;
+  display:flex;
+  /* flex: 1fr 1fr 1fr; */
+  position: relative;
+  align-items: center;
+  justify-content: center;
+ 
+
+}
+
+
+input[type=file]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: var(--label-color);
+  content: 'Upload' !important;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: 'background' .2s ease-in-out;
+}
+
+input[type=file]::file-selector-button:hover {
+  margin-right: 20px;
+  border: none;
+  background: var(--label-color);
+  content: 'Upload' !important;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: 'background' .2s ease-in-out;
+}

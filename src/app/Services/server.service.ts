@@ -39,6 +39,24 @@ export class ServerService {
 
   }
 
+
+  UploadCameraIPsFile(file:any){
+    return this.http.post(this.IP+'/upload_cameras_excel',file,{withCredentials:true})
+  }
+  TestCameraIps(){
+    return this.http.get(this.IP+'/get_camera_status_excel')
+  }
+
+  DownloadCameraSheet(){
+    const headers = new HttpHeaders({
+      
+      'Access-Control-Allow-Origin': '*',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    })
+    return this.http.get( this.IP+'/download_camera_status_sheet',{headers:headers,observe:'body', responseType:'arraybuffer'})
+
+  }
+
   DeleteJobPanel(data:any){
 
     return this.http.post(this.IP+'/delete_panel',data)
@@ -243,7 +261,7 @@ GetCameraBrandDetails(){
 
 LiveViolationData (cameraName?:string | null,violType?:string|null,page?:number,size?:number) {
 
-  cameraName=cameraName? cameraName.replace(/ /g,'_'):null
+  // cameraName=cameraName? cameraName.replace(/ /g,'_'):null
 
   cameraName==="all_cameras"?cameraName=null:''
   violType==="all_violations"?violType=null:''
@@ -252,10 +270,10 @@ LiveViolationData (cameraName?:string | null,violType?:string|null,page?:number,
   return    page && size && cameraName && violType? this.http.get(this.IP + '/live_data1/' + cameraName + '/'+violType+'/' + page + '/' + size): 
   !page && !size && cameraName && violType? this.http.get(this.IP + '/live_data1/' + cameraName + '/'+violType):
   page && size && cameraName && !violType ? this.http.get(this.IP + '/live_data1/cameraname/' + cameraName + '/' + page + '/' + size) : 
-  !page && !size && !cameraName && violType ? this.http.get(this.IP + '/live_data1/violation_type/'+violType )
-  : page && size && !cameraName && violType? this.http.get(this.IP + '/live_data1/violation_type/'+violType +'/'+ page + '/' + size) :
+  !page && !size && !cameraName && violType ? this.http.get(this.IP + '/live_data1/violation/'+violType )
+  : page && size && !cameraName && violType? this.http.get(this.IP + '/live_data1/violation/'+violType +'/'+ page + '/' + size) :
   page && size && (!cameraName) && (!violType) ? this.http.get(this.IP + '/live_data1/pagination/'+ page + '/' + size):
-   !page && !size &&cameraName &&!violType? this.http.get(this.IP + '/live_data/cameraname/'  + cameraName) :
+   !page && !size &&cameraName &&!violType? this.http.get(this.IP + '/live_data1/cameraname/'  + cameraName) :
    this.http.get(this.IP + '/live_data1')
 
 }
@@ -284,7 +302,7 @@ DatewiseViolations(from: any, to: any, page?: number|null, size?: number|null, c
   var toD = this.dateTransform(to)
   console.log(fromD, toD)
   console.log(page, size)
-  cameraName=cameraName? cameraName.replace(/ /g,'_'):null
+  // cameraName=cameraName? cameraName.replace(/ /g,'_'):null
 
   cameraName==="all_cameras"?cameraName=null:''
   violType==="all_violations"?violType=null:''
