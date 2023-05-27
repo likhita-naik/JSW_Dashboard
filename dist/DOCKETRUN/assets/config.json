@@ -1,0 +1,8 @@
+{
+     "IP":"http://192.168.1.66:5000",
+    "hooterDelay":250,
+    "relayDelay":15000,
+    "dashboardInterval":30000,
+    "jobSheetStatusInterval":30000
+
+}

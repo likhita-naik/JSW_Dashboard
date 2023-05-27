@@ -17,20 +17,14 @@ import { ESIMoniterComponent } from './features/esi-moniter/esi-moniter.componen
 import { FooterComponent } from './NavigationBar/footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RoiSettingsComponent } from './features/roi-settings/roi-settings.component';
 import { ServerService } from './Services/server.service';
 import { ToastrModule } from 'ngx-toastr';
-import { LightboxModule } from 'ngx-lightbox';
 import { DatePipe } from '@angular/common';
-import { PanelViolationsComponent } from './features/panel-violations/panel-violations.component';
-import { CameraSettingsComponent } from './settings/camera-settings/camera-settings.component';
-import { CameraRoiComponent } from './settings/camera-roi/camera-roi.component';
+
 import { AuthGuard } from './Services/auth.guard';
-import { AuthGuardLogin } from './Services/authLogin.guard';
 import { alertComponent } from './common/alert.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgbdSortableHeader } from './common/sortable.directive';
 import {
   DaterangepickerDirective,
   NgxDaterangepickerMd,
@@ -39,9 +33,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import 'fabric';
 import * as CanvasJSAngularChart from '../assets/canvasjs/canvasjs.angular.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { NgxImageZoomComponent, NgxImageZoomModule } from 'ngx-image-zoom';
-import { LogHistoryComponent } from './features/log-history/log-history.component';
+
+import { NgChartsConfiguration, NgChartsModule } from 'ng2-charts';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
@@ -52,12 +45,12 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     HeaderComponent,
     HomeComponent,
    
-    alertComponent
+    alertComponent,
 
    // RackEditComponent,
   ],
   imports: [
-  
+    NgChartsModule,
     FontAwesomeModule,
     BrowserModule,
     HttpClientModule,
@@ -79,7 +72,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgMultiSelectDropDownModule.forRoot(),
   ],
   entryComponents: [alertComponent],
-  providers: [ServerService, DatePipe, AuthGuard],
+  providers: [ServerService, DatePipe, AuthGuard,  { provide: NgChartsConfiguration, useValue: { generateColors: false }}],
   bootstrap: [AppComponent],
 })
 export class AppModule {

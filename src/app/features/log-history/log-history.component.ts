@@ -112,10 +112,10 @@ export class LogHistoryComponent implements OnDestroy {
   loc2: FormControl = new FormControl('', Validators.required)
   @ViewChild('dangerAlert') Violation: ElementRef<any>;
   dropdownSettings!: IDropdownSettings
-  selectedItems!: any[]
-  violationTypeList: Observable<any[]> = of([])
+  selectedItems!: any
+  violationTypeList: Observable<any[]> = of([{key:'0',label:'All Violations',icon:'pi', data:'all_violations'}])
   dropdownSettings2: any
-  selectedViolation!: any[]
+  selectedViolation!: any
   livedataInteval!: any
   loaderLatest: boolean = false
   isLatest: boolean = false
@@ -124,6 +124,7 @@ export class LogHistoryComponent implements OnDestroy {
   relayFlag:boolean=false
   relayDelay:number
   isEditTable:boolean=true
+  violationsList:any[]=[]
   ranges: any = {
     'Today': [dayjs().hour(0).minute(0).second(0), dayjs()],
     'Yesterday': [dayjs().subtract(1, 'days').hour(0).minute(0).second(0), dayjs().subtract(1, 'days')],
@@ -137,7 +138,10 @@ export class LogHistoryComponent implements OnDestroy {
   scrollStrategy: ScrollStrategy;
   @ViewChildren(DaterangepickerDirective) pickerDirective: any;
   editViol:any
+  selectedCity1: any;
 
+  selectedCity2: any;
+ 
   //@ViewChild('data',{static:true}) table!:ElementRef<any>
 
 
@@ -175,6 +179,7 @@ export class LogHistoryComponent implements OnDestroy {
 
   this.API = webServer.IP
   console.log(this.API)
+  
 
   //..................for search..................
   this.filterOut.valueChanges.pipe((startWith(''),
@@ -199,11 +204,10 @@ export class LogHistoryComponent implements OnDestroy {
 }
 
 openDatePicker(event:any){
-  console.log(this.pickerDirective.last.picker)
-  console.log(this.pickerDirective)
+
   var dateInput=document.getElementById('dateInput')
   dateInput.click()
-   this.pickerDirective.open(event)
+   //this.pickerDirective.open(event)
  // this.pickerDirective[0].open()
  
   //console.log(this.pickerDirective[0].open())
@@ -327,7 +331,6 @@ table?.classList.add('loading')
 ngAfterViewInit() {
   console.log(this.selectedViolation)
   this.dataread()
-    this.Relay('http://192.168.1.201/Delay*100@')
 
 
 }
@@ -572,6 +575,9 @@ sliceVD() {
 
 Submit() {
   this.isLatest = false
+  console.log(this.selectedCameraId)
+  this.selectedViolType=this.selectedViolation?<any> this.selectedViolation.data:null
+  this.selectedCameraId=  this.selectedItems?this.selectedItems.data:null
   console.log(this.selectedMoments)
   console.log(this.fromDateControl.value)
   this.Images = []
@@ -805,17 +811,16 @@ onCameraIdSelect(event: any) {
   console.log(event)
   console.log(event.item_id)
   !this.isdatewise ? this.page = 1 : ''
-  if (!this.selectedItems) {
-    this.selectedCameraId = null
-  }
-  if (event.item_id == -1) {
-    this.selectedCameraId = "all_cameras"
-  }
-  else {
-    this.selectedCameraId = event.item_text
+  // if (!this.selectedItems) {
+  //   this.selectedCameraId = null
+  // }
+  // if (event.item_id == -1) {
+  //   this.selectedCameraId = "all_cameras"
+  // }
+    this.selectedCameraId =this.selectedItems.data
     console.log(this.selectedItems)
     console.log(event)
-  }
+  
 
 }
 
@@ -825,17 +830,16 @@ onViolationTypeSelect(event: any) {
   console.log(event)
   console.log(event.item_id)
   !this.isdatewise ? this.page = 1 : ''
-  if (!this.selectedViolation) {
-    this.selectedViolation = null
-  }
-  if (event.item_id == -1) {
-    this.selectedViolType = "all_violations"
-  }
-  else {
-    this.selectedViolType = event.item_text
-    console.log(this.selectedViolation)
+  // if (!this.selectedViolation) {
+  //   this.selectedViolation = null
+  // }
+  // if (event.item_id == -1) {
+  //   this.selectedViolType = "all_violations"
+  // }
+    this.selectedViolType =this.selectedViolation.data
+    console.log(this.selectedViolType)
     console.log(event)
-  }
+  
 
 }
 
@@ -873,6 +877,8 @@ submitForm() {
   this.isalert = false
   this.excelLoad = true
   this.isExcel = false
+  this.selectedViolType=this.selectedViolation?<any> this.selectedViolation.data:null
+  this.selectedCameraId=  this.selectedItems?this.selectedItems.data:null
   console.log(this.excelFromDate.value)
   console.log(this.excelToDate.value)
   var body = {
@@ -944,7 +950,7 @@ submitForm() {
     this.isalert = true
     this.excelLoader = false
     this.alertmessage = "Data range should be " + this.ExcelRange + " days"
-
+    this.webServer.notification(this.alertmessage)
   }
   var formData: FormData = new FormData()
 
@@ -975,13 +981,13 @@ onCameraIdDeSelect(event: any) {
 
 onViolationTypeDeSelect(event: any) {
   console.log(this.selectedViolation)
-  console.log(event)
-  console.log(event.item_id)
-  this.selectedViolation = []
-  !this.isdatewise ? this.page = 1 : ''
-  if (this.selectedViolation.length === 0) {
-    this.selectedViolType = null
-  }
+  // console.log(event)
+  // console.log(event.item_id)
+  // this.selectedViolation = []
+  // !this.isdatewise ? this.page = 1 : ''
+  // if (this.selectedViolation.length === 0) {
+  //   this.selectedViolType = null
+  // }
   // if (event.item_id == -1) {
   //   this.selectedViolType = "all_violations"
   // }
@@ -1191,7 +1197,7 @@ ngOnDestroy() {
   clearInterval(this.interval)
   clearInterval(this.interval2)
   this.isalert=false
-
+  
   this.toasterService.clear()
 
 }
@@ -1200,7 +1206,7 @@ getCameraList() {
   var cameralist: any[] = []
   var cameraIdList: any[] = []
 
-  cameralist[0] = { item_id: -1, item_text: 'All Cameras' }
+  cameralist[0] ={key:'0',label:'All Cameras',data:'all_cameras'}
   this.webServer.GetCameraDetails().subscribe((data: any) => {
     console.log(data)
     if (data.success === true) {
@@ -1211,9 +1217,15 @@ getCameraList() {
       cameraIdList = cameraIdList.filter((el, i, a) => i === a.indexOf(el))
       console.log(cameraIdList)
       cameraIdList.forEach((element: any, i: number) => {
-        cameralist[i + 1] = { item_id: element.cameraid, item_text: element.cameraname }
-
+       // cameralist[i + 1] = { item_id: element.cameraid, item_text: element.cameraname }
+       var obj;
+        console.log(element)
+       obj={key:((i+1).toString()),label:element.cameraname,data:element.cameraname}
+     
+     cameralist.push(obj)
       });
+
+     
       console.log(cameralist)
       this.dropdownList = of(cameralist)
     }
@@ -1227,21 +1239,30 @@ getViolationTypes() {
   var violTypeList: any[] = []
   var temp: any[] = []
 
-  violTypeList[0] = { item_id: -1, item_text: 'All Violations' }
+  this.violationsList[0] = {key:'0',label:'All Violations',data:'all_violations'}
   this.webServer.GetViolationList().subscribe((reponse: any) => {
     console.log(reponse)
     if (reponse.success) {
       reponse.message.forEach((element: any) => {
         temp.push(element)
       });
-
+   
       //temp=temp.filter((el,i,a)=>{i===a.indexOf(el)})
       console.log(temp)
-      temp.forEach((element: any, i: number) => {
-        violTypeList[i + 1] = { item_id: i, item_text: element }
+      // temp.forEach((element: any, i: number) => {
+      //   violTypeList[i] = { item_id: i, item_text: element }
+      // })
+
+      temp.forEach((element:any,index:number)=>{
+        var obj;
+        console.log(element)
+
+          obj={key:(index+1).toString(),   icon:'pi', label:element,data:element}
+        
+        this.violationsList.push(obj)
       })
-      console.log(violTypeList)
-      this.violationTypeList = of(violTypeList)
+      console.log(this.violationsList)
+      this.violationTypeList = of(this.violationsList)
     }
   })
 

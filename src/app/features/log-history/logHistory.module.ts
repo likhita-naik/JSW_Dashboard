@@ -11,12 +11,13 @@ import { alertComponent } from "src/app/common/alert.component";
 import { CommonModules } from "src/app/common/common.module";
 import { ServerService } from "src/app/Services/server.service";
 import { LogHistoryComponent } from "./log-history.component";
+import { TreeSelectModule } from 'primeng/treeselect';
 
 const routes:Routes=[{path:'',component:LogHistoryComponent}]
 
 @NgModule({
     declarations:[LogHistoryComponent],
-    imports:[CommonModules, RouterModule.forChild(routes),LightboxModule,
+    imports:[CommonModules, RouterModule.forChild(routes),LightboxModule,TreeSelectModule,
         NgMultiSelectDropDownModule.forRoot(),ToastrModule.forRoot({
             timeOut: 2000000,
             toastComponent: alertComponent,

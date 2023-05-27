@@ -74,15 +74,70 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   TCLineList: any[] = []
   isAddCC: boolean = false
   tempTCCanvas: any[] = []
+  ppeObjects:any[]=[]
+  raObjects:any[]=[]
+  ccObjects:any[]=[]
+  ppeAlarmObjects:any[]=[]
+  raAlarmObjects:any[]=[]
+  CCValid:number=0
    CCpoints:any[]=[]
+  CCClasses:any[]=[]
+  AISolutions:any[]=[]
+
+  CCObjectCounts:any[]=[]
+  CCObjectsCount:any[]=[]
    fireAndSmoke={
     fire:false,
     smoke:false,
    }
+
+   ccObjectsMinMax:any[]=[new FormGroup({
+    object:new FormControl('person'),
+    person:new FormControl(true,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),new FormGroup({
+    object:new FormControl('car'),
+    car:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),
+   new FormGroup({
+    object:new FormControl('truck'),
+    truck:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),
+
+   new FormGroup({
+    object:new FormControl('bike'),
+    bike:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+    
+   }),
+    ]
+   
+
+
+   alarmPPEObjects:FormGroup=new FormGroup({
+    helemet:new FormControl(Validators.requiredTrue),
+    vest:new FormControl(Validators.requiredTrue)
+   })
+   alarmRAObjects:FormGroup=new FormGroup({
+    person:new FormControl(Validators.requiredTrue),
+    car:new FormControl(Validators.requiredTrue),
+    truck:new FormControl(Validators.requiredTrue),
+    bike:new FormControl(Validators.requiredTrue),
+
+
+    
+    
+   })
   crowdCountRoiName: FormControl = new FormControl('', Validators.required)
   @ViewChild('roiInfo') infoModal: ElementRef<any>
   @ViewChild('crowdCount') CCNameModal: ElementRef<any>
-
+  @ViewChild('CCNameChangeModal') CCNameChangeModal:ElementRef<any>
   crowdConfig: any[] = []
   tcName: FormControl = new FormControl('', Validators.required)
   TrafficConfig: any
@@ -91,13 +146,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 
   peopleCrowdForm: FormGroup = new FormGroup(
     {
-      min: new FormControl(null, Validators.pattern(/\d+/)),
+      min: new FormControl(null, Validators.pattern('^(?!-)\d+$')),
       max: new FormControl(null, Validators.pattern(/\d+/))
     }
   )
   CrowdForm: FormGroup = new FormGroup(
     {
-      min: new FormControl(null, [Validators.pattern(/\d+/),Validators.required]),
+      min: new FormControl(null, [Validators.pattern(/^[^-a-zA-Z]+$/),Validators.required]),
       max: new FormControl(null, [Validators.pattern(/\d+/),Validators.required])
     }
   )
@@ -134,7 +189,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 
   fireSmokeForm:FormGroup=new FormGroup({
     fire:new FormControl(false,Validators.requiredTrue),
-    smoke:new FormControl(false,Validators.requiredTrue)
+    smoke:new FormControl(false,Validators.requiredTrue),
+    water:new FormControl(false,Validators.requiredTrue)
   })
   vehicleForm: FormGroup = new FormGroup({
     type: new FormControl(),
@@ -148,7 +204,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   @ViewChild('ROINameModal', { static: false }) RoiNameModal: TemplateRef<any>
   @ViewChild('TCNameModal', { static: false }) TCNameModal: TemplateRef<any>
   @ViewChild('ccForFrame',{static:false}) CCForFrame:TemplateRef<any>
-
+   @ViewChild('CCType',{static:false})  CCTYpe:TemplateRef<any> 
   //traffic count roi variables
   isMouseDown: boolean = false
   btnIndex: number
@@ -160,15 +216,16 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   roiType: any = 0
   currentArea: any
   currentPlant: any
-
-
+ selectedCCType:any
+  ccTypeList:any[]=[{label:'+ Crowd Count Types',items:[{label:'ROI',command:(onclick:any)=>{console.log(onclick) ,this.AddCCRoi();}},]}]
+  
   constructor(
     private ActiveRoute: ActivatedRoute,
     private server: ServerService,
     private router: Router,
-    private modalService: NgbModal) {
+    private modalService: NgbModal) { 
     this.IP = server.IP
-
+    this.ccTypeList[0].items[1]={label:'Full Frame',command:(onclick:any)=>{console.log(onclick),this.AddCCForFrame()}}
     this.ActiveRoute.queryParams.subscribe((params: any) => {
       console.log(params)
       this.ID = params.id
@@ -179,7 +236,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
       this.server.GetRACameraData(this.ID).subscribe((response: any) => {
         console.log(response.message)
         this.cameraData = response.message
-        console.log(this.imageName)
+        this.AISolutions=this.cameraData[0].ai_solutions?this.cameraData[0].ai_solution:[]
+        console.log(this.AISolutions)
         this.currentArea = response.area
         this.currentPlant = response.plant
         this.CameraDataObservable = of(response.message)
@@ -195,8 +253,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
             //this.ppeForm.get('helmet').
             this.ppeForm.get('helmet').setValue(true)
             this.ppeForm.get('helmet').markAsUntouched()
-            var temp: any = document.getElementById('helmet')
-            temp.checked = true
+            
 
           }
           else {
@@ -234,15 +291,27 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
         }
-        // this.DrawExistPanels()
-        //this.GetROIPoints()
-        console.log(this.cameraData)
-        // this.CameraDataObservable.subscribe((data:any)=>{
-        //   this.CameraData=data
-        //   console.log(data)
-        //   console.log(this.CameraData)
-        //  }) 
+        //edited
+        // if (this.cameraData[0].fire_smoke_data.length > 0) {
+        //   this.fireSmokeForm.get('fire').setValue(this.cameraData[0].fire_smoke_data[0].fire)
+        //   this.fireSmokeForm.get('smoke').setValue(this.cameraData[0].fire_smoke_data[0].smoke)
 
+         
+         
+        // }
+        // else {
+        //   console.log('ppe not vest')
+         
+        //   this.fireSmokeForm.get('fire').setValue(false)
+        //   this.fireSmokeForm.get('smoke').setValue(false)
+
+
+
+
+        // }
+       
+        console.log(this.cameraData)
+      
       })
 
 
@@ -253,12 +322,32 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
     //  this.canvas.on('mouse:down',(options:any)=>{
 
     //  })
+
+
+  
   }
 
   ngAfterViewInit(): void {
     this.canvasSetup()
     console.log(document.getElementById('helmet'))
     this.makeNewROI()
+
+    this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+      form.valueChanges.subscribe(()=>{
+        if(form.get(form.get('object').value).value && form.get('min').valid && form.get('min').valid){
+        this.CCValid++
+        }
+        else{
+          this.CCValid=0;
+        }
+
+        if(form.get('min').value>form.get('max').value ||(form.get('min').value==form.get('max').value)){
+       this.CCValid=0;
+        }
+
+        console.log(this.CCValid)
+      })
+    })
 
     console.log(this.allCameraData)
     // this.canvasContainer.nativeElement.
@@ -375,7 +464,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
       // console.log(this.canvas.width)
       //this.canvas.add(oImg);
     });
-    this.cameraData[0].roi_data !== null ? this.GetPanelPoints() : ''
+    this.cameraData.length>0? this.cameraData[0].roi_data !== null ? this.GetPanelPoints() : '':''
 
   }
 
@@ -383,6 +472,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   RoiName() {
     this.isPolygonDrawn = true
     this.isAddROI = false
+    this.classIds=['person']
     if(this.isAddCC){
 
       this.modalService.open(this.CCNameModal).result.then((result) => {
@@ -398,12 +488,12 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
         this.newROIPoints.splice(0,this.newROIPoints.length)
       
       this.CrowdForm.get("min").setValidators(Validators.required)
-        this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
+        this.CrowdForm.get('min').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
   
         this.CrowdForm.get('max').reset()
         
         this.CrowdForm.get("max").setValidators(Validators.required)
-        this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
+        this.CrowdForm.get('max').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
 
         this.roiNameControl.addValidators(Validators.required)
         console.log(this.roiNameControl.value)
@@ -459,6 +549,17 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   }
   }
 
+  ModalOpen(modal:any)
+  {
+    console.log('full frame')
+    this.modalService.open(modal,{backdrop:'static',keyboard:true})
+  }
+
+  onCCTypeSelect(event:any){
+    console.log(event)
+   console.log('crowd count select')
+  }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -509,6 +610,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
   AddNewROI() {
+    this.classIds=['person']
     this.polygonOptions.stroke='rgb(127, 255, 0)'
     this.newROI.stroke='rgb(127, 255, 0)'
 
@@ -522,6 +624,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   }
 
   AddNewLine() {
+    this.classIds=['person']
+
     this.roiType = 2
     this.btnIndex = 1
     this.isEdit = false
@@ -530,6 +634,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
     this.newROIPoints.splice(0,this.newROIPoints.length)
   }
   AddNewArrow() {
+    this.classIds=['person']
+
     this.roiType = 2
     this.btnIndex = 2
     this.isEdit = false
@@ -538,6 +644,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
   AddCCRoi() {
+    console.log('addcc')
     this.newROIPoints.splice(0,this.newROIPoints.length)
     this.isAddCC = true
     this.isAddROI=true
@@ -560,6 +667,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   // if(ele!=null){
   //   ele.style.display='block'
   // }
+
+  console.log('add cc for frame')
   this.modalService.open(this.CCForFrame).result.then((result) => {
     // this.closeResult = `Closed with: ${result}`;
     //  this.roiNameControl.setValue(null)
@@ -594,14 +703,33 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 }
 onSaveCCFrame(){
   this.isAddROI = false
-   
+  this.CCClasses=[]
+  this.CCObjectCounts=[]
+  this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+    if(form.get(form.get('object').value).value){
+   var obj={class_name:form.get('object').value,min_count:form.get('min').value,max_count:form.get('max').value}
+   //this.CCClasses.push(form.get('object').value)
+   this.CCObjectCounts.push(obj)
+
+
+    }
+   form.get(form.get('object').value).reset()
+   form.get('min').markAsUntouched()
+   form.get('min').setValue(0)
+  
+   form.get('max').reset()
+   form.get('max').reset()
+
+ //  form.get('object').reset()
+    
+  })
 
   var tempObj:any = {
     roi_name_canvas: null,
     roi_canvas: null,
     roi_id: null,
     roi_name: null,
-    cr_data: { bb_box: '',roi_id:this.CcRois.length, area_name: '', class_name: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
+    cr_data: { bb_box: '',full_frame:true, roi_id:null,area_name: '', data_object:this.CCObjectCounts}
   }
     this.CcRois.push(tempObj)
     // this.CameraData[0].ROI_data.push(tempObj.ROI_data)
@@ -624,7 +752,7 @@ onSaveCCFrame(){
       this.CrowdForm.get("max").setValidators(Validators.required)
       this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
    this.modalService.dismissAll()
-    this.SaveChanges()
+    this.AddCCData()
 
   }
 
@@ -673,12 +801,13 @@ onSaveCCFrame(){
         this.canvas.add(ROINameObject)
         this.canvas.renderAll()
 
-        var tempObj = {
+        var tempObj:any = {
           roi_name_canvas: ROINameObject,
           roi_canvas: currentROI,
-          roi_id: ROIName,
+          // roi_id: ROIName,need to check this one
           roi_name: ROIName,
-          roi_data: { bb_box: roiPointsString, roi_name: ROIName, label_name: this.classIds }
+          roi_id: this.allCameraData.length-1,
+          roi_data: { bb_box: roiPointsString, roi_name: ROIName,roi_id:this.allCameraData.length-1, label_name: this.classIds }
         }
       }
       console.log(roiPointsString)
@@ -704,13 +833,15 @@ onSaveCCFrame(){
       // this.newROIPoints.splice(0, this.newROIPoints.length) 
       // this.canvas.renderAll()
       console.log('elsepart')
-      this.classIds = []
+      this.classIds = ['person']
 
       this.DeleteNewRoi()
     }
   }
 
   OnAddingNewCCRoi(){
+    this.CCClasses=[]
+    this.CCObjectCounts=[]
     this.isAddROI = false
     
     if (this.crowdCountRoiName.value !== null) {
@@ -731,9 +862,9 @@ onSaveCCFrame(){
         console.log(this.newROI)
         for (let i = 0; i < this.newROIPoints.length; i++) {
 
-          let tempX = (this.newROIPoints[i].x)
+          let tempX = (Math.round(this.newROIPoints[i].x))
 
-          let tempY = (this.newROIPoints[i].y)
+          let tempY = Math.round((this.newROIPoints[i].y))
           roi_points.push(`${tempX};${tempY};`)
         }
         //to remove the ,
@@ -755,20 +886,41 @@ onSaveCCFrame(){
         this.canvas.add(ROINameObject)
         this.canvas.renderAll()
 
+        this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+          if(form.get(form.get('object').value).value){
+         var obj={class_name:form.get('object').value,min_count:form.get('min').value,max_count:form.get('max').value}
+         //this.CCClasses.push(form.get('object').value)
+         this.CCObjectCounts.push(obj)
+
+
+          }
+         form.get(form.get('object').value).reset()
+         form.get('min').markAsUntouched()
+         form.get('min').setValue(0)
+        
+         form.get('max').reset()
+         form.get('max').reset()
+
+       //  form.get('object').reset()
+          
+        })
+
+        console.log(this.CCClasses,this.CCObjectCounts)
+
         var tempObj = {
           roi_name_canvas: ROINameObject,
           roi_canvas: currentROI,
           roi_id: ccName,
           roi_name: ccName,
-          cr_data: { bb_box: roiPointsString,roi_id:this.CcRois.length, area_name: ccName, class_name: this.classIds ,min_count:this.CrowdForm.get('min').value,max_count:this.CrowdForm.get('max').value}
+          cr_data: { bb_box: roiPointsString,full_frame:false, roi_id:this.CcRois.length, area_name: ccName, data_object:this.CCObjectCounts}
         }
       }
-      console.log(roiPointsString)
+      console.log(tempObj)
       // this.CameraData[0].ROI_data.push(tempObj.ROI_data)
 
       this.CcRois.push(tempObj)
       this.modalService.dismissAll()
-     this.SaveChanges()
+    this.AddCCData()
       console.log(this.allCameraData)
       this.newROIPoints.splice(0, this.newROIPoints.length)
       this.crowdCountRoiName.setValue(null)
@@ -781,7 +933,7 @@ onSaveCCFrame(){
       
       this.CrowdForm.get("max").setValidators(Validators.required)
       this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
-      this.classIds = []
+      this.classIds = ['person']
       console.log('cc rois',this.CcRois)
 
     }
@@ -789,7 +941,7 @@ onSaveCCFrame(){
       // this.newROIPoints.splice(0, this.newROIPoints.length) 
       // this.canvas.renderAll()
       console.log('elsepart')
-      this.classIds = []
+      this.classIds = ['person']
 
       this.DeleteNewRoi()
       this.CrowdForm.get('min').reset()
@@ -859,14 +1011,14 @@ onSaveCCFrame(){
       console.log(this.allCameraData)
       this.newROIPoints.splice(0, this.newROIPoints.length)
       this.roiNameControl.setValue(null)
-      this.classIds = []
+      this.classIds = ['person']
 
     }
     else {
       // this.newROIPoints.splice(0, this.newROIPoints.length) 
       // this.canvas.renderAll()
       console.log('elsepart')
-      this.classIds = []
+      this.classIds = ['person']
 
       this.DeleteNewRoi()
     }
@@ -1066,9 +1218,39 @@ onSaveCCFrame(){
   }
 
 //delete roi in backend 
-  DeleteTCROI(){
+DeleteCCROI() {
+  var id = this.deleteID
+  //var confirmDelete=confirm('Do you want to delete this ROI?')
+  if (true) {
+    var tempRoiCanvas = this.CcRois[id].roi_canvas
+    var tempTextCanvas = this.CcRois[id].roi_name_canvas
+    this.canvas.remove(tempRoiCanvas)
+    this.canvas.remove(tempTextCanvas)
+    var roi = this.CcRois[id]
+    var roi_id = roi.cr_data.roi_id
+    console.log(roi_id)
+    this.CcRois.splice(id, 1)
+    this.cameraData[0].cr_data.splice(id, 1)
+    var data = {
+      id: this.ID,
+      roi_id: String(roi_id),
+      ai_solutions:this.AISolutions
+    }
+    this.modalService.dismissAll()
 
+    this.server.deleteCCData(data).subscribe((data: any) => {
+      this.server.notification(data.message)
+      console.log(data)
+      this.modalService.dismissAll()
+    },
+      Err => {
+        this.modalService.dismissAll()
+        this.server.notification('Something went wrong', 'Retry')
+      })
+    this.canvas.renderAll()
   }
+
+}
   AlterROIName(id: number) {
     this.isEditText = !this.isEditText
     this.selectedId = id
@@ -1088,7 +1270,37 @@ onSaveCCFrame(){
     this.SaveEditedRoi()
 
   }
+  ChangeCCName() { 
+    //this.cameraData[0].roi_data[this.selectedId].roi_id=this.tempROIID
+    this.CcRois[this.selectedId].roi_name = this.tempROIID.value
 
+    this.CcRois[this.selectedId].roi_name_canvas.text = this.tempROIID.value
+    this.CcRois[this.selectedId].roi_data.roi_name=this.tempROIID.value
+    this.canvas.renderAll()
+    this.modalService.dismissAll()
+    var crowdCountData:any;
+    if(this.CcRois.length>0){
+     crowdCountData = this.CcRois[this.CcRois.length-1].cr_data
+      console.log('crowd data',crowdCountData)
+     }
+this.CcRois.length>0 && this.AISolutions.indexOf('CR')<0?this.AISolutions.push('CR'):''
+     var data={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+    cr_data:[crowdCountData]
+
+     }
+
+     console.log(data)
+     this.server.AddCrowdCount(data).subscribe((response:any)=>{
+
+console.log(response)
+
+
+     })
+    this.SaveEditedRoi()
+
+  }
   SaveChanges() {
     console.log(this.isLoading = true)
     console.log(this.peopleCrowdForm.get('min').value)
@@ -1137,6 +1349,15 @@ onSaveCCFrame(){
       tc_data: this.trafficCountData,
       ppe_data: [this.ppeConfig],
       cr_data: crowdCountData,
+      //edited
+      fire_smoke_data:[{
+        fire:this.fireSmokeForm.get('fire').value,
+        smoke:this.fireSmokeForm.get('smoke').value,
+        water:this.fireSmokeForm.get('water').value
+        
+      }]
+
+
     }
 
 
@@ -1160,6 +1381,77 @@ onSaveCCFrame(){
       })
   }
 
+
+  AddCCData(){
+    this.crowdCountRoiName.reset()
+    var crowdCountData:any;
+    if(this.CcRois.length>0){
+     crowdCountData= this.CcRois[this.CcRois.length-1].cr_data
+      console.log('crowd data',crowdCountData)
+     }
+this.CcRois.length>0 && this.AISolutions.indexOf('CR')<0?this.AISolutions.push('CR'):''
+     var data={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+    cr_data:[crowdCountData]
+
+     }
+
+     console.log(data)
+     this.server.AddCrowdCount(data).subscribe((response:any)=>{
+
+console.log(response)
+if(response.success){
+   this.server.notification(response.message)
+   this.RefreshCameraData()
+
+}
+else{
+  this.server.notification(response.message,'Retry')
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_canvas)
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_name_canvas)
+   this.canvas.renderAll()
+
+}
+
+
+     },Err=>{
+      this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_canvas)
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_name_canvas)
+   this.canvas.renderAll()
+      this.server.notification('Something went wrong','Retry')
+     })
+
+  }
+
+  AddTCData(){
+    var tcData:any=[]
+    if(this.trafficCountData.length>0)[
+      tcData=[]
+    ]
+    this.trafficCountData.length>0 && this.AISolutions.indexOf('TC')<0?this.AISolutions.push('TC'):''
+
+    var obj={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+      tc_data:[this.trafficCountData[this.trafficCountData.length-1]]
+
+    }
+
+    this.server.AddTCData(obj).subscribe((response:any)=>{
+      console.log(response)
+      if(response.success){
+        this.RefreshCameraData()
+        this.server.notification(response.message)
+      }
+      else{
+        this.server.notification(response.message)
+      }
+    },Err=>{
+      this.server.notification("Something went wrong",'Retry')
+    })
+
+  }
   savePpeConfig() {
     var roiData: any[] = []
     this.allCameraData.forEach((element: any, id: number) => {
@@ -1176,6 +1468,11 @@ onSaveCCFrame(){
       tc_data: [],
       ppe_data: [this.ppeConfig],
       cr_data: this.crowdConfig,
+      //edited
+      fire_smoke_data:[{
+        fire:this.fireSmokeForm.get('fire').value,
+        smoke:this.fireSmokeForm.get('smoke').value
+      }]
     }
 
 
@@ -1212,6 +1509,7 @@ onSaveCCFrame(){
       console.log(points)
       //accessing roi points
       var roi_points = points.bb_box.split(';')
+      this.raObjects.push(...points.label_name)
       console.log(roi_points)
       var polyGon: any[] = []
       for (let i = 0; i < roi_points.length - 1; i = i + 2) {
@@ -1230,6 +1528,9 @@ onSaveCCFrame(){
       this.roiPoints.push(tempObj)
       console.log(tempObj)
     });
+this.raObjects=this.RemoveDuplicates(this.raObjects)
+console.log(this.raObjects)
+
    this.GetCCRoiPoints()
 
     this.DrawExistPanels()
@@ -1324,8 +1625,8 @@ onSaveCCFrame(){
       //   const element = tempPoints[index];
       console.log(Number(tempPoints[index]))
       temp = [
-        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', area_name: points.area_name },
-        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', area_name: points.area_name },
+        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', area_name: points.area_name ,roi_id:index},
+        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', area_name: points.area_name ,roi_id:index},
 
       ]
       this.tempTCData.push(temp)
@@ -1431,8 +1732,8 @@ onSaveCCFrame(){
           var points = [pointer.points.x1, pointer.points.y1, pointer.points.x2, pointer.points.y2];
          line = new fabric.Line(points, {
             strokeWidth: 3,
-            fill: 'rgb(144, 164, 237)',
-            stroke: 'rgb(144, 164, 237)',
+            fill: 'rgb(255, 81, 148)',
+            stroke: 'rgb(255, 81, 148)',
             originX: 'center',
             originY: 'center',
             id: 'arrow_line',
@@ -1443,7 +1744,7 @@ onSaveCCFrame(){
             type: 'arrow'
           });
 
-          temp.push(line, triangle)
+       
           var centerX = (line.x1 +line.x2) / 2;
           var centerY = (line.y1 + line.y2) / 2;
           this.deltaX = line.left - centerX;
@@ -1459,14 +1760,12 @@ onSaveCCFrame(){
             angle: this._FabricCalcArrowAngle(line.x1, line.y1, line.x2, line.y2),
             width: 20,
             height: 20,
-            fill: 'rgb(144, 164, 237)',
+            fill: 'rgb(255, 81, 148)',
             id: 'arrow_triangle',
             uuid:line.uuid
           });
-          // var arrow= new fabric.([this.line,this.triangle],{
-          //   left:this.triangle.left,
-          //   top:this.triangle.transparentCorners
-          // })
+          temp.push(line, triangle)
+   
           this.canvas.add(line, triangle);
           var text = new fabric.Text(pointer.area_name, {
             fontSize: 16,
@@ -1478,6 +1777,7 @@ onSaveCCFrame(){
             stroke: 'rgb(255, 81, 148)',
             fill: 'rgb(255, 81, 148)',
           });
+          temp.push(text)
           this.canvas.add(text)
           this.canvas.renderAll()
           //this.activeObj = this.line;
@@ -1539,7 +1839,7 @@ onSaveCCFrame(){
       this.allCameraData[this.selectedEditId].roi_data.bb_box = roiPointsString
       console.log(this.allCameraData[this.selectedEditId].roi_data)
 
-      roiData.push(this.allCameraData[this.selectedEditId].roi_data)
+      roiData.push({...this.allCameraData[this.selectedEditId].roi_data})
     }
     var cameraData: any = {
       id: this.ID,
@@ -1547,8 +1847,8 @@ onSaveCCFrame(){
       imagename: this.imageName,
       roi_data: roiData,
       ppe_data: [this.ppeConfig],
-      cr_data: this.crowdConfig,
-      tc_data: []
+      // cr_data: this.crowdConfig,
+      // tc_data: []
 
     }
     console.log(cameraData)
@@ -1588,6 +1888,42 @@ onSaveCCFrame(){
     }
     console.log(this.classIds)
   }
+
+  OnRAAlarmObjects(event: any) {
+    console.log(event.target.defaultValue)
+    console.log(event.target.checked)
+    // console.log(this.classIDPerson.value)
+    // console.log(this.classIDCar.value)
+    // console.log(this.classIDBike.value)
+    if (event.target.checked) {
+      this.raAlarmObjects.push(event.target.value)
+
+    }
+    else {
+      var index = this.raAlarmObjects.indexOf(event.target.defaultValue)
+      this.raAlarmObjects.splice(index, 1)
+    }
+    console.log(this.raAlarmObjects)
+  }
+
+
+  OnPPEAlarmObjects(event: any) {
+    console.log(event.target.defaultValue)
+    console.log(event.target.checked)
+    // console.log(this.classIDPerson.value)
+    // console.log(this.classIDCar.value)
+    // console.log(this.classIDBike.value)
+    if (event.target.checked) {
+      this.ppeAlarmObjects.push(event.target.value)
+
+    }
+    else {
+      var index = this.ppeAlarmObjects.indexOf(event.target.defaultValue)
+      this.ppeAlarmObjects.splice(index, 1)
+    }
+    console.log(this.ppeAlarmObjects)
+  }
+
 
   TrafficCountConfig(event: any) {
     console.log(event)
@@ -1695,11 +2031,14 @@ onSaveCCFrame(){
   }
 
   AddTrafficCountData() {
-    var temp: any = {}
-    temp.line = Math.fround(this.trafficCountLineROIS[0].x1).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].y1).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].x2).toString() + ';' + Math.fround(this.trafficCountLineROIS[0].y2).toString() + ';'
-    temp.arrow = this.trafficCountLineROIS[1].x1.toString() + ';' + this.trafficCountLineROIS[1].y1.toString() + ';' + this.trafficCountLineROIS[1].x2.toString() + ';' + this.trafficCountLineROIS[1].y2.toString() + ';'
+     
 
-    var tempObj = { class_name: this.classIds, line_bbox: temp, area_name: this.tcName.value }
+    var temp: any = {}
+    var tempCanvas:any[]=[]
+    temp.line = Math.round(this.trafficCountLineROIS[0].x1).toString() + ';' + Math.round(this.trafficCountLineROIS[0].y1).toString() + ';' + Math.round(this.trafficCountLineROIS[0].x2).toString() + ';' + Math.round(this.trafficCountLineROIS[0].y2).toString() + ';'
+    temp.arrow = Math.round(this.trafficCountLineROIS[1].x1).toString() + ';' + Math.round( this.trafficCountLineROIS[1].y1).toString() + ';' +Math.round(this.trafficCountLineROIS[1].x2).toString() + ';' +Math.round(this.trafficCountLineROIS[1].y2).toString() + ';'
+
+    var tempObj = { class_name: this.classIds, line_bbox: temp, area_name: this.tcName.value,roi_id:(this.trafficCountData.length) }
     fabric.util.resetObjectTransform(this.newROI)
     var dimensionsLeft = this.line._getLeftToOriginX()
     var dimensionsTop = this.line._getTopToOriginY()
@@ -1714,6 +2053,7 @@ onSaveCCFrame(){
       stroke: 'rgb(255, 81, 148)',
       fill: 'rgb(255, 81, 148)',
     });
+    tempCanvas=[...this.trafficCountLineROIS,ROINameObject]
     console.log(ROINameObject)
     this.canvas.add(ROINameObject)
     this.canvas.renderAll()
@@ -1726,9 +2066,12 @@ onSaveCCFrame(){
     console.log(this.trafficCountLineROIS)
     this.trafficCountLineROIS = []
     this.btnIndex = 1
-    this.SaveChanges()
+    this.tempTCCanvas.push(tempCanvas)
+   // this.SaveChanges()
+   this.AddTCData()
     this.modalService.dismissAll()
   }
+
   //traffic count roi
   addingShapeOnMouseDown(event: any) {
     this.isMouseDown = true
@@ -1763,8 +2106,8 @@ onSaveCCFrame(){
       var points = [pointer.x, pointer.y, pointer.x, pointer.y];
       this.line = new fabric.Line(points, {
         strokeWidth: 3,
-        fill: 'rgb(144, 164, 237)',
-        stroke: 'rgb(144, 164, 237)',
+        fill: 'rgb(255, 81, 148)',
+        stroke: 'rgb(255, 81, 148)',
         originX: 'center',
         originY: 'center',
         id: 'arrow_line',
@@ -1789,7 +2132,7 @@ onSaveCCFrame(){
         angle: -45,
         width: 20,
         height: 20,
-        fill: 'rgb(144, 164, 237)',
+        fill: 'rgb(255, 81, 148)',
         id: 'arrow_triangle',
         uuid: this.line.uuid
       });
@@ -1803,13 +2146,38 @@ onSaveCCFrame(){
     this.canvas.requestRenderAll()
   }
 
-  OnDeleteTCROI(index: number) {
+   IsDeleteTC(modal:any,index:any){
+    this.deleteID=index
+    this.modalService.open(modal,{backdrop:'static',size:'xs'})
+
+   }
+  OnDeleteTCROI() {
+    var index=this.deleteID
+    console.log(this.deleteID)
+    console.log( this.tempTCCanvas)
+    console.log(this.TCCanvasData[index])
+
+    console.log( this.trafficCountData[index])
     this.tempTCCanvas[index].forEach((roi: any) => {
       this.canvas.remove(roi)
       this.canvas.renderAll()
     });
     this.trafficCountLineROIS = []
     this.btnIndex = 1
+   var data={
+    id:this.ID,
+    roi_id:this.trafficCountData[index].roi_id,
+    ai_solutions:this.AISolutions
+   }
+  this.server.deleteTCData(data).subscribe((response:any)=>{
+    this.server.notification(response.message)
+    if(response.success){
+      this.trafficCountData.splice(index,1)
+      this.modalService.dismissAll()
+    }
+  })
+    //to modify need to implement  api to delete  tc roi
+    
   }
 
 
@@ -1879,6 +2247,18 @@ onSaveCCFrame(){
   ngOnDestroy(){
     this.modalService.dismissAll()
   }
+
+  RefreshCameraData(){
+    this.server.GetRACameraData(this.ID).subscribe((response: any) => {
+     
+     if(response.success){
+      this.cameraData=response.message
+      this.trafficCountData=this.cameraData[0].tc_data
+      
+     }
+    })
+
+  }
   _FabricCalcArrowAngle(x1: any, y1: any, x2: any, y2: any) {
     var angle = 0, x, y;
     x = (x2 - x1);
@@ -1893,6 +2273,11 @@ onSaveCCFrame(){
     }
     return (angle * 180 / Math.PI + 90);
   };
+
+RemoveDuplicates(arr:any[]) {
+    return arr.filter((item,
+        index) => arr.indexOf(item) === index);
+}
 
 
 }

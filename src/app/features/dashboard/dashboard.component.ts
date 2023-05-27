@@ -162,7 +162,7 @@ Interval3:any
       },
       subtitles: [
         {
-          text: this.violationList.indexOf('RA') >= 0 && this.violationList.indexOf('PPE') >= 0 ? 'RA/PEE' : this.violationList.indexOf('RA') >= 0 ? 'RA' : this.violationList.indexOf('PPE') >= 0 ? 'PPE' : ''
+          text: this.violationList.indexOf('RA') >= 0 && this.violationList.indexOf('PPE') >= 0 ? 'RA/PPE' : this.violationList.indexOf('RA') >= 0 ? 'RA' : this.violationList.indexOf('PPE') >= 0 ? 'PPE' : ''
         },
       ],
       data: [

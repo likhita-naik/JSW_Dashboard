@@ -11,6 +11,7 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { LightboxModule } from 'ngx-lightbox';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import FileSaver from 'file-saver';
 
 
 
@@ -22,6 +23,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     CommonModule,
     FormsModule,
+  
+  
     ReactiveFormsModule,
     FontAwesomeModule,
     NgbModule,

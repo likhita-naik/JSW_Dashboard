@@ -1,0 +1,46 @@
+#data-card.card{
+
+    box-shadow: none !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--gray-light) !important;
+}
+
+.date-picker{
+    position: relative;
+    border: 2px solid var(--gray-light);
+  /* background-color:var(--light-black) !important; */
+  padding: 5px;
+  border-radius: 10px;
+    display: flex;
+    height: 2.5em;
+    justify-content: space-between;
+    align-items: center;
+}
+.container{
+    position: relative;
+  background-color:var(--light-black) !important;
+  padding: 5px;
+  border-radius: 5px;
+    display: flex;
+    height: 2.5em;
+    justify-content: space-between;
+    align-items: center;
+}
+.date-picker input{
+    /* background-color: var(--light-black) !important; */
+
+    border: none !important;
+
+}
+
+.date-picker fa-icon{
+    margin-right: 0.4rem !important;
+}
+
+.date-picker input:active{
+    /* background-color: var(--light-black) !important; */
+
+    box-shadow: none !important;
+    border: none;
+    
+}

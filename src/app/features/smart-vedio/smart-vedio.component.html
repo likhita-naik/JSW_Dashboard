@@ -1,0 +1,76 @@
+<div class="container-fluid dashboard-conent">
+    <h3 class="page-header">
+        Smart Video Recording
+    </h3>
+
+    <div class="card" id="data-card">
+        <div class="col-xl-12">
+          
+            <div class="d-flex flex-row-reverse align-items-center">
+                
+                <div class="p-2" >
+                    <div class="container p-3">
+                    <fa-icon icon="filter"></fa-icon>
+                    </div>
+                    </div>
+                <div class="col-xl-2">
+                    <div class="ms-3 date-picker">
+                        <input ngxDaterangepickerMd #datepicker (datesUpdated)="dateUpdated($event)"
+                            [showCustomRangeLabel]="true" [timePicker]="true" placeholder="Select Date"
+                            class="form-control" [(ngModel)]="selectedMoments" required>
+                        <fa-icon icon="calendar"></fa-icon>
+                    </div>
+                </div>
+                <div class="ms-1" id="filter">
+                    <p-treeSelect  containerStyleClass="w-full" [(ngModel)]="selectedCoinId"  [ngModelOptions]=" 
+                    {standalone: true}" [options]="coinIdList|async" (onNodeSelect)="OnCoinIdSelect($event)" placeholder="Select Coin Id"></p-treeSelect>
+                </div>
+                <div class="m-2" id="filter">
+                    <p-treeSelect  containerStyleClass="w-full" [(ngModel)]="selectedCamera"  [ngModelOptions]=" 
+                    {standalone: true}" [options]="cameraList|async" (onNodeSelect)="OnCoinIdSelect($event)" placeholder="Select Camera Name"></p-treeSelect>
+                </div>
+
+               
+            
+            </div>
+        </div>
+        <table class="table table-striped mt-3">
+            <thead style="border:2px solid #e0dfdf;border-radius:5px;">
+                <tr>
+
+                <th scope="col">
+                    SI no
+                </th>
+                <th scope="col">Coin ID</th>
+
+                <th scope="col">Camera Name</th>
+                <th scope="col">Video</th>
+               
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of Data;let i=index">
+                    <td>{{data.si_no}}</td>
+                    <td>{{data.coin_id}}</td>
+
+                    <td>{{data.camera_name}}</td>
+                    <td><div>
+                        <video width="200" height="55" [poster]="data.poster_image"preload="none"  controls>
+                            <source [src]="data.video_name" type="video/mp4">
+                            <!--<source src="video.ogg" type="video/ogg">
+                            <source src="video.webm" type="video/webm"> 
+                            <object [data]="data.video_name" width="470" height="255">
+                            <embed [src]="data.video_name" width="470" height="255">
+                                
+                            </object>-->
+                        </video>
+                        
+                    </div></td>
+
+                </tr>
+  
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,4 +1,4 @@
-<div class="dashboard-content">
+<div class="dashboard-content" id="page">
   <div class="page-header mb-3">
     <h3>Camera Settings</h3>
   </div>
@@ -23,7 +23,7 @@
 
   <div class="row mt-5 mb-3">
     <div class="float-end">
-      <button *ngIf="!isActive" class="float-end ms-2 btn primary" (click)="StartAppModal(startAppModal)" >
+      <button *ngIf="!isActive" class="float-end ms-2 btn primary" (click)="StartAppModal(startAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
         Start Application
       </button>
@@ -38,27 +38,31 @@
     </div>
   </div>
 
-<!-- <div class="row mb-3">
-  <h5 class="sub-header mb-2 ms-3">Upload Excel</h5>
+  <div class="row mb-3">
+    <h5 class="sub-header mb-2 ms-3">Upload Excel</h5>
 
-  <div class="mt-2 row">
+    <div class="mt-2 row">
 
-    <div class="container" >
-      <div>
-      <p class="mb-2 text-muted">Select excel sheet of camera's IP and RTSP to check cameras status</p>
+      <div class="container">
+        <div>
+          <p class="mb-2 text-muted">Select excel sheet of camera's IP and RTSP to check camera's status</p>
 
-      <div id="ExcelContainer" class="mb-2">
-      <input class="form-control form-control-lg" id="formFileLg"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (change)="OnFileSelect($event)" type="file">
+          <div id="ExcelContainer" class="mb-2">
+            <input class="form-control form-control-lg" id="formFileLg"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              (change)="OnFileSelect($event)" type="file">
+          </div>
+          <div class="d-flex justify-centent-center mt-2" style="width:100%">
+            <button class="btn default" style="width:inherit;" (click)="DownloadCameraExcel()"
+              *ngIf="isDownload"><fa-icon class="me-2" *ngIf="!isDownloading" icon="download"></fa-icon>
+              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"
+                *ngIf="isDownloading"></span>
+              Download</button>
+          </div>
+        </div>
       </div>
-      <div class="d-flex justify-centent-center mt-2" style="width:100%"> 
-        <button class="btn default" style="width:inherit;" (click)="DownloadCameraExcel()" *ngIf="isDownload"><fa-icon class="me-2"  *ngIf="!isDownloading" icon="download"></fa-icon>               
-            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" *ngIf="isDownloading"></span>
-        Download</button>
-      </div> 
-    </div>
     </div>
   </div>
-</div>   -->
 
   <div class="col-12">
 
@@ -78,14 +82,16 @@
               <th scope="col" sortable *ngIf="showSI">SI No</th>
               <th scope="col" sortable *ngIf="showCamName">Camera Name</th>
               <th scope="col" sortable *ngIf="showCamImage">Camera Image</th>
+              <th scope="col" sortable *ngIf="showCamIP">Camera IP</th>
+
               <th scope="col" sortable *ngIf="showPlant">Plant</th>
               <th scope="col" sortable *ngIf="showArea">Area</th>
               <th scope="col" sortable *ngIf="showAlarmType">Alarm</th>
               <th scope="col" sortable *ngIf="showAlarmIp">Alarm IP Address</th>
 
               <th scope="col" sortable *ngIf="showCamBrand">Camera Brand</th>
-              <th scope="col">Enable <br/> Analytics</th>
-              <th scope="col" sortable *ngIf="showAiSolutions">AI Solutions</th>
+              <th scope="col">Enable <br /> Analytics</th>
+              <th scope="col" sortable *ngIf="showAiSolutions">Settings</th>
 
               <th scope="col"></th>
             </tr>
@@ -97,6 +103,8 @@
               <td style="text-align:center;" *ngIf="showCamName">{{camera.cameraname}}</td>
               <td style="text-align:center;" *ngIf="showCamImage"><img [src]="IP+'/get_roi_image/'+camera.imagename"
                   alt="Not Found" class="camera-image" (click)=open(camera.SNo)></td>
+              <td style="text-align:center;" *ngIf="showCamIP">{{camera.camera_ip}}</td>
+
               <td style="text-align:center;" *ngIf="showPlant">{{camera.plant}}</td>
               <td style="text-align:center;" *ngIf="showArea">{{camera.area}}</td>
               <td style="text-align:center;" *ngIf="showAlarmType">{{camera.alarm_type?camera.alarm_type:'none'}}</td>
@@ -105,8 +113,10 @@
 
 
               <td style="text-align:center;" *ngIf="showCamBrand">{{camera.camera_brand}}</td>
-             <td><input type="checkbox" hidden="hidden" [checked]="camera.analytics_status=='true'?true:false" (change)="EnableAnalytics(camera,$event)" [id]="'camera'+camera.SNo">
-              <label class="switch" [for]="'camera'+camera.SNo"></label></td>
+              <td><input type="checkbox" hidden="hidden" [checked]="camera.analytics_status=='true'?true:false"
+                  (change)="EnableAnalytics(camera,$event)" [id]="'camera'+camera.SNo">
+                <label class="switch" [for]="'camera'+camera.SNo"></label>
+              </td>
               <!-- <td *ngIf="showAiSolutions"><input type="checkbox" class="form-check-input" name="RackIn" id="">&nbsp;<label class="form-check-label">PPE</label>
               </td> -->
               <td *ngIf="showAiSolutions"><button class="btn" (click)="goToRoiEdit(camera._id.$oid,camera.imagename)">
@@ -147,7 +157,7 @@
     </div>
     <div class="modal-body">
       <form action="" class="" [formGroup]="AddCameraForm" id="addCameraForm">
-        <div class="wrapper-two">
+        <div class="wrapper-two" id="input">
           <div class="form-floating">
             <input type="text"
               [ngClass]="AddCameraForm.get('cameraname').invalid && AddCameraForm.get('cameraname').touched?'is-invalid':''"
@@ -160,7 +170,7 @@
             formControlName="camera_brand" placeholder="Camera brand" class="form-control" id="camerabrand">
           <label for="camerabrand">Camera Brand</label> -->
             <ng-multiselect-dropdown #singleSelect [placeholder]="'Camera Brand'" [settings]="dropdownSettings2|async"
-              [data]="cameraBrandList|async" formControlName="camera_brand" >
+              [data]="cameraBrandList|async" formControlName="camera_brand">
             </ng-multiselect-dropdown>
             <!-- <label>Camera brand</label> -->
           </div>
@@ -177,7 +187,7 @@
               id="Area">
             <label for="Area">Area</label>
           </div>
-          </div>
+        </div>
         <!-- <div class="form-control p-3 mb-3" id="hooterConfig" *ngIf="isHooter||isRelay">
           
           <label for="hooterConfig" style="color:#3a5b72;"> Hooter/Relay Enabled Violations : &nbsp; &nbsp;</label>
@@ -197,8 +207,8 @@
             <label for="relay" class="form-check-label text-muted">ONB</label>
           </div>
         </div> -->
-        <div class="camera-display">
-          <div class="form-floating">
+        <div class="camera-display" id="input">
+          <div class="form-floating" >
             <input type="text" formControlName="username" placeholder="User name" class="form-control"
               [ngClass]="AddCameraForm.get('username').invalid && AddCameraForm.get('username').touched?'is-invalid':''"
               id="username">
@@ -245,14 +255,14 @@
               id="port">
             <label for="port">Port</label>
           </div>
-          </div>
-           
-          <div class="d-flex justify-centent-center align-items-center mt-3">
-            <h5 class="sub-header me-2 ms-2" style="font-size:1.5rem"> <span class="ms-2">Alert settings</span></h5>
-          </div>
-          <div class="wrapper-two">
+        </div>
 
-        
+        <div class="d-flex justify-centent-center align-items-center mt-3">
+          <h5 class="sub-header me-2 ms-2" style="font-size:1.5rem"> <span class="ms-2">Alert settings</span></h5>
+        </div>
+        <div class="wrapper-two" id="input">
+
+
           <div class="form-floating form-control p-3">
             <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="hooter" (change)="hooterOrRelayConfig($event)"
@@ -265,10 +275,15 @@
               <label for="relay" class="form-check-label text-muted">Relay</label>
             </div>
             <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="sensgiz" (change)="hooterOrRelayConfig($event,sensgizDetails)"
+                defaultValue="sensgiz" id="sensgiz" class="form-check-input">
+              <label for="sensgiz" class="form-check-label text-muted">Sensgiz</label>
+            </div>
+            <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
                 defaultValue="voiceAlert" id="voiceAlert" class="form-check-input">
               <label for="voiceAlert" class="form-check-label text-muted">Voice Alert</label>
-            </div>
+            </div> -->
           </div>
           <div class="form-floating" *ngIf="isHooter">
             <input type="text" formControlName="hooterIp" placeholder="User name" class="form-control"
@@ -283,17 +298,29 @@
               id="relayIp">
             <label for="relayIp">Relay IP</label>
           </div>
+          <div class="form-floating" *ngIf="isSensgiz">
+          
+          <div class="form-control">
+            <div>
+              
+            <div>Sensgiz Details</div>
+            <span class="float-left">
+              <fa-icon icon="pen-to-square"></fa-icon>
+            </span>
+            </div>
+          </div>
+          </div>
           <!-- altered -->
-          <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
+          <!-- <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
             <ng-multiselect-dropdown #singleSelect [placeholder]="'Language'" [settings]="dropdownSettings2|async"
             [data]="voiceLanguages|async" formControlName="voiceLang" >
           </ng-multiselect-dropdown>
 
-          </div>
+          </div> -->
         </div>
-    
 
-        
+
+
         <!-- </div> -->
         <div class="alert alert-success mb-2 mt-2" *ngIf="isSuccess" role="alert">
           {{responseMessage}}
@@ -337,6 +364,31 @@
   </div>
 </ng-template>
 
+
+<ng-template let-modal #errorMessage>
+  <div class="modal-body">
+    <div class="modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header flex-column">
+          <div class="icon-box">
+            <i class="material-icons">&#33;</i>
+          </div>
+          <h4 class="modal-title w-100">Limit has reached!</h4>
+          <!-- <button type="button" class="btn"  aria-hidden="true">&times;</button> -->
+        </div>
+        <div class="modal-body">
+          <p>{{licenseMessage}}</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
+            data-dismiss="modal">Okay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
 <ng-template let-modal #deleteModal>
   <div class="modal-body">
     <div class="modal-confirm">
@@ -376,22 +428,21 @@
         <div class="modal-body flex-column">
           <h5 class="text-dark">Do you want to start the Application ?</h5>
           <!-- <p class="text-muted"><small> If the jobsheet contains panels of named 'NA' it will be deleted.So Please edit those panels,further proceed</small></p> -->
-              <form action="" >
-                <p class="text-muted"><small> Config file creation method</small></p>
+          <form action="">
+            <p class="text-muted"> Select Configaration Method </p>
 
-                <div class="form-check form-check-inline" id="custome">
-                    <input type="radio" [formControl]="startAppConfig" [value]=0
-                        (change)="StartAppConfig($event)" [defaultValue]=0 id="rackin" class="form-check-input">
-                    <label for="rackin" class="form-check-label text-muted">RTSP </label>
-                </div>
-                <div class="form-check form-check-inline" id="custome">
-                    <input type="radio" [formControl]="startAppConfig" [value]=1
-                        (change)="StartAppConfig($event)" [defaultValue]=1 id="rackout"
-                        class="form-check-input">
-                    <label for="rackout" class="form-check-label text-muted">RTSPT </label>
-                </div>
-                
-            </form>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" [formControl]="startAppConfig" [value]=0 (change)="StartAppConfig($event)"
+                [defaultValue]=0 id="rackin" class="form-check-input">
+              <label for="rackin" class="form-check-label text-muted">RTSP </label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" [formControl]="startAppConfig" [value]=1 (change)="StartAppConfig($event)"
+                [defaultValue]=1 id="rackout" class="form-check-input">
+              <label for="rackout" class="form-check-label text-muted">RTSPT </label>
+            </div>
+
+          </form>
         </div>
         <div class="modal-footer justify-content-center">
           <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
@@ -400,6 +451,36 @@
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #sensgizDetails let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Sensgiz Details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Cross click')"></button>
+  </div>
+  <div class="modal-body p-3">
+    <button class="btn btn-sm default-outline mb-3 ms-3" (click)="AddSensgizData()">
+      <fa-icon icon="plus" class="mb-2"></fa-icon> Add
+    </button>
+    <div *ngFor="let form of sensgiz.controls;let i=index" class="p-2" style="">
+      <ng-container class="d-flex justify-centent-center" [formGroup]="form">
+        <div class="form-inline d-flex align-items-center">
+          <input class="form-control w-30 m-2" placeholder="Coin ID" formControlName="coinId">
+          <input class="form-control w-30 m-2" placeholder="Angle" formControlName="angle">
+          <!-- <span class="circle"> -->
+          <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
+            (click)="DeleteSensgizData(i)"></fa-icon>
+          <!-- </span> -->
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn default float-end" (click)="SaveSensgizInfo()">
+      Save
+    </button>
   </div>
 </ng-template>
 <!-- <form class="row g-3">

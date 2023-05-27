@@ -26,11 +26,22 @@ const routes: Routes =
                 {
                 path:'violations',loadChildren:()=>import('./features/log-history/logHistory.module').then(m => m.LogHistoryModule),
                 },
+
+                {
+                  path:'WaterColorChange',loadChildren:()=>import('./features/water-color-change/water-color-change.module').then(m => m.WaterColorModule),
+                  },
+                
               
                 {
                   path:'dashboard',loadChildren:()=>import('./features/dashboard/dashboard.module').then(m=>m.DashboardModule)
                   },
-             
+                  {
+                    path:'smartVideoRecorder',loadChildren:()=>import('./features/smart-vedio/smart-video.module').then(m=>m.SmartVideoRecorderModule)
+                    },
+                  {
+                    path:'trafficCount',loadChildren:()=>import('./features/traffic-count/traffic-count.module').then(m=>m.TrafficCountModule)
+                    },
+               
                     {
                       path:'panelViolation',loadChildren:()=>import('./features/panel-violations/panel-violations.module').then(m=>m.PanelViolationsModule)
                       },

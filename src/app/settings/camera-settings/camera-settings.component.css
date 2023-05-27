@@ -28,7 +28,7 @@ form {
   margin-bottom: 10px;
 }
 
-.form-control{
+#input .form-control{
   background-color: hsl(210, 27%, 96%);
   border: 2px solid hsl(213, 59%, 88%);
   /* border:hsl(212, 49%, 49%); */
@@ -168,14 +168,12 @@ button[type=reset]:active {
 
 
 
-input[type=text],
+#input > input[type=text],
 input[type=email],
 input[type=password],
 input[type=tel].ng-valid {
-  /* background-color: #f6f6f6; */
   background-color: hsl(210, 27%, 96%);
   border: 2px solid hsl(213, 59%, 88%);
-  /* border:hsl(212, 49%, 49%); */
   color: #0d0d0d;
 
 }
@@ -332,7 +330,7 @@ input:checked + .switch:active::before {
 }
 
 
-input[type=file]::file-selector-button {
+ input[type=file]::file-selector-button {
   margin-right: 20px;
   border: none;
   background: var(--label-color);
@@ -354,4 +352,16 @@ input[type=file]::file-selector-button:hover {
   color: #fff;
   cursor: pointer;
   transition: 'background' .2s ease-in-out;
+}
+
+.circle{
+  height: 2.5rem;
+  width: 2.5rem;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  padding:0.3rem 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

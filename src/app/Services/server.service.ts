@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse, HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, retry, Subject } from 'rxjs';
@@ -115,6 +115,10 @@ readConfigFile(filepath:any,mimeType:any){
 }
 
 }
+CheckLicense(){
+  return this.http.get(this.IP+'/check_license')
+}
+
 
 GetJobSheet(){
  return this.http.get(this.IP+'/multiisolation')
@@ -164,11 +168,44 @@ AddRACamerabyRtsp(details:any){
   return this.http.post(this.IP+'/add_camera_rtsp',details)
 }
 
+//camera analytics api
 AddROI(data:any){
   return this.http.post(this.IP+'/add_roi',data)
 }
 EditROI(data:any){
   return this.http.post(this.IP+'/edit_roi',data)
+}
+
+
+AddCrowdCount(data:any){
+  http://192.168.1.80:5000/add_tc_data
+
+  return this.http.post(this.IP+'/add_cr_data',data)
+}
+
+
+AddTCData(data:any)
+{
+  return this.http.post(this.IP+ '/add_tc_data',data)
+}
+
+EditCCData(data:any)
+{
+  return this.http.post(this.IP+'/edit_crdata',data)
+}
+
+
+// EditTCData(data:any){
+//   return this.http.post(this.IP+'/edit_tcdata')
+// }
+
+
+deleteCCData(data:any){
+  return this.http.post(this.IP+'/delete_cr_data',data) 
+}
+
+deleteTCData(data:any){
+  return this.http.post(this.IP+'/delete_tc_data',data) 
 }
 
 LatestData(violtype:any,cameraname:string){

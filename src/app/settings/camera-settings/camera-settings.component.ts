@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { FormArray, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +13,7 @@ import { Lightbox, LightboxConfig } from 'ngx-lightbox';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
+import { formatCurrency } from '@angular/common';
 
 @Component({
   selector: 'app-camera-settings',
@@ -26,11 +27,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   isFail: boolean = false
   isSuccess: boolean = false
   isLoading: boolean = false
-  isDownloading:boolean=false
+  isDownloading: boolean = false
   cameraData: any[] = []
   roiPoints: any[] = []
   showCamName: boolean = true
   showCamImage: boolean = true
+  showCamIP:boolean=true
   showSI: boolean = true
   showPlant: boolean = true
   showArea: boolean = true
@@ -48,14 +50,19 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   page: number = 1
   pageSize: number = 10
   tempData: any[] = []
-  isVoiceAlert:boolean=false
+  isVoiceAlert: boolean = false
   isActive: boolean = false
-  AppConfig:number=0
-  isDownload:boolean=false
+  AppConfig: number = 0
+  isDownload: boolean = false
   alarmEnabledViolations: any[] = []
-  startAppConfig:FormControl=new FormControl('0',Validators.required)
-  voiceLanguages:Observable<any[]>=of([{text:'English',id:0},
-  {text:'Hindi',id:1},{text:'Kannada',id:2},{text:'Telugu',id:3}])
+  isSensgiz:boolean=false
+  sensgiz:any = new FormArray([])
+  SensGizInfo:any[]=[]
+  sensgizModal:any
+  licenseMessage: string = "You have reached the limit of cameras that you can add to this application"
+  startAppConfig: FormControl = new FormControl('0', Validators.required)
+  voiceLanguages: Observable<any[]> = of([{ text: 'English', id: 0 },
+  { text: 'Hindi', id: 1 }, { text: 'Kannada', id: 2 }, { text: 'Telugu', id: 3 }])
 
 
   @ViewChild('singleSelect') singleSelect: any
@@ -92,19 +99,21 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   headers: any[] = [{ item_text: 'SI No', item_id: 0 },
   { item_text: 'Camera Name', item_id: 1 },
   { item_text: 'Camera Image', item_id: 2 },
+  { item_text: 'Camera IP', item_id: 9 },
+
   { item_text: 'Plant', item_id: 3 },
   { item_text: 'Area', item_id: 4 },
   { item_text: 'Camera brand', item_id: 5 },
   { item_text: 'Alarm Type', item_id: 6 },
   { item_text: 'Alarm Ip Address', item_id: 7 },
 
-  { item_text: 'AI solutions', item_id: 8 },
+  { item_text: 'Settings', item_id: 8 },
   ]
 
 
   @ViewChildren(NgbdSortableHeader) sortableHeaders: QueryList<NgbdSortableHeader>
 
-
+  @ViewChild('errorMessage', { static: false }) ErrorModal: TemplateRef<any>
   AddCameraForm: FormGroup = new FormGroup({
     cameraname: new FormControl('', Validators.required),
     camera_brand: new FormControl('', Validators.required),
@@ -117,10 +126,11 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     rtsp_url: new FormControl(''),
     isHooter: new FormControl(''),
     isRelay: new FormControl(''),
+    isSensgiz:new FormControl(''),
     hooterIp: new FormControl(''),
     hooterConfig: new FormControl(''),
     relayIp: new FormControl(''),
-    voiceLang:new  FormControl('')//altered voice language settings
+    voiceLang: new FormControl('')//altered voice language settings
 
   })
 
@@ -145,12 +155,17 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       noDataAvailablePlaceholderText: 'No data',
       maxHeight: 197
     };
+
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl(''),
+      angle:new FormControl('')
+    }))
     this.server.CheckApplicationStatus().subscribe((response: any) => {
       console.log(response)
-      if(response.success){
+      if (response.success) {
         //this.isActive=true
-        localStorage.setItem('appStatus',response.message[0].process_status)
-       this.isActive=response.message[0].process_status
+        localStorage.setItem('appStatus', response.message[0].process_status)
+        this.isActive = response.message[0].process_status
       }
     })
     this.AddCameraForm.valueChanges.subscribe(value => {
@@ -233,49 +248,69 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     })
   }
   openCameraAddModal(modal: any) {
-    this.modalService.open(modal, { size: 'lg' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
-      //  this.roiNameControl.setValue(null)
-      //  this.OnAddingNewROI()
-      // this.download = '',
-      //   this.isalert = false.
-      this.isHooter = false
-      this.isRelay = false
-      this.isVoiceAlert=false
-      console.log('cancel')
-      this.AddCameraForm.reset()
-      this.isFail = false
-      this.isSuccess = false
-      this.isLoading = false
-      // this.newROIPoints.splice(0,this.newROIPoints.length)
-      // this.OnAddingNewROI()
-    }, (reason) => {
-      this.isHooter = false
-      this.isRelay = false
-      this.isVoiceAlert=false
-      console.log('submit')
-      this.isLoading = false
-      /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      // this.download = '',
-      //   this.isalert = false
-      this.AddCameraForm.reset()
-      this.isFail = false
-      this.isSuccess = false
 
-        ;
-    }
-    )
-  }
-  EnableAnalytics(camera:any,event:any){
-    console.log(event.target.checked,'event')
-    var value=event.target.checked.toString()
-    this.server.notification("Camera Analytics Updated")
-    this.server.UpdateCameraAnalytics(camera._id.$oid,value).subscribe((response:any)=>{
-      this.GetCameraList()
-      if(response.success){
-        this.server.notification(response.message)
+    var container = document.getElementById('page')
+    container.classList.add('loading')
+
+    this.server.CheckLicense().subscribe((response: any) => {
+      if (response.success) {
+        container.classList.remove('loading')
+
+        this.modalService.open(modal, { size: 'lg' }).result.then((result) => {
+          // this.closeResult = `Closed with: ${result}`;
+          //  this.roiNameControl.setValue(null)
+          //  this.OnAddingNewROI()
+          // this.download = '',
+          //   this.isalert = false.
+          this.isHooter = false
+          this.isRelay = false
+          this.isVoiceAlert = false
+          console.log('cancel')
+          this.AddCameraForm.reset()
+          this.isFail = false
+          this.isSuccess = false
+          this.isLoading = false
+          // this.newROIPoints.splice(0,this.newROIPoints.length)
+          // this.OnAddingNewROI()
+        }, (reason) => {
+          this.isHooter = false
+          this.isRelay = false
+          this.isVoiceAlert = false
+          console.log('submit')
+          this.isLoading = false
+          /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          // this.download = '',
+          //   this.isalert = false
+          this.AddCameraForm.reset()
+          this.isFail = false
+          this.isSuccess = false
+
+            ;
+        }
+        )
       }
       else{
+        this.licenseMessage=response.message
+        container.classList.remove('loading')
+        this.modalService.open(this.ErrorModal,{centered:true,backdrop:'static'})
+
+      }
+    }, Err=>{container.classList.remove('loading')
+  this.server.notification('Something went wrong','Retry')}
+
+    )
+
+  }
+  EnableAnalytics(camera: any, event: any) {
+    console.log(event.target.checked, 'event')
+    var value = event.target.checked.toString()
+    this.server.notification("Camera Analytics Updated")
+    this.server.UpdateCameraAnalytics(camera._id.$oid, value).subscribe((response: any) => {
+      this.GetCameraList()
+      if (response.success) {
+        this.server.notification(response.message)
+      }
+      else {
         this.server.notification(response.message)
       }
     })
@@ -283,12 +318,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
   isDelete(modal: any, id: number) {
-    this.selectedDeleteID = id-1
+    this.selectedDeleteID = id - 1
     console.log(id)
     this.modalService.open(modal, { centered: true, backdrop: 'static' })
   }
-  StopAppModal(modal:any){
-    this.modalService.open(modal,{centered:true,backdrop:"static"})
+  StopAppModal(modal: any) {
+    this.modalService.open(modal, { centered: true, backdrop: "static" })
   }
   StartAppModal(modal: any) {
     this.startAppConfig.setValue(0)
@@ -312,26 +347,32 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
 
-  hooterOrRelayConfig(event: any) {
+  hooterOrRelayConfig(event: any,modal?:any) {
     console.log(event.target.checked)
     if (event.target.value == 'hooter') {
       this.isHooter = true
       this.isRelay = false
-      this.isVoiceAlert= false
+      this.isVoiceAlert = false
 
     }
     if (event.target.value == 'relay') {
       this.isHooter = false
       this.isRelay = true
-      this.isVoiceAlert= false
+      this.isVoiceAlert = false
 
     }
-    
-    if(event.target.value=='voiceAlert')
-    {
-      this.isVoiceAlert= true
-      this.isHooter=false
-      this.isRelay=false
+
+    if (event.target.value == 'voiceAlert') {
+      this.isVoiceAlert = true
+      this.isHooter = false
+      this.isRelay = false
+    }
+    if (event.target.value == 'sensgiz') {
+      this.isVoiceAlert = false
+      this.isSensgiz=true
+      this.SensgizModal(modal)
+      this.isHooter = false
+      this.isRelay = false
     }
 
 
@@ -400,7 +441,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             ai_solution: []
 
           }
-          
+
         }
         //altered
         else if (this.isVoiceAlert) {
@@ -424,8 +465,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             area: this.AddCameraForm.value['area'],
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             ai_solution: [],
-            alarm_type:null,
-            alarm_ip_address:null,
+            alarm_type: null,
+            alarm_ip_address: null,
 
 
           }
@@ -446,7 +487,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             this.isSuccess = true
 
             this.responseMessage = response.message
-          
+
             this.isHooter = false
             this.isRelay = false
             setTimeout(() => {
@@ -564,28 +605,28 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   StartApplication() {
-    this.server.ConfigRtsp(this.AppConfig).subscribe((res:any)=>{
- if(res.success){
-  
-    this.server.StartApplication().subscribe((response: any) => {
-      if (response.success) {
-        this.isActive=true
-        this.server.notification(response.message)
-        this.modalService.dismissAll()
+    this.server.ConfigRtsp(this.AppConfig).subscribe((res: any) => {
+      if (res.success) {
+
+        this.server.StartApplication().subscribe((response: any) => {
+          if (response.success) {
+            this.isActive = true
+            this.server.notification(response.message)
+            this.modalService.dismissAll()
+          }
+          else {
+            this.server.notification(response.message)
+          }
+        },
+          Err => {
+            this.server.notification('Something went wrong', 'Retry')
+          })
       }
       else {
-        this.server.notification(response.message)
+        this.server.notification(res.message, 'Retry')
       }
-    },
-      Err => {
-        this.server.notification('Something went wrong', 'Retry')
-      })
-    }
-    else{
-      this.server.notification(res.message,'Retry')
-    }
-    },err=>{
-      this.server.notification("Error while the process","Retry")
+    }, err => {
+      this.server.notification("Error while the process", "Retry")
     })
   }
 
@@ -598,7 +639,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   }
   GetCameraList() {
     this.AddCameraForm.reset()
-    var container=document.getElementById('dataTable')
+    var container = document.getElementById('dataTable')
     container.classList.add('loading')
     this.server.getCameras().subscribe((response: any) => {
       container.classList.remove('loading')
@@ -621,17 +662,17 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
         });
       }
-      else{
-        this.cameraImages=[]
-        this.CameraList=[]
-        this.total=of(0)
-        this.tempData=[]
-        this.RACameraList=of([])
+      else {
+        this.cameraImages = []
+        this.CameraList = []
+        this.total = of(0)
+        this.tempData = []
+        this.RACameraList = of([])
         this.server.notification(response.message)
       }
-    },Err=>{
+    }, Err => {
       container.classList.remove('loading')
-    this.server.notification('Error ')
+      this.server.notification('Error ')
     })
   }
   goToRoiEdit(id: string, image: string) {
@@ -681,6 +722,10 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
         this.showAiSolutions = false
         break;
       }
+      case 9: {
+        this.showCamIP = false
+        break;
+      }
     }
 
 
@@ -722,6 +767,10 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       }
       case 8: {
         this.showAiSolutions = true
+        break;
+      }
+      case 9: {
+        this.showCamIP = true
         break;
       }
     }
@@ -766,93 +815,124 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
 
-  StopApplication(){
-    this.server.stopApp().subscribe((response:any)=>{
+  StopApplication() {
+    this.server.stopApp().subscribe((response: any) => {
       console.log(response)
-      if(response.success){
-        this.isActive=false
+      if (response.success) {
+        this.isActive = false
         this.server.notification(response.message)
-        this.modalService.dismissAll()     }
-      else{
+        this.modalService.dismissAll()
+      }
+      else {
         this.server.notification(response.message)
       }
     },
-    err=>{
-      this.server.notification('Error while the process','Retry')
-    })
+      err => {
+        this.server.notification('Error while the process', 'Retry')
+      })
   }
-  
 
-StartAppConfig(event:any){
-  console.log(typeof (event.target.value))
-  this.AppConfig= Number(event.target.value)
-}
 
-DownloadCameraExcel(){
-   this.isDownloading=true
-   this.server.DownloadCameraSheet().subscribe(
-    (response:any) => {
-      var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  var fileName;
+  StartAppConfig(event: any) {
+    console.log(typeof (event.target.value))
+    this.AppConfig = Number(event.target.value)
+  }
 
-      console.log(response)
-      const blob = new Blob([response], { type: '.xlsx' });
-      // var fileName =  response.headers.get('Content-Disposition').split(';')[1];
-      fileName = "camera_status_excel_sheet" + "_" + (this.server.dateTransformbyPattern(new Date,'yyyy_MM_dd_HH_mm_ss'))+'.xlsx'
-      const file = new File([blob], fileName, { type: '.xlsx' });
-      this.isLoading=false
-      saveAs(blob, fileName);
-       this.isDownloading=false
-       
+  DownloadCameraExcel() {
+    this.isDownloading = true
+    this.server.DownloadCameraSheet().subscribe(
+      (response: any) => {
+        var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        var fileName;
 
-   
-    },
-    err => {
-this.isDownloading=false
- console.log(err)
-    })
-  
-}
+        console.log(response)
+        const blob = new Blob([response], { type: '.xlsx' });
+        // var fileName =  response.headers.get('Content-Disposition').split(';')[1];
+        fileName = "camera_status_excel_sheet" + "_" + (this.server.dateTransformbyPattern(new Date, 'yyyy_MM_dd_HH_mm_ss')) + '.xlsx'
+        const file = new File([blob], fileName, { type: '.xlsx' });
+        this.isLoading = false
+        saveAs(blob, fileName);
+        this.isDownloading = false
 
-OnFileSelect($event:any){
-  var container=document.getElementById('ExcelContainer')
-  container.classList.add('loading')
-  this.isDownload=false
-  var file=$event.target.files[0]
-  var formData= new FormData()
-  formData.append('excel_file',file)
-  this.server.UploadCameraIPsFile(formData).subscribe((response:any)=>{
-    this.server.notification(response.message)
 
-    if(response.success){
-        this.server.TestCameraIps().subscribe((response:any)=>{
-          if(response.success)
-          {
-            this.isDownload=true
+
+      },
+      err => {
+        this.isDownloading = false
+        console.log(err)
+      })
+
+  }
+
+  OnFileSelect($event: any) {
+    var container = document.getElementById('ExcelContainer')
+    container.classList.add('loading')
+    this.isDownload = false
+    var file = $event.target.files[0]
+    var formData = new FormData()
+    formData.append('excel_file', file)
+    this.server.UploadCameraIPsFile(formData).subscribe((response: any) => {
+      this.server.notification(response.message)
+
+      if (response.success) {
+        this.server.TestCameraIps().subscribe((response: any) => {
+          if (response.success) {
+            this.isDownload = true
             container.classList.remove('loading')
 
 
           }
-          else{
-            this.isDownload=false
+          else {
+            this.isDownload = false
           }
-        },Err=>{
-          this.isDownload=false
+        }, Err => {
+          this.isDownload = false
+          container.classList.remove('loading')
+
+          this.server.notification("Error during the process", 'Retry')
         })
 
 
 
-    }
-    else{
-      this.isDownload=false
-      this.server.notification(response.message)
-    }
+      }
+      else {
+        this.isDownload = false
+        container.classList.remove('loading')
 
-  },Err=>{
-    this.isDownload=false
-    this.server.notification('Error while uploading the file')
-  })
-  console.log(file)
+        this.server.notification(response.message)
+      }
+
+    }, Err => {
+      this.isDownload = false
+      container.classList.remove('loading')
+
+      this.server.notification('Error while uploading the file')
+    })
+    console.log(file)
+  }
+AddSensgizData(){
+  this.sensgiz.push(new FormGroup({
+    coinId:new FormControl(),
+    angle:new FormControl()
+  }))
+}
+
+DeleteSensgizData(i:number){
+  this.sensgiz.controls.splice(i,1)
+}
+
+SensgizModal(modal:any){
+ this.sensgizModal =this.modalService.open(modal)
+}
+
+
+SaveSensgizInfo(){
+  this.sensgiz.controls.forEach((element:any) => {
+    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle']})
+    
+  }); 
+  this.sensgizModal.close()
+  console.log(this.SensGizInfo)
 }
 
 

@@ -1,0 +1,29 @@
+<div class="dashboard-content">
+    <h5>Traffic Count</h5>
+
+
+
+    <div class="row card">
+      <div class="float-end mb-3 col-xl-3 col-xs-6 col-md-6 col-sm-6 col-lg-4" id="dateInput">
+        <!-- <form class="search-form"> -->
+          <div class="input calendar">
+         <input ngxDaterangepickerMd
+         #datepicker   (datesUpdated)="dateUpdated($event)"
+         [showCustomRangeLabel]="true"  [timePicker]="true"
+         placeholder="Select Date" class="form-control" [(ngModel)]="selectedMoments" required>
+         <fa-icon icon="calendar" ></fa-icon>
+         </div>
+      <!-- <label><fa-icon icon="calendar"></fa-icon> </label>
+        </form> -->
+     </div>
+        <div class="chart-wrapper">
+            <canvas baseChart 
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [type]="barChartType">
+          </canvas>
+        </div>
+</div>

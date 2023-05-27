@@ -100,7 +100,6 @@ export class RoiSettingsComponent implements OnInit, AfterViewInit,OnDestroy {
 
   @ViewChild('alertRW', { static: false })RWAlert: TemplateRef<any>
 
-
   constructor(
     private ActiveRoute: ActivatedRoute,
     private server: ServerService,
@@ -583,7 +582,7 @@ export class RoiSettingsComponent implements OnInit, AfterViewInit,OnDestroy {
       // this.OnAddingNewPanel()
       // this.download = '',
       //   this.isalert = false
-    }, (reason) => {
+    }, (reason:any) => {
       this.panelNameControl.markAsUntouched()
       //  this.panelNameControl.setValue(null)
       //  this.OnAddingNewPanel()

@@ -55,11 +55,23 @@
 
                    <span> Violations</span></a>
             </li>
+            <!-- <li class="mt-4">
+                <a  [ngbPopover]="isCollapse?'Violations':''" popoverTitle="" popoverClass="custom-popover" triggers="mouseenter:mouseleave" routerLink="/app/WaterColorChange" routerLinkActive="active" >
+                    <fa-icon icon="droplet" class="me-2"></fa-icon>
+
+                   <span>Water</span></a>
+            </li> -->
             <li class="mt-4">
                 <a [ngbPopover]="isCollapse?'Camera Settings':''" popoverTitle="" popoverClass="custom-popover" triggers="mouseenter:mouseleave" routerLink="/app/CameraSettings" routerLinkActive="active">
                     <fa-icon icon="camera" class="me-2"></fa-icon>
 
                 <span>  Camera Settings</span>  </a>
+            </li>
+            <li class="mt-4">
+                <a [ngbPopover]="isCollapse?'Smart Video Recording':''" popoverTitle="" popoverClass="custom-popover" triggers="mouseenter:mouseleave" routerLink="/app/smartVideoRecorder" routerLinkActive="active">
+                    <fa-icon icon="video" class="me-2"></fa-icon>
+
+                <span>  Smart Video Recorder</span>  </a>
             </li>
             <!-- <li>
                 <a routerLink="/app/jobsheetUpload" routerLinkActive="active" target="_blank">Job sheet Upload</a>

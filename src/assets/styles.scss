@@ -4,10 +4,14 @@
 $grey:  #777;
 $grey2: #dfe3e4;
 $blue:  #2183dd;
+$blue-light:#b0ceff;
 $green: #009900;
 $white: #fff;
 $danger:hsl(4, 81%, 41%);
 $primary-color:#1B98C5;
+$light-black:#EBEBEB;
+
+
 $base-color: hsl(212, 59%, 29%);
 
 $disable-background-color: #eceeef;
@@ -31,12 +35,34 @@ $disable-background-color: #eceeef;
   height: 1.2em !important;
   width: 1.2em;
  }
+//  #custome .form-check-input
+//  {
+//   border-color:$light-black  !important ;
+//   height: 1.2em !important;
+//   width: 1.2em;
+//   border-radius: 5px !important;
+//  }
 
  #custome .form-check-input
  {
   height: 1.2em !important;
   width: 1.2em;
  }
+ 
+ #subCheckbox .form-check-input:checked
+ {
+  background-color: $blue-light !important;
+  border-color:$blue-light  !important ;
+  height: 1.2em !important;
+  width: 1.2em;
+ }
+
+ #subCheckbox .form-check-input
+ {
+  height: 1.2em !important;
+  width: 1.2em;
+ }
+
 
  .panel.form-check-input:checked{
     background-color:hsl(4, 57%, 52%) !important;
@@ -656,4 +682,46 @@ ngb-popover-window{
   height: inherit;
   width: inherit;
   object-fit:fill ;
+}
+
+.w-full{
+  width: inherit !important;
+  color: white !important;
+}
+
+p-menubar{
+  padding:0px !important;
+  width:inherit !important;
+}
+
+// p-menubarsub
+// {
+//   background: transparent !important;
+//   z-index: 1000 !important;
+// }
+
+// p-menubarsub:hover{
+//   background: transparent !important;
+// }
+// .p-element.p-menuitem{
+//   z-index: 9 !important;
+// }
+
+// .p-menubar .p-submenu-list{
+//   z-index: 900 !important;
+
+// }
+
+.p-treeselect-label{
+  color:black !important;
+}
+
+#filter .p-treeselect{
+  border-radius:10px !important;
+  // background-color:$light-black !important;
+  border:2px solid $light-black !important;
+
+}
+#filter .p-focus{
+  border: none !important;
 }
