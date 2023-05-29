@@ -377,6 +377,11 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
 
   }
+
+  editSensgiz(modal:any){
+    this.modalService.open(modal)
+
+  }
   HooterSettings(event: any) {
     console.log(event)
     if (event.target.checked) {

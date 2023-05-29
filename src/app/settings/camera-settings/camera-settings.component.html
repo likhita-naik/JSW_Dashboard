@@ -303,9 +303,9 @@
           <div class="form-control">
             <div>
               
-            <div>Sensgiz Details</div>
-            <span class="float-left">
-              <fa-icon icon="pen-to-square"></fa-icon>
+            <span>Sensgiz Details</span>
+            <span class="float-end">
+              <fa-icon icon="pen-to-square" style="cursor: pointer;" (click)="editSensgiz(sensgizDetails)" ></fa-icon>
             </span>
             </div>
           </div>
@@ -483,6 +483,42 @@
     </button>
   </div>
 </ng-template>
+
+
+<ng-template #EditSensgizDetails let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Sensgiz Details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Cross click')"></button>
+  </div>
+  <div class="modal-body p-3">
+    <button class="btn btn-sm default-outline mb-3 ms-3" (click)="AddSensgizData()">
+      <fa-icon icon="plus" class="mb-2"></fa-icon> Add
+    </button>
+    <div *ngFor="let form of sensgiz.controls;let i=index" class="p-2" style="">
+      <ng-container class="d-flex justify-centent-center" [formGroup]="form">
+        <div class="form-inline d-flex align-items-center">
+          <input class="form-control w-30 m-2" placeholder="Coin ID" formControlName="coinId">
+          <input class="form-control w-30 m-2" placeholder="Angle" formControlName="angle">
+          <!-- <span class="circle"> -->
+          <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
+            (click)="DeleteSensgizData(i)"></fa-icon>
+          <!-- </span> -->
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn default float-end" (click)="SaveSensgizInfo()">
+      Save
+    </button>
+  </div>
+</ng-template>
+
+
+
+
+
 <!-- <form class="row g-3">
             <div class="col-md-4">
               <label for="validationServer01" class="form-label">First name</label>

@@ -720,8 +720,12 @@ p-menubar{
   border-radius:10px !important;
   // background-color:$light-black !important;
   border:2px solid $light-black !important;
+  box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 8px rgba(94,104,121,0.3) !important;
+
 
 }
 #filter .p-focus{
   border: none !important;
+  box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+
 }
