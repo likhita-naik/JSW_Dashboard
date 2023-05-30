@@ -2,7 +2,7 @@
 
     box-shadow: none !important;
     border-radius: 10px !important;
-    border: 1px solid var(--gray-light) !important;
+    border: 1px solid #ccc !important;
 }
 
 .date-picker{
