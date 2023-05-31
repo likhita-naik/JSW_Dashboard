@@ -10,8 +10,10 @@ import { ServerService } from 'src/app/Services/server.service';
 })
 export class HeaderComponent implements OnInit ,AfterViewInit{
   isCollapse:boolean=false
+  viewPortWidth:any
   constructor(private router:Router,public server:ServerService,public modalService:NgbModal) {
-    
+    this.viewPortWidth=window.innerWidth
+    console.log(this.viewPortWidth)
    // console.log(this.isCollapse,'collapse')
    }
 
@@ -19,6 +21,8 @@ export class HeaderComponent implements OnInit ,AfterViewInit{
     
   }
   ngAfterViewInit(): void {
+    this.viewPortWidth=window.innerWidth
+
     if(localStorage.getItem('isCollapse')=='true'){
       this.isCollapse=true
       var sidebarWrapper=document.getElementById('sidebarWrapper')

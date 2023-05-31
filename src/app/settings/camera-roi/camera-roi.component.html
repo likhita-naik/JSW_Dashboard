@@ -113,9 +113,13 @@
 
             <div class="col-12">
                 <div class="">
+                    <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
+                        [disabled]="false">
                     <div id="canvas-container" class="d-flex justify-content-center" #canvasContainer>
+                        
                         <canvas id="canvasROI" class="canvas-class" height="auto" width="auto"></canvas>
                     </div>
+                    </ng-scrollbar>
                 </div>
             </div>
         </div>

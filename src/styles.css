@@ -477,6 +477,8 @@ body {
   }
 }
 
+
+
 .page-header {
   display: inline-block;
   margin-bottom: 20px !important;
@@ -980,4 +982,10 @@ font-size: 0.5rem;
   border-radius: 7px;
   cursor: pointer;
   box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+}
+
+@media screen and (max-width:480px) {
+
+
+  
 }

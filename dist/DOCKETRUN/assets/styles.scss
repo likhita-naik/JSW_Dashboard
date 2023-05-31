@@ -9,6 +9,7 @@ $green: #009900;
 $white: #fff;
 $danger:hsl(4, 81%, 41%);
 $primary-color:#1B98C5;
+$light-black:#EBEBEB;
 
 
 $base-color: hsl(212, 59%, 29%);
@@ -34,6 +35,13 @@ $disable-background-color: #eceeef;
   height: 1.2em !important;
   width: 1.2em;
  }
+//  #custome .form-check-input
+//  {
+//   border-color:$light-black  !important ;
+//   height: 1.2em !important;
+//   width: 1.2em;
+//   border-radius: 5px !important;
+//  }
 
  #custome .form-check-input
  {
@@ -706,4 +714,18 @@ p-menubar{
 
 .p-treeselect-label{
   color:black !important;
+}
+
+#filter .p-treeselect{
+  border-radius:10px !important;
+  // background-color:$light-black !important;
+  border:2px solid $light-black !important;
+  box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 8px rgba(94,104,121,0.3) !important;
+
+
+}
+#filter .p-focus{
+  border: none !important;
+  box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+
 }

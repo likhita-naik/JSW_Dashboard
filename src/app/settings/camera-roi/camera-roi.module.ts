@@ -6,10 +6,11 @@ import { CameraRoiComponent } from "./camera-roi.component";
 const routes:Routes=[{path:'',component:CameraRoiComponent}]
 import { TreeSelectModule } from 'primeng/treeselect';
 import { MenubarModule } from 'primeng/menubar';
+import { NgScrollbarModule } from "ngx-scrollbar";
 //itemClick(event: MouseEvent, item: MenuItem)
 @NgModule({
     declarations:[CameraRoiComponent],
-    imports:[CommonModules,RouterModule.forChild(routes),TreeSelectModule,MenubarModule],
+    imports:[CommonModules,RouterModule.forChild(routes),TreeSelectModule,MenubarModule,NgScrollbarModule],
     exports:[RouterModule],
     
 })

@@ -29,12 +29,12 @@ import {
   DaterangepickerDirective,
   NgxDaterangepickerMd,
 } from 'ngx-daterangepicker-material';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import 'fabric';
 import * as CanvasJSAngularChart from '../assets/canvasjs/canvasjs.angular.component';
 
 import { NgChartsConfiguration, NgChartsModule } from 'ng2-charts';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
@@ -58,7 +58,6 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgbModule,
     FormsModule,
     MatSnackBarModule,
-   
     BrowserAnimationsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({

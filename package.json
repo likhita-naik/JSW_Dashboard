@@ -43,6 +43,7 @@
     "ngx-daterangepicker-material": "^6.0.2",
     "ngx-image-zoom": "^1.0.1",
     "ngx-lightbox": "^2.6.1",
+    "ngx-scrollbar": "^11.0.0",
     "ngx-toastr": "^15.2.2",
     "popper.js": "^1.16.1",
     "primeicons": "^6.0.1",
