@@ -218,7 +218,6 @@ a.article:hover {
 #sidebar {
     width: 253px;
     position: fixed;
-    /* top: 5rem; */
     left: 0;
     top:0;
     height: 100vh;
@@ -227,7 +226,7 @@ a.article:hover {
     background: rgb(13, 91, 156);
     border-radius: 3px;
     color: #fff;
-    box-shadow: 10px 5px 20px 10px rgba(154, 154, 204, 0.22);
+    box-shadow: 2px 2px 20px 10px rgba(173, 173, 173, 0.22);
 
     transition: all 0.3s;
 }

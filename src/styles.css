@@ -247,10 +247,6 @@ body {
   margin-left: 0px !important;
   transition: all 0.3s;
 }
-.fixed-top {
-  margin-left: 255px;
-  max-height: 5rem;
-}
 
 .bg-header {
   /* padding: 10px; */
@@ -470,14 +466,6 @@ body {
 }
 
 
-@media (max-width: 768px) {
-  .dashboard-wrapper {
-    margin-left: 0;
-    width: calc(100%) !important;
-  }
-}
-
-
 
 .page-header {
   display: inline-block;
@@ -575,6 +563,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding:1rem;
   box-shadow: 0 1px 0 0 rgba(0,0,0,.1),0 6px 12px 0 rgba(0,0,0,.2) !important;
 
+}
+.fixed-top {
+  margin-left: 255px;
+  max-height: 5rem;
 }
 
 
@@ -691,12 +683,12 @@ color:var(--label-color) !important;
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 999 !important;
+  z-index: 3000 !important;
   overflow: auto;
   background: hsl(207, 85%, 33%);
   border-radius: 3px;
   color: #fff;
-  box-shadow: 10px 5px 20px 10px rgba(154, 154, 204, 0.22);
+  /* box-shadow: 10px 5px 20px 10px rgba(154, 154, 204, 0.22); */
 
   transition: all 0.3s ease;
 
@@ -741,9 +733,9 @@ color:var(--label-color) !important;
 }
 
 #sidebar.active .sidebar-header #CollapseImg{
-  display: inline;
-}#sidebar.active .sidebar-header strong #Img{
   display: none;
+}#sidebar.active .sidebar-header strong #Img{
+  display: block;
 }
 
 #sidebar.active ul li a {
@@ -796,12 +788,12 @@ font-size: 0.5rem;
   /* 80px and its content aligned to centre. Pushing it off the screen with the
      negative left margin
   */
-  #sidebar.active {
+  /* #sidebar.active {
       min-width: 80px;
       max-width: 80px;
       text-align: center;
       margin-left: -80px !important;
-  }
+  } */
 
 
   /* Reappearing the sidebar on toggle button click */
@@ -836,6 +828,13 @@ font-size: 0.5rem;
       margin-bottom: 5px;
   }
 
+
+  #sidebar.active .sidebar-header #CollapseImg{
+    display: none !important;
+  }#sidebar.active .sidebar-header strong #Img{
+    display: block;
+  }
+  
   /* Adjust the dropdown links padding*/
   #sidebar.active ul ul a {
       padding: 10px !important;
@@ -978,14 +977,142 @@ font-size: 0.5rem;
 .btn-icon{
   display: inline-block;
   background-color: white;
-  padding: 0.3rem 0.6rem;
-  border-radius: 7px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
 }
 
-@media screen and (max-width:480px) {
 
+/* styling of sidebars toggle in mobile */
+@media screen and (max-width:460px) {
+
+  .dashboard-wrapper.active{
+    left: 0rem;
+    width: calc(100vw - 0px) !important;
+    margin-left: 0px !important;
+    transition: all 0.3s;
+  }
+  .dashboard-wrapper{
+    left: 0rem;
+    width: calc(100vw - 0px) !important;
+    margin-left: 0px !important;
+    transition: all 0.3s;
+  }
+
+  #sidebar.active {
+    /* min-width:5rem ;
+    max-width: 5rem; */
+    display: block;
+    width: 250px;
+    min-width:240px;
+    max-width:240px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 2000 !important;
+    overflow: auto;
+    background: hsl(207, 85%, 33%);
+    border-radius: 3px;
+    color: #fff;
+  
+    transition: all 0.3s ease;
+  }
+
+  .fixed-top {
+    margin-left: 0px;
+    max-height: 5rem;
+    z-index: 1000;
+  }
+  
+
+  .fixed-top.active {
+    margin-left: 0px;
+    max-height: 5rem;
+  }
+  .fixed-bottom.active {
+    margin-left: 0rem;
+  }
+  
+  #sidebar {
+    display: none;
+  }
+
+
+  #sidebar.active .toggle-button{
+    display: block;
+    cursor: pointer;
+    position: fixed;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    top: 5rem;
+    background: transparent;
+    border-radius: 50%;
+    background-color: var(--label-color);
+    color:white;
+    border:1px solid var(--prime-color);
+    box-shadow: -5px -5px 9px var, 5px 5px 9px rgba(94,104,121,0.3);
+    z-index: 2000;
+    height: 3rem;
+    width: 3rem;
+    left: 3.5rem;
+
+  }
 
   
+  /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
+  #sidebar.active .sidebar-header strong {
+    display: none;
+  }
+  #sidebar.active .sidebar-header h3 {
+    display: none;
+  }
+  
+  #sidebar.active .sidebar-header #CollapseImg{
+    display: block;
+  }#sidebar.active .sidebar-header strong #Img{
+    display: block;
+  }
+  
+  #sidebar.active ul li a {
+    text-align: center;
+  }
+  
+  #sidebar.active .list-unstyled.components ul li a span {
+    /* padding: 20px 10px;
+    text-align: center;
+    font-size: 0.85em; */
+    display: inline !important;
+  }
+  
+  #sidebar.active .list-unstyled.components ul li a fa-icon{
+    margin-right:  0;
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  #sidebar.active ul li a span {
+  display: inline;
+  /* font-size: 0.5rem; */
+  }
+  
 }
+
+
+
+
+
+.toggle-button{
+display: none;
+}
+
+
+
+/* 
+.modal {
+  --bs-modal-bg:transparent !important;
+} */

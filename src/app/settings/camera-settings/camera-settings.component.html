@@ -40,7 +40,9 @@
 
   <div class="row mb-3">
     <h5 class="sub-header mb-2 ms-3">Upload Excel</h5>
-
+    <div class="float-end">
+      <button class="btn default-outline float-end">Download Sample Sheet</button>
+    </div>
     <div class="mt-2 row">
 
       <div class="container">
@@ -119,7 +121,13 @@
               </td>
               <!-- <td *ngIf="showAiSolutions"><input type="checkbox" class="form-check-input" name="RackIn" id="">&nbsp;<label class="form-check-label">PPE</label>
               </td> -->
-              <td *ngIf="showAiSolutions"><button class="btn" (click)="goToRoiEdit(camera._id.$oid,camera.imagename)">
+              <td *ngIf="showAiSolutions">
+                <button class="btn" (click)="EditCameraModal(cameraEditModal,camera)">
+                  <fa-icon class="text-black" icon="pen-to-square"></fa-icon>
+                </button>
+                
+                <button class="btn" (click)="goToRoiEdit(camera._id.$oid,camera.imagename)">
+
                   <fa-icon icon="cog" class="text-dark"></fa-icon>
                 </button>
                 <!-- &nbsp;&nbsp; -->
@@ -143,7 +151,7 @@
 </div>
 <!--  -->
 <ng-template let-modal #cameraAddModal>
-  <div class="border">
+  <div class="border" style="background-color: white;">
     <div class="" id="formContent">
       <div style="font-family: 'Times New Roman',
     Times, serif;">
@@ -188,27 +196,9 @@
             <label for="Area">Area</label>
           </div>
         </div>
-        <!-- <div class="form-control p-3 mb-3" id="hooterConfig" *ngIf="isHooter||isRelay">
-          
-          <label for="hooterConfig" style="color:#3a5b72;"> Hooter/Relay Enabled Violations : &nbsp; &nbsp;</label>
-          <div class="form-check form-check-inline" id="custome">
-            <input type="checkbox" formControlName="hooterConfig" value="RA" (change)="HooterSettings($event)"
-              defaultValue="hooter" id="hooter" class="form-check-input">
-            <label for="hooter" class="form-check-label text-muted">RA</label>
-          </div>
-           <div class="form-check form-check-inline" id="custome">
-            <input type="checkbox" formControlName="hooterConfig" value="ppe" (change)="HooterSettings($event)"
-              defaultValue="relay" id="relay" class="form-check-input">
-            <label for="relay" class="form-check-label text-muted">PPE</label>
-          </div> 
-          <div class="form-check form-check-inline" id="custome">
-            <input type="checkbox" formControlName="hooterConfig" value="ONB" (change)="HooterSettings($event)"
-              defaultValue="relay" id="relay" class="form-check-input">
-            <label for="relay" class="form-check-label text-muted">ONB</label>
-          </div>
-        </div> -->
+       
         <div class="camera-display" id="input">
-          <div class="form-floating" >
+          <div class="form-floating">
             <input type="text" formControlName="username" placeholder="User name" class="form-control"
               [ngClass]="AddCameraForm.get('username').invalid && AddCameraForm.get('username').touched?'is-invalid':''"
               id="username">
@@ -258,7 +248,7 @@
         </div>
 
         <div class="d-flex justify-centent-center align-items-center mt-3">
-          <h5 class="sub-header me-2 ms-2" style="font-size:1.5rem"> <span class="ms-2">Alert settings</span></h5>
+          <h5 class="sub-header me-2 ms-2" style="font-size:1.3rem"> <span class="ms-2">Alert settings</span></h5>
         </div>
         <div class="wrapper-two" id="input">
 
@@ -275,8 +265,9 @@
               <label for="relay" class="form-check-label text-muted">Relay</label>
             </div>
             <div class="form-check form-check-inline" id="custome">
-              <input type="radio" formControlName="isHooter" value="sensgiz" (change)="hooterOrRelayConfig($event,sensgizDetails)"
-                defaultValue="sensgiz" id="sensgiz" class="form-check-input">
+              <input type="radio" formControlName="isHooter" value="sensgiz"
+                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensgiz"
+                class="form-check-input">
               <label for="sensgiz" class="form-check-label text-muted">Sensgiz</label>
             </div>
             <!-- <div class="form-check form-check-inline" id="custome">
@@ -299,16 +290,17 @@
             <label for="relayIp">Relay IP</label>
           </div>
           <div class="form-floating" *ngIf="isSensgiz">
-          
-          <div class="form-control">
-            <div>
-              
-            <span>Sensgiz Details</span>
-            <span class="float-end">
-              <fa-icon icon="pen-to-square" style="cursor: pointer;" (click)="editSensgiz(sensgizDetails)" ></fa-icon>
-            </span>
+
+            <div class="form-control">
+              <div>
+
+                <span>Sensgiz Details</span>
+                <span class="float-end">
+                  <fa-icon icon="pen-to-square" style="cursor: pointer;"
+                    (click)="editSensgiz(sensgizDetails)"></fa-icon>
+                </span>
+              </div>
             </div>
-          </div>
           </div>
           <!-- altered -->
           <!-- <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
@@ -317,7 +309,25 @@
           </ng-multiselect-dropdown>
 
           </div> -->
+
+
         </div>
+
+
+        <!-- adding report settings  -->
+        <!-- <div id="input" class="d-flex justify-centent-center align-items-center mt-3">
+          <h6 class="sub-header me-2 ms-2" style="font-size:1.3rem"> <span class="ms-2">Report settings</span></h6>
+
+        </div>
+        <div class="" id="input">
+          <div class="form-control">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="checkbox" formControlName="isHooter" value="relay" (change)="hooterOrRelayConfig($event)"
+                defaultValue="relay" id="relay" class="form-check-input">
+              <label for="relay" class="form-check-label text-muted">Email Report</label>
+            </div>
+          </div>
+        </div> -->
 
 
 
@@ -339,6 +349,226 @@
   </div>
 
 </ng-template>
+
+
+
+<!-- template to edit the camera details
+ -->
+ <ng-template let-modal #cameraEditModal>
+  <div class="border">
+    <div class="" id="formContent">
+      <div style="font-family: 'Times New Roman',
+    Times, serif;">
+        <h3>
+          <b>Edit Camera</b>
+        </h3>
+      </div>
+      <button type="button" class="btn btn-default close" aria-label="Close" (click)="modal.close('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form action="" class="" [formGroup]="AddCameraForm" id="addCameraForm">
+        <div class="wrapper-two" id="input">
+          <div class="form-floating">
+            <input type="text"
+              [ngClass]="AddCameraForm.get('cameraname').invalid && AddCameraForm.get('cameraname').touched?'is-invalid':''"
+              formControlName="cameraname" placeholder="Camera name" class="form-control" id="cameraname">
+            <label for="cameraname">Camera Name</label>
+          </div>
+          <div class="form-floating" id="cameraBrand">
+            <!-- <input type="text"
+            [ngClass]="AddCameraForm.get('camera_brand').invalid && AddCameraForm.get('camera_brand').touched?'is-invalid':''"
+            formControlName="camera_brand" placeholder="Camera brand" class="form-control" id="camerabrand">
+          <label for="camerabrand">Camera Brand</label> -->
+            <ng-multiselect-dropdown #singleSelect [placeholder]="'Camera Brand'" [settings]="dropdownSettings2|async"
+              [data]="cameraBrandList|async" formControlName="camera_brand">
+            </ng-multiselect-dropdown>
+            <!-- <label>Camera brand</label> -->
+          </div>
+
+          <div class="form-floating">
+            <input type="text" formControlName="plant" placeholder="Plant" class="form-control"
+              [ngClass]="AddCameraForm.get('plant').invalid && AddCameraForm.get('plant').touched?'is-invalid':''"
+              id="plant">
+            <label for="plant">Plant</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" formControlName="area" placeholder="Area" class="form-control"
+              [ngClass]="AddCameraForm.get('area').invalid && AddCameraForm.get('area').touched?'is-invalid':''"
+              id="Area">
+            <label for="Area">Area</label>
+          </div>
+        </div>
+       
+        <div class="camera-display" id="input">
+          <div class="form-floating">
+            <input type="text" formControlName="username" placeholder="User name" class="form-control"
+              [ngClass]="AddCameraForm.get('username').invalid && AddCameraForm.get('username').touched?'is-invalid':''"
+              id="username">
+            <label for="username">User name</label>
+          </div>
+          <div class="form-floating">
+          </div>
+          <div></div>
+
+
+          <div class="form-floating">
+            <input type="text" type="password" formControlName="password" placeholder="Password" class="form-control"
+              [ngClass]="AddCameraForm.get('password').invalid && AddCameraForm.get('password').touched?'is-invalid':''"
+              id="password">
+            <label for="password">Password</label>
+          </div>
+          <div class="icon-circle-medium  icon-circle-lg bg-info-light">
+            <div class="or">
+              <div class="ms-2 me-2 mt-2 mb-2">
+                or
+              </div>
+            </div>
+          </div>
+          <div class="">
+            <div class="form-floating">
+              <input type="text" formControlName="rtsp_url" placeholder="User name" class="form-control"
+                [ngClass]="AddCameraForm.get('rtsp_url').invalid && AddCameraForm.get('rtsp_url').touched?'is-invalid':''"
+                id="username">
+              <label for="username">Rtsp Url</label>
+            </div>
+          </div>
+          <div class="form-floating">
+            <input type="text" formControlName="cameraip" placeholder="Camera ip" class="form-control"
+              [ngClass]="AddCameraForm.get('cameraip').invalid && AddCameraForm.get('cameraip').touched?'is-invalid':''"
+              id="cameraip">
+            <label for="cameraip">Camera IP</label>
+          </div>
+
+          <div></div>
+          <div></div>
+          <div class="form-floating">
+            <input type="text" formControlName="port" placeholder="Port" class="form-control"
+              [ngClass]="AddCameraForm.get('port').invalid && AddCameraForm.get('port').touched?'is-invalid':''"
+              id="port">
+            <label for="port">Port</label>
+          </div>
+        </div>
+
+        <div class="d-flex justify-centent-center align-items-center mt-3">
+          <h5 class="sub-header me-2 ms-2" style="font-size:1.3rem"> <span class="ms-2">Alert settings</span></h5>
+        </div>
+        <div class="wrapper-two" id="input">
+
+
+          <div class="form-floating form-control p-3">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="hooter" (change)="hooterOrRelayConfig($event)"
+                defaultValue="hooter" id="hooter" class="form-check-input">
+              <label for="hooter" class="form-check-label text-muted">Hooter</label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="relay" (change)="hooterOrRelayConfig($event)"
+                defaultValue="relay" id="relay" class="form-check-input">
+              <label for="relay" class="form-check-label text-muted">Relay</label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="sensgiz"
+                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensgiz"
+                class="form-check-input">
+              <label for="sensgiz" class="form-check-label text-muted">Sensgiz</label>
+            </div>
+            <!-- <div class="form-check form-check-inline" id="custome">
+              <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
+                defaultValue="voiceAlert" id="voiceAlert" class="form-check-input">
+              <label for="voiceAlert" class="form-check-label text-muted">Voice Alert</label>
+            </div> -->
+          </div>
+          <div class="form-floating" *ngIf="isHooter">
+            <input type="text" formControlName="hooterIp" placeholder="User name" class="form-control"
+              [ngClass]="AddCameraForm.get('hooterIp').invalid && AddCameraForm.get('hooterIp').touched?'is-invalid':''"
+              id="hooterIp">
+            <label for="hooterIp">Hooter IP</label>
+          </div>
+          <div class="form-floating" *ngIf="isRelay">
+
+            <input type="text" formControlName="relayIp" placeholder="User name" class="form-control"
+              [ngClass]="AddCameraForm.get('relayIp').invalid && AddCameraForm.get('relayIp').touched?'is-invalid':''"
+              id="relayIp">
+            <label for="relayIp">Relay IP</label>
+          </div>
+          <div class="form-floating" *ngIf="isSensgiz">
+
+            <div class="form-control">
+              <div>
+
+                <span>Sensgiz Details</span>
+                <span class="float-end">
+                  <fa-icon icon="pen-to-square" style="cursor: pointer;"
+                    (click)="editSensgiz(sensgizDetails)"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- altered -->
+          <!-- <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
+            <ng-multiselect-dropdown #singleSelect [placeholder]="'Language'" [settings]="dropdownSettings2|async"
+            [data]="voiceLanguages|async" formControlName="voiceLang" >
+          </ng-multiselect-dropdown>
+
+          </div> -->
+
+
+        </div>
+
+
+        <!-- adding report settings  -->
+        <!-- <div id="input" class="d-flex justify-centent-center align-items-center mt-3">
+          <h6 class="sub-header me-2 ms-2" style="font-size:1.3rem"> <span class="ms-2">Report settings</span></h6>
+
+        </div>
+        <div class="" id="input">
+          <div class="form-control">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="checkbox" formControlName="isHooter" value="relay" (change)="hooterOrRelayConfig($event)"
+                defaultValue="relay" id="relay" class="form-check-input">
+              <label for="relay" class="form-check-label text-muted">Email Report</label>
+            </div>
+          </div>
+        </div> -->
+
+
+
+        <!-- </div> -->
+        <div class="alert alert-success mb-2 mt-2" *ngIf="isSuccess" role="alert">
+          {{responseMessage}}
+        </div>
+        <div class="alert alert-danger mb-2 mt-3" *ngIf="isFail" role="alert">
+          {{responseMessage}}
+        </div>
+        <button type="submit" class="mt-3" (click)="OnAddCameraDetails()" [disabled]="(!isFormValid)||isLoading"><span
+            *ngIf="!isLoading">Submit</span>
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" *ngIf="isLoading"></span>
+
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 <ng-template let-modal #stopAppModal>
   <div class="modal-body">

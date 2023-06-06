@@ -12,6 +12,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { LightboxModule } from 'ngx-lightbox';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import FileSaver from 'file-saver';
+import { VideoModalComponent } from './video-modal/video-modal.component';
 
 
 
@@ -19,6 +20,8 @@ import FileSaver from 'file-saver';
   declarations: [
     // NgbdSortableHeader,
 
+  
+    VideoModalComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ import FileSaver from 'file-saver';
     NgxImageZoomModule,
     NgMultiSelectDropDownModule,LightboxModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    VideoModalComponent
            
             
             ]

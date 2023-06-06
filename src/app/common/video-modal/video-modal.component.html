@@ -1,0 +1,27 @@
+<ng-template #modal let-modal>
+    <div class="modal-header" style="background:transparent !important">
+        <button type="button" class="btn btn-default close float-end" aria-label="Close" (click)="modal.close('Cross click')">
+            <span aria-hidden="true" class="text-dark">&times;</span>
+        </button>
+    </div>
+        <div class="modal video-modal" style="background-color: transparent !important; border: 2px solid white;border-radius:7px">
+
+            
+            <ngb-carousel *ngIf="Data" class="">
+                <ng-template ngbSlide *ngFor="let data of Data;">
+                    <div class="video-container">
+                        <video width="500" height="300" [poster]="data.poster_image" preload="none" controls>
+                            <source [src]="data.video_name" type="video/mp4">
+
+                        </video>
+                    </div>
+                    <div class="carousel-caption">
+                        <div><span class="tex">Camera Name :</span><b>{{data.camera_name}}</b></div>
+                        <div><span class="tex">Coin ID :</span><b>{{data.coin_id}}</b></div>
+                    </div>
+                </ng-template>
+
+
+            </ngb-carousel>
+        </div>
+</ng-template>

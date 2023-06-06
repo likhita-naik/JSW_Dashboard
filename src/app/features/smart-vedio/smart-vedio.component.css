@@ -46,3 +46,7 @@
     border: none;
     
 }
+
+.modal {
+    --bs-modal-bg:transparent !important;
+  }

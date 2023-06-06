@@ -359,10 +359,10 @@ DatewiseViolations(from: any, to: any, page?: number|null, size?: number|null, c
 
 }
 
-notification(message: string, action?: string) {
+notification(message: string, action?: string,duration?:number) {
   console.log('snackbar')
   this.snackbar.open(message, action ? action : '', ({
-    duration: 4000, panelClass: ['error'],
+    duration:duration?duration:4000, panelClass: ['error'],
     horizontalPosition: 'center',
     verticalPosition: 'bottom',
   })

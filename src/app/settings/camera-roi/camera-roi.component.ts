@@ -352,15 +352,14 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.allCameraData)
     // this.canvasContainer.nativeElement.
     this.canvas.on('mouse:up', (options: any) => {
-      console.log('mouse up', options, options.e.type)
-      if (options.e.type === 'mouseup') {
+      console.log(options,'mouse up')
         if (this.roiType == 1 || this.AddCCRoi) {
           if (options.button === 1) {
             if (!((options.transform == null ? false : options.transform.action === 'modifyPolygon' ? false : true)) && !this.isEdit
             ) {
               console.log('polygon  is 1creating')
 
-              this.getClickCoords(options.e);
+              this.getClickCoords(options);
 
             }
           }
@@ -376,7 +375,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
           }
-        }
+        
       }
 
       if (this.roiType == 2 && !this.isAddCC) {
@@ -388,11 +387,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.canvas.on('mouse:down', (event: any) => {
-      console.log('mouse down')
+      //console.log('mouse down')
 
 
-
-      if (event.type == 'mousedown') {
         //this.CreateRectangle(event)
         if (this.roiType === 1 || this.isAddCC) {
           if (this.isAddROI || this.isAddCC
@@ -411,7 +408,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }
           }
-        }
+        
         else if (this.roiType === 2) {
           if ((event.transform == null ? true : event.transform.action === 'drag' ? false : true)) {
             this.addingShapeOnMouseDown(event)
@@ -434,8 +431,6 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log('Touch drag event:', event);
         });
 
-        const context = this.canvas.getContext("2d");
-        console.log(context, 'context')
       }
       })
 
@@ -447,81 +442,86 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.Modify()
     })
 
+    // const context = this.canvas.getContext("2d");
 
-    //toouch events
-    var cContainer:any = document.getElementById('canvas-container')
-    cContainer=cContainer.getContext("2d")
-    cContainer.addEventListener("touchstart", (options: any) => {
-      console.log("touch start", options)
-      console.log(options)
-      if (this.roiType == 1 || this.AddCCRoi) {
-        if (!this.isEdit
-        ) {
-          console.log('polygon  is 1creating')
+    // //toouch events
+    // var cContainer:any = document.getElementById('canvas-container')
+    // //cContainer=cContainer.getContext("2d")
+    // cContainer.addEventListener("touch:end", (options: any) => {
+    //   console.log("touch start", options)
+    //   this.server.notification(options.JSON(),'okay',100000 )
+    //  // console.log(options)
+    //   if (this.roiType == 1 || this.AddCCRoi) {
+    //     if (!this.isEdit
+    //     ) {
+    //       console.log('polygon  is 1creating')
 
-          this.getClickCoords(options);
+    //       this.getClickCoords(options);
 
-        }
+    //     }
 
-        if (this.isAddROI || this.isAddCC) {
-          if (this.newROIPoints.length < 4) {
-            console.log('polygon is  3creating')
-            this.isPolygonDrawn = false;
-          } else {
-            console.log('polygon is  3creating')
-            this.isPolygonDrawn = true;
-          }
-        }
-
-
-      }
-      else if (this.roiType === 2) {
-
-        this.addingShapeOnMouseDown(event)
+    //     if (this.isAddROI || this.isAddCC) {
+    //       if (this.newROIPoints.length < 4) {
+    //         console.log('polygon is  3creating')
+    //         this.isPolygonDrawn = false;
+    //       } else {
+    //         console.log('polygon is  3creating')
+    //         this.isPolygonDrawn = true;
+    //       }
+    //     }
 
 
-      }
+    //   }
+    //   else if (this.roiType === 2) {
+
+    //     this.addingShapeOnMouseDown(event)
+
+
+    //   }
 
 
 
 
-    }, false);
-    cContainer.addEventListener("touchmove", () => { console.log("touch move") }, false);
-    cContainer.addEventListener("touchcancel", () => { console.log("touch cancel") }, false);
-    cContainer.addEventListener("touchend", (options: any) => {
+    // }, false);
+    // this.canvas.on("touchmove", () => { console.log("touch move") }, false);
+    // cContainer.addEventListener("touchcancel", () => { console.log("touch cancel") }, false);
+    // this.canvas.on("touch:end", (options: any) => {
 
-      // console.log("touch end")
-      // if (this.roiType == 1 || this.AddCCRoi) {
-      //   if (!this.isEdit
-      //   ) {
-      //     console.log('polygon  is 1creating on mobile')
+    //   console.log("touch end",options)
+    //   if (this.roiType == 1 || this.AddCCRoi) {
+    //     if (!this.isEdit
+    //     ) {
+    //       console.log('polygon  is 1creating on mobile')
 
-      //     this.getClickCoords(options);
+    //       this.getClickCoords(options);
 
-      //   }
+    //     }
 
-      //   if (this.isAddROI || this.isAddCC) {
-      //     if (this.newROIPoints.length < 4) {
-      //       console.log('touch 1')
-      //       this.isPolygonDrawn = false;
-      //     } else {
-      //       console.log('touch2')
-      //       this.isPolygonDrawn = true;
-      //     }
-      //   }
-
-
-      // }
-      // else if (this.roiType === 2) {
-
-      //   this.addingShapeOnMouseDown(event)
+    //     if (this.isAddROI || this.isAddCC) {
+    //       if (this.newROIPoints.length < 4) {
+    //         console.log('touch 1')
+    //         this.isPolygonDrawn = false;
+    //       } else {
+    //         console.log('touch2')
+    //         this.isPolygonDrawn = true;
+    //       }
+    //     }
 
 
-      // }
-    },
-      false);
+    //   }
+    //   else if (this.roiType === 2) {
+
+    //     this.addingShapeOnMouseDown(event)
+
+
+    //   }
+    // },
+    //   true);
 
   }
+
+
+  
   canvasSetup() {
     var cContainer = document.getElementById('canvas-container')
     console.log(cContainer, 'canvas')
@@ -551,8 +551,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       // this.canvas.renderAll()
-      // console.log(this.canvas.height)
-      // console.log(this.canvas.width)
+      console.log(this.canvas.height,'canvas width')
+      console.log(this.canvas.width,'canvas height')
       //this.canvas.add(oImg);
     });
     this.cameraData.length > 0 ? this.cameraData[0].roi_data !== null ? this.GetPanelPoints() : '' : ''
@@ -668,11 +668,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   getClickCoords(event: any) {
-    console.log(event)
+    console.log(event,'in get click function')
     if (this.isAddROI) {
       this.newPt = {
-        x: Math.round(event.pointer.X),
-        y: Math.round(event.pointer.Y)
+        x: Math.round(event.pointer.x),
+        y: Math.round(event.pointer.y)
       };
       this.newROIPoints.push(this.newPt);
       console.log(this.newPt, this.newROIPoints)
@@ -684,6 +684,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       // if (this.points.length > 3) {
       //   this.isPolygonDrawn = true;
       // }
+    }
+
+    if(event.e.type=='touchend'){
+       if((event.e.touches.length)==2){
+       {alert('you touched twice')
+      this.RoiName()}
+       }
     }
   }
 

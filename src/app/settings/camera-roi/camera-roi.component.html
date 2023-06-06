@@ -4,7 +4,7 @@
     </div>
 
     <div class="row mt-3 mb-3" *ngIf="isCameraData" id="analytic">
-        <div class="col-3">
+        <div class="col-xl-3 col-md-6 col-xs-12 col-sm-12">
             <div class="card analytics">
                 <div class="card-body">
                     <h5 class="text-muted">Camera Name</h5>
@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-xl-3 col-md-6 col-xs-12 col-sm-12">
             <div class="card analytics">
                 <div class="card-body">
                     <h5 class="text-muted">Camera IP</h5>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-xl-3 col-md-6 col-xs-12 col-sm-12">
             <div class="card analytics">
                 <div class="card-body">
                     <h5 class="text-muted">Area</h5>
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-xl-3 col-md-6 col-xs-12 col-sm-12">
             <div class="card analytics">
                 <div class="card-body">
                     <h5 class="text-muted">Plant</h5>
@@ -51,14 +51,14 @@
             <div class="col-12">
                 <div class="">
                     <div class="row">
-                        <div class="col-9 p-2 border-bottom">
+                        <div class="col-xs-9 col-md-9 col-sm-12 col-xs-12 p-2 border-bottom">
                             <div class="row">
                                 <!-- <div class="col-4">
                             <p-menubar styleClass="w-full btn default text-white" (onClick)="onCCTypeSelect($event)"
                                 [style]="{'width':'inherit','color':'white','padding':'0px','background':'#42a8a8 !important'}"
                                 [model]="ccTypeList"></p-menubar>
                                 </div> -->
-                                <div class="col-4">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-xl-4">
                                     <button class="me-2 btn success" (click)="AddNewROI()">
                                         <fa-icon icon="plus" class="me-1"></fa-icon>Danger Zone ROI
                                     </button>
@@ -81,7 +81,7 @@
                         </button>
 
                     </div> -->
-                        <div class="col-3 p-2 border-bottom">
+                        <div class="col-xl-3 col-md-12 col-xs-12 col-sm-12 p-2 border-bottom">
                             <div class="float-end">
                                 <!-- <button class="btn default me-2" *ngIf="isEdit" (click)="SaveEditedRoi()">Save
                                 changes</button> -->
@@ -112,12 +112,14 @@
         <div class="row mb-3">
 
             <div class="col-12">
-                <div class="">
-                    <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
+                <div class="" id="container-canvas">
+                    <ng-scrollbar #scrollable   track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
                         [disabled]="false">
+                        
+
                     <div id="canvas-container" class="d-flex justify-content-center" #canvasContainer>
                         
-                        <canvas id="canvasROI" class="canvas-class" height="auto" width="auto"></canvas>
+                        <canvas id="canvasROI" style="cursor:move !important" class="canvas-class" height="100%" width="100%"></canvas>
                     </div>
                     </ng-scrollbar>
                 </div>
@@ -129,8 +131,10 @@
             <!-- *ngIf="allCameraData.length>0" -->
             <div class="card">
                 <div class="card-header"><b> ROI list</b></div>
-                <div class="">
-                    <table class="table">
+               
+                <div class="table-responsive" >
+               
+                    <table class="table table-responsive">
                         <thead>
                             <tr style="text-align:center;">
                                 <th scope="col">SI no</th>
@@ -160,6 +164,7 @@
 
                     </table>
                 </div>
+
                 <!--traffic count details  -->
                 <div class="class-header">Traffic Count Details</div>
                 <table>
@@ -211,7 +216,9 @@
                 <div class="border" style="border-radius: 8.5px;">
                     <ul class="list-group">
 
-                        <li class="list-group-item" *ngIf="cameraData[0].roi_data.length>0">
+                        <li class="list-group-item p-3" id="table" *ngIf="cameraData[0].roi_data.length>0">
+                            <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
+                            [disabled]="false">
                             <h5 class="" style="color: #178489;">Danger Zone Details:</h5>
                             <table class="table" *ngIf="cameraData[0].roi_data.length>0">
                                 <thead>
@@ -241,6 +248,7 @@
                                 </tbody>
 
                             </table>
+                            </ng-scrollbar>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
@@ -248,7 +256,7 @@
 
 
                                     <div class="input-group">
-                                        <span class="row col-2">
+                                        <span class="row col-xl-2 col-xs-12 col-sm-12 col-md-12 me-1">
                                             <h5 class="" style="color: #178489;">PPE :</h5>
                                         </span>
                                         <div class="" [formGroup]="ppeForm" style="pointer-events:all;">
@@ -277,196 +285,7 @@
 
 
 
-                        <!-- Vehicle crowd settings -->
-                        <!-- <li class="list-group-item">
-                            <div class="input-group">
-                                <span class="row col-sm-2">
-                                    <h5 class="">Vehicle:</h5>
-                                </span>
-                                <div class="" [formGroup]="vehicleForm">
-                                    <div class="form-check form-check-inline" id="custome">
-                                        <input type="checkbox" name="" id="type" defaultValue="type"
-                                            (change)="VehicleConfig($event)" formControlName="type"
-                                            class="form-check-input">
-                                        <label for="type" class="form-check-label text-muted">Type</label>
-                                    </div>
-                                    <div class="form-check form-check-inline" id="custome">
-                                        <input type="checkbox" name="" id="make" defaultValue="make"
-                                            formControlName="make" (change)="VehicleConfig($event)"
-                                            class="form-check-input">
-                                        <label for="make" class="form-check-label text-muted">Make</label>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </li> -->
-                        <!-- person  crowd settings -->
-                        <!-- <li class="list-group-item">
-                            <div class="">
-                                <span class="row col-sm-2">
-                                    <h5 class="" style="color: #178489;">Crowd Count Details :</h5>
-                                </span>
-                                <div class="d-flex justify-content-end align-items-center mt-3 mb-3">
-
-                                    <span>
-                                        <button class="btn default" (click)="AddCCForFrame()">
-                                            <fa-icon icon="plus" class="me-2"></fa-icon> Whole
-                                            Frame
-                                        </button>
-                                    </span>
-                                </div>
-                                <div style="display:none;" id="ccWholeFrame">
-
-
-                                </div>
-
-                                <div *ngIf="cameraData.length>0">
-                                    <table class="table" *ngIf="cameraData[0].cr_data.length>0">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">
-                                                    SI no
-                                                </th>
-                                                <th scope="col">Crowd Count Roi Name</th>
-                                                <th scope="col">Details</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let cr_data of CcRois;let i=index">
-                                                <td>{{i+1}}</td>
-                                                <td>{{cr_data.cr_data.area_name?cr_data.cr_data.area_name:'Frame'}}</td>
-
-                                                <td>
-                                                    <ul>
-                                                        <li *ngFor="let class of cr_data.cr_data.data_object">
-
-
-                                                            <span class="mb-3"> <b>{{class.class_name}}</b> </span>
-                                                            <br /> minimum : {{class.min_count}} , maximum :
-                                                            {{class.max_count }}
-                                                            <br />
-                                                        </li>
-                                                    </ul>
-                                                </td>
-                                                <td> <button (click)="isDelete(i,deleteCCModal)"
-                                                        class="btn btn-sm danger">Delete</button></td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </li> -->
-                        <!-- vehicle crowd settings -->
-                        <!-- <li class="list-group-item">
-                <div class="class-header"><h5 style="color: #178489;"> Traffic Count Details</h5></div>
-                 <div class="col-4 p-2 border-bottom">
-                     wwwwl
-                    </div>
-                <table class="table" *ngIf="cameraData[0].tc_data.length>0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Index</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Class Id</th>
-                            <th></th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let tc of cameraData[0].tc_data;let in=index">
-                            <td>{{in+1}}</td>
-                            <td>{{tc.label}}</td>
-                            <td>
-                                <div *ngFor="let class of tc.classes">{{class}}
-
-                                </div>
-                            </td>
-                            <td><button (click)="OnDeleteTCROI(in)" class="btn btn-default">
-                                    <fa-icon icon="trash"></fa-icon>
-                                </button> </td>
-                            <hr />
-                        </tr>
-                    </tbody>
-                </table>
-                        </li> -->
-                        <!-- <li class="list-group-item">
-                            <div class="class-header">
-                                <h5 style="color: #178489;"> Traffic Count Details :</h5>
-                            </div>
-                            <div class="col-4 p-2 border-bottom">
-
-                            </div>
-                            <div *ngIf="cameraData.length>0">
-                                <table class="table" *ngIf="cameraData[0].tc_data.length>0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Index</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Class Id</th>
-                                            <th></th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let tc of cameraData[0].tc_data;let in=index">
-                                            <td>{{in+1}}</td>
-                                            <td>{{tc.area_name}}</td>
-                                            <td>
-                                                <div *ngFor="let class of tc.class_name">{{class}}
-
-                                                </div>
-                                            </td>
-                                            <td><button (click)="IsDeleteTC(deleteTCModal,in)" class="btn btn-default">
-                                                    <fa-icon icon="trash"></fa-icon>
-                                                </button> </td>
-                                            <hr />
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li> -->
-
-
-                        <!-- fire and smoke ai analytics settings -->
-                        <!-- <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-10">
-
-
-                                    <div class="input-group">
-                                        <span class="row col-2">
-                                            <h5 class="" style="color: #178489;">Environmental Change</h5>
-                                        </span>
-                                        <div class="" [formGroup]="fireSmokeForm" style="pointer-events:all;">
-                                            <div class="form-check form-check-inline" id="custome">
-                                                <input type="checkbox" id="fire" value="fire" defaultValue="helmet"
-                                                    (change)="PPE_Config($event)" formControlName="fire"
-                                                    class="form-check-input">
-                                                <label for="fire" class="form-check-label text-muted">Fire</label>
-                                            </div>
-                                            <div class="form-check form-check-inline" id="custome">
-                                                <input type="checkbox" formControlName="smoke" name="" value="smoke"
-                                                    (change)="PPE_Config($event)" defaultValue="smoke" id="smoke"
-                                                    class="form-check-input">
-                                                <label for="smoke" class="form-check-label text-muted">Smoke</label>
-                                            </div>
-                                            <div class="form-check form-check-inline" id="custome">
-                                                <input type="checkbox" formControlName="water" name="" value="water"
-                                                    (change)="PPE_Config($event)" defaultValue="water" id="water"
-                                                    class="form-check-input">
-                                                <label for="smoke" class="form-check-label text-muted">Water</label>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </li> -->
-
+                      
                     </ul>
                 </div>
             </div>
@@ -871,55 +690,6 @@
 
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- <div class="form-inline row" id="custome" [formGroup]="CrowdForm">
-                    <div class="col-sm-3">
-                        <input type="number" [ngClass]="{'is-invalid':(CrowdForm.get('min').invalid)}"
-                            formControlName="min" pattern="\d+" name="" min="0" id="min" class="form-control"
-                            placeholder="min">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="number" [ngClass]="{'is-invalid':(CrowdForm.get('max').invalid)}"
-                            formControlName="max" pattern="\d+" name="" min="0" id="min" class="form-control"
-                            placeholder="max">
-                    </div>
-                </div>
-                <div class="mb-3 mt-3 d-flex justify-content-center">
-                    <div class="form-check form-check-inline" id="custome">
-                        <input type="checkbox" [formControl]="classIDPerson" [defaultValue]="'person'"
-                            [value]="'person'" checked class="form-check-input" (change)="ClassId($event)" name=""
-                            id="0">
-                        <label for="0" class="form-check-label">Person</label>
-                    </div>
-                    <div class="form-check form-check-inline" id="custome">
-                        <input type="checkbox" [formControl]="classIDCar" [value]="'car'" [defaultValue]="'car'"
-                            class="form-check-input" (change)="ClassId($event)" name="" id="1">
-                        <label for="1" class="form-check-label">Car</label>
-                    </div>
-                    <div class="form-check form-check-inline" id="custome">
-                        <input type="checkbox" [formControl]="classIDBike" [value]="'bike'" [defaultValue]="'bike'"
-                            class="form-check-input" (change)="ClassId($event)" name="" id="2">
-                        <label for="2" class="form-check-label">Bike</label>
-                    </div>
-                    <div class="form-check form-check-inline" id="custome">
-                        <input type="checkbox" [formControl]="classIDTruck" [value]="'truck'" [defaultValue]="'truck'"
-                            class="form-check-input" (change)="ClassId($event)" name="" id="3">
-                        <label for="3" class="form-check-label">Truck</label>
-                    </div>
-                </div> -->
                 <button class="btn success ms-1 float-end" type="submit" (click)="OnAddingNewCCRoi()"
                     [disabled]="CCValid<=0||crowdCountRoiName.invalid">Submit</button>
                 <button class="btn danger me-1 float-end" (click)="modal.close('Cross click')">cancel</button>

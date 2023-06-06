@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Moment } from 'moment';
 import { Observable, of } from 'rxjs';
+import { VideoModalComponent } from 'src/app/common/video-modal/video-modal.component';
 
 @Component({
   selector: 'app-smart-vedio',
@@ -11,7 +12,7 @@ export class SmartVedioComponent {
   selectedMoments: { startDate: Moment | any, endDate: Moment | any }
   fromDate:any
   toDate:any
-  
+  @ViewChild('modal') private modalComponent: VideoModalComponent
   Data:any[]=[{
     si_no:1,
     coin_id:"Coin_25",
@@ -61,6 +62,12 @@ export class SmartVedioComponent {
   OnCoinIdSelect(event:any){
   
 
+  }
+
+
+  openVideoModal()
+  {
+    this.modalComponent.open()
   }
 
 }

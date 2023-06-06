@@ -352,12 +352,14 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     if (event.target.value == 'hooter') {
       this.isHooter = true
       this.isRelay = false
+      this.isSensgiz=false
       this.isVoiceAlert = false
 
     }
     if (event.target.value == 'relay') {
       this.isHooter = false
       this.isRelay = true
+      this.isSensgiz=false
       this.isVoiceAlert = false
 
     }
@@ -366,13 +368,16 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       this.isVoiceAlert = true
       this.isHooter = false
       this.isRelay = false
+      this.isSensgiz=false
+
     }
     if (event.target.value == 'sensgiz') {
       this.isVoiceAlert = false
       this.isSensgiz=true
-      this.SensgizModal(modal)
       this.isHooter = false
       this.isRelay = false
+      this.SensgizModal(modal)
+    
     }
 
 
@@ -458,6 +463,22 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             alarm_type: 'voiceAlert',
             alarm_ip_address: this.AddCameraForm.value['voiceLanguage'],
+            ai_solution: []
+
+          }
+        }
+        else if (this.isSensgiz) {
+          var data1: any = {
+            cameraname: this.AddCameraForm.value['cameraname'],
+            camera_brand: this.AddCameraForm.value['camera_brand'][0].text,
+            plant: this.AddCameraForm.value['plant'],
+            area: this.AddCameraForm.value['area'],
+            rtsp_url: this.AddCameraForm.value['rtsp_url'],
+            alarm_type: 'sensgiz',
+            // alarm_type: null,
+            alarm_ip_address: null,
+            coin_details:this.SensGizInfo,
+            // alarm_ip_address: this.AddCameraForm.value['voiceLanguage'],
             ai_solution: []
 
           }
@@ -549,6 +570,24 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             port: this.AddCameraForm.value['port'],
             alarm_type: 'relay',
             alarm_ip_address: this.AddCameraForm.value['relayIp'],
+            ai_solution: []
+          }
+        }
+        else if(this.isSensgiz){
+          var data: any = {
+            cameraname: this.AddCameraForm.value['cameraname'],
+            camera_brand: this.AddCameraForm.value['camera_brand'][0].text,
+            plant: this.AddCameraForm.value['plant'],
+            area: this.AddCameraForm.value['area'],
+            username: this.AddCameraForm.value['username'],
+            password: this.AddCameraForm.value['password'],
+            cameraip: this.AddCameraForm.value['cameraip'],
+            port: this.AddCameraForm.value['port'],
+            alarm_type: 'sensgiz',
+            alarm_ip_address: null,
+            coin_details:this.SensGizInfo,
+
+            // alarm_ip_address: this.AddCameraForm.value['relayIp'],
             ai_solution: []
           }
         }
@@ -932,15 +971,29 @@ SensgizModal(modal:any){
 
 
 SaveSensgizInfo(){
-  this.sensgiz.controls.forEach((element:any) => {
-    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle']})
+  this.sensgiz.controls.forEach((element:any,index:number) => {
+    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle'],coin_key_id:index})
     
   }); 
   this.sensgizModal.close()
   console.log(this.SensGizInfo)
 }
 
+EditCameraModal(modal:any,data:any){
+  this.AddCameraForm.get('cameraname').setValue(data.cameraname)
+  this.AddCameraForm.get('camera_brand').setValue(data.camera_brand)
+  this.AddCameraForm.get('plant').setValue(data.plant)
+  this.AddCameraForm.get('area').setValue(data.area)
+  this.AddCameraForm.get('cameraip').setValue(data.camera_ip)
+  // this.AddCameraForm.get('password').setValue(data.password)
+  // this.AddCameraForm.get('useraname').setValue(data.camera_name)
+  // this.AddCameraForm.get('port').setValue(data.camera_name)
 
+
+
+
+  this.modalService.open(modal,{size:'lg'})
+}
   ngOnDestroy(): void {
     this.modalService.dismissAll()
   }

@@ -138,7 +138,7 @@ $disable-background-color: #eceeef;
        }
  
        span{
-         max-width: 70px !important;
+         max-width: 80px !important;
          text-overflow: clip !important;
        }
      }
@@ -358,7 +358,7 @@ color:white ;
     }
     .dropdown-multiselect__caret{
       margin: 10px !important;
-      width: 20px !important;
+      width: 25px !important;
     }
     .selected-item {
       border: none !important;
@@ -728,4 +728,34 @@ p-menubar{
   border: none !important;
   box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
 
+}
+
+
+ng-scrollbar {
+  --scrollbar-size: 20px;
+  --scrollbar-thumb-color: rgb(155, 154, 154);
+  --scrollbar-hover-size: 20px;
+  --scrollbar-track-color: rgba(241, 241, 241, 0);
+  --scrollbar-border-radius: 10px;
+
+
+  // ::ng-deep {
+  //   .ng-scroll-viewport{
+  //     padding: 1em;
+  //   }
+  // }
+}
+
+
+// .modal {
+//   --bs-modal-bg:transparent;
+// }
+
+
+.ng-scroll-viewport {
+  overscroll-behavior: unset !important;
+}
+
+.ng-scroll-viewport-wrapper{
+  overflow: scroll !important;
 }

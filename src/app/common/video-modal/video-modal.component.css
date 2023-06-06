@@ -1,0 +1,31 @@
+.video-modal{
+    display: flex;
+    width: inherit;
+    height: inherit;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent !important;
+    justify-content: center;
+}
+
+
+.video-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ width: 50rem;
+ height: 35rem;
+
+
+
+}
+
+
+.modal {
+  --bs-modal-bg:transparent;
+}
+
+.modal-header{
+    background-color: transparent !important;
+    color: white;
+}

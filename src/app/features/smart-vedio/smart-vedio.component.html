@@ -34,7 +34,7 @@
             
             </div>
         </div>
-        <table class="table table-striped mt-3">
+        <table class="table mt-3">
             <thead style="border:2px solid #e0dfdf;border-radius:5px;">
                 <tr>
 
@@ -49,7 +49,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let data of Data;let i=index">
+                <tr *ngFor="let data of Data;let i=index" class="p-3">
                     <td>{{data.si_no}}</td>
                     <td>{{data.coin_id}}</td>
 
@@ -62,7 +62,7 @@
                         
                     </div></td> -->
                     <td>
-                        <div class="btn-icon" ><fa-icon icon="video"></fa-icon></div>
+                        <div class="btn-icon" (click)="openVideoModal()" ><fa-icon icon="video"></fa-icon></div>
                     </td>
 
                 </tr>
@@ -72,3 +72,6 @@
     </div>
 
 </div>
+
+<app-video-modal #modal [Data]="Data"
+></app-video-modal>
