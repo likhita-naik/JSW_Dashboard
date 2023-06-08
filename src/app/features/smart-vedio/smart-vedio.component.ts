@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Moment } from 'moment';
 import { Observable, of } from 'rxjs';
 import { VideoModalComponent } from 'src/app/common/video-modal/video-modal.component';
@@ -8,10 +8,11 @@ import { VideoModalComponent } from 'src/app/common/video-modal/video-modal.comp
   templateUrl: './smart-vedio.component.html',
   styleUrls: ['./smart-vedio.component.css']
 })
-export class SmartVedioComponent {
+export class SmartVedioComponent implements AfterViewInit {
   selectedMoments: { startDate: Moment | any, endDate: Moment | any }
   fromDate:any
   toDate:any
+  selectedVideoId:string
   @ViewChild('modal') private modalComponent: VideoModalComponent
   Data:any[]=[{
     si_no:1,
@@ -53,6 +54,10 @@ export class SmartVedioComponent {
   cameraList:Observable<any[]>=of([])
   selectedCoinId:any
   selectedCamera:any
+constructor(){
+
+}
+
   dateUpdated(event:any){
     console.log(event)
     this.fromDate=this.selectedMoments.startDate.format('YYYY-MM-DD HH:mm:ss')
@@ -65,9 +70,14 @@ export class SmartVedioComponent {
   }
 
 
-  openVideoModal()
+  openVideoModal(id:number)
   {
+    this.selectedVideoId= String(id)
     this.modalComponent.open()
+  }
+ 
+  ngAfterViewInit(): void {
+   
   }
 
 }

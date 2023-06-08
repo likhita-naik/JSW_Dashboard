@@ -32,7 +32,7 @@ export interface ROI {
   styleUrls: ['./camera-roi.component.css']
 })
 
-export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   cameraData: any = {}
   CameraDataObservable: Observable<any> = of({})
   ID: string
@@ -43,9 +43,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   newROIPoints: polygonPoints[] = []
   imageName: string
   isAddROI: boolean = false
-  CcRois: any[] = []
+  CcRois:any[]=[]
   newPt: any
   newROI: any
+  isFire:boolean=false
   isPolygonDrawn: boolean = false
   isEdit: boolean = false
   isLock1: boolean = false
@@ -74,70 +75,83 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   TCLineList: any[] = []
   isAddCC: boolean = false
   tempTCCanvas: any[] = []
-  ppeObjects: any[] = []
-  raObjects: any[] = []
-  ccObjects: any[] = []
-  ppeAlarmObjects: any[] = []
-  raAlarmObjects: any[] = []
-  CCValid: number = 0
-  CCpoints: any[] = []
-  CCClasses: any[] = []
-  AISolutions: any[] = []
-
-  CCObjectCounts: any[] = []
-  CCObjectsCount: any[] = []
-  fireAndSmoke = {
-    fire: false,
-    smoke: false,
-  }
-
-  ccObjectsMinMax: any[] = [new FormGroup({
-    object: new FormControl('person'),
-    person: new FormControl(true, Validators.requiredTrue),
-    min: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/)),
-    max: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/))
-  }), new FormGroup({
-    object: new FormControl('car'),
-    car: new FormControl(false, Validators.requiredTrue),
-    min: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/)),
-    max: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/))
-  }),
-  new FormGroup({
-    object: new FormControl('truck'),
-    truck: new FormControl(false, Validators.requiredTrue),
-    min: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/)),
-    max: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/))
-  }),
-
-  new FormGroup({
-    object: new FormControl('bike'),
-    bike: new FormControl(false, Validators.requiredTrue),
-    min: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/)),
-    max: new FormControl(0, Validators.pattern(/^[^-\D]\d*$/))
-
-  }),
-  ]
+  ppeObjects:any[]=[]
+  raObjects:any[]=[]
+  ccObjects:any[]=[]
+  ppeAlarmObjects:any[]=[]
+  raAlarmObjects:any[]=[]
+  CCValid:number=0
+   CCpoints:any[]=[]
+  CCClasses:any[]=[]
+  AISolutions:any[]=[]
+  isWater:boolean=false
+  WaterROIData:any[]=[]
+deleteField:any=''
+  CCObjectCounts:any[]=[]
+  CCObjectsCount:any[]=[]
+  fireROIS:any[]=[]
+  TCKeyId:number=0
+  CCKeyId:number=0
+  RAKeyId:number=0
+  raROIColor:string='rgb(127, 255, 0)'
+   fireAndSmoke={
+    fire:false,
+    smoke:false,
+   }
+   alertForm:FormGroup=new FormGroup({
+    ip:new FormControl('',Validators.required),
+    delay:new FormControl('',Validators.required)
+   })
 
 
+   ccObjectsMinMax:any[]=[new FormGroup({
+    object:new FormControl('person'),
+    person:new FormControl(true,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),new FormGroup({
+    object:new FormControl('car'),
+    car:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),
+   new FormGroup({
+    object:new FormControl('truck'),
+    truck:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+   }),
 
-  alarmPPEObjects: FormGroup = new FormGroup({
-    helemet: new FormControl(Validators.requiredTrue),
-    vest: new FormControl(Validators.requiredTrue)
-  })
-  alarmRAObjects: FormGroup = new FormGroup({
-    person: new FormControl(Validators.requiredTrue),
-    car: new FormControl(Validators.requiredTrue),
-    truck: new FormControl(Validators.requiredTrue),
-    bike: new FormControl(Validators.requiredTrue),
+   new FormGroup({
+    object:new FormControl('bike'),
+    bike:new FormControl(false,Validators.requiredTrue),
+    min:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/)),
+    max:new FormControl(0,Validators.pattern(/^[^-\D]\d*$/))
+    
+   }),
+    ]
+   
 
 
+   alarmPPEObjects:FormGroup=new FormGroup({
+    helemet:new FormControl(Validators.requiredTrue),
+    vest:new FormControl(Validators.requiredTrue)
+   })
+   alarmRAObjects:FormGroup=new FormGroup({
+    person:new FormControl(Validators.requiredTrue),
+    car:new FormControl(Validators.requiredTrue),
+    truck:new FormControl(Validators.requiredTrue),
+    bike:new FormControl(Validators.requiredTrue),
 
 
-  })
+    
+    
+   })
   crowdCountRoiName: FormControl = new FormControl('', Validators.required)
   @ViewChild('roiInfo') infoModal: ElementRef<any>
   @ViewChild('crowdCount') CCNameModal: ElementRef<any>
-  @ViewChild('CCNameChangeModal') CCNameChangeModal: ElementRef<any>
+  @ViewChild('CCNameChangeModal') CCNameChangeModal:ElementRef<any>
+  @ViewChild('FireNameModal',{static:false}) fireROINameModal:ElementRef<any>
   crowdConfig: any[] = []
   tcName: FormControl = new FormControl('', Validators.required)
   TrafficConfig: any
@@ -152,8 +166,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   )
   CrowdForm: FormGroup = new FormGroup(
     {
-      min: new FormControl(null, [Validators.pattern(/^[^-a-zA-Z]+$/), Validators.required]),
-      max: new FormControl(null, [Validators.pattern(/\d+/), Validators.required])
+      min: new FormControl(null, [Validators.pattern(/^[^-a-zA-Z]+$/),Validators.required]),
+      max: new FormControl(null, [Validators.pattern(/\d+/),Validators.required])
     }
   )
   vehicleCrowdForm: FormGroup = new FormGroup(
@@ -187,10 +201,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     vest: new FormControl('person')
   })
 
-  fireSmokeForm: FormGroup = new FormGroup({
-    fire: new FormControl(false, Validators.requiredTrue),
-    smoke: new FormControl(false, Validators.requiredTrue),
-    water: new FormControl(false, Validators.requiredTrue)
+  fireSmokeForm:FormGroup=new FormGroup({
+    fire:new FormControl(false,Validators.requiredTrue),
+    smoke:new FormControl(false,Validators.requiredTrue),
+    water:new FormControl(false,Validators.requiredTrue)
   })
   vehicleForm: FormGroup = new FormGroup({
     type: new FormControl(),
@@ -203,8 +217,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasContainer', { static: true }) canvasContainer: ElementRef
   @ViewChild('ROINameModal', { static: false }) RoiNameModal: TemplateRef<any>
   @ViewChild('TCNameModal', { static: false }) TCNameModal: TemplateRef<any>
-  @ViewChild('ccForFrame', { static: false }) CCForFrame: TemplateRef<any>
-  @ViewChild('CCType', { static: false }) CCTYpe: TemplateRef<any>
+  @ViewChild('ccForFrame',{static:false}) CCForFrame:TemplateRef<any>
+   @ViewChild('CCType',{static:false})  CCTYpe:TemplateRef<any> 
   //traffic count roi variables
   isMouseDown: boolean = false
   btnIndex: number
@@ -216,27 +230,26 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   roiType: any = 0
   currentArea: any
   currentPlant: any
-  selectedCCType: any
-  ccTypeList: any[] = [{ label: '+ Crowd Count Types', items: [{ label: 'ROI', command: (onclick: any) => { console.log(onclick), this.AddCCRoi(); } },] }]
+ selectedCCType:any
+  ccTypeList:Observable< any[]>=of([{label:'+ Crowd Count Types',items:[{label:'ROI',command:(onclick:any)=>{console.log(onclick) ,this.AddCCRoi();}},{label:'Full Frame',command:(onclick:any)=>{console.log(onclick),this.AddCCForFrame()}}]}])
+  fireSmoke:any[]=[{label:'+ Fire/Smoke',items:[{label:'ROI',command:(onclick:any)=>{console.log(onclick) ,this.AddCCRoi();}},{label:'Full Frame',command:(onclick:any)=>{console.log(onclick) ,this.AddCCRoi();}},{label:'Full Frame',command:(onclick:any)=>{console.log(onclick),this.AddCCForFrame()}}]},]
 
   constructor(
     private ActiveRoute: ActivatedRoute,
     private server: ServerService,
     private router: Router,
-    private modalService: NgbModal) {
+    private modalService: NgbModal) { 
     this.IP = server.IP
-    this.ccTypeList[0].items[1] = { label: 'Full Frame', command: (onclick: any) => { console.log(onclick), this.AddCCForFrame() } }
     this.ActiveRoute.queryParams.subscribe((params: any) => {
       console.log(params)
       this.ID = params.id
       this.imageName = params.image
       this.currentArea = params.area
       this.currentPlant = params.plant
-      console.log(this.currentArea, this.currentPlant)
       this.server.GetRACameraData(this.ID).subscribe((response: any) => {
         console.log(response.message)
         this.cameraData = response.message
-        this.AISolutions = this.cameraData[0].ai_solutions ? this.cameraData[0].ai_solution : []
+        this.AISolutions=this.cameraData[0].ai_solutions?this.cameraData[0].ai_solution:[]
         console.log(this.AISolutions)
         this.currentArea = response.area
         this.currentPlant = response.plant
@@ -244,16 +257,16 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isCameraData = true
 
         if (this.cameraData[0].ppe_data.length > 0) {
-          this.ppeForm.get('helmet').valueChanges.subscribe((value: any) => {
+          this.ppeForm.get('helmet').valueChanges.subscribe((value:any)=>{
             console.log(value)
           })
-          this.ppeConfig = this.cameraData[0].ppe_data[0]
+          this.ppeConfig =  this.cameraData[0].ppe_data[0]
           console.log(this.ppeConfig)
           if (this.cameraData[0].ppe_data[0].helmet) {
             //this.ppeForm.get('helmet').
             this.ppeForm.get('helmet').setValue(true)
             this.ppeForm.get('helmet').markAsUntouched()
-
+            
 
           }
           else {
@@ -267,7 +280,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.cameraData[0].ppe_data[0].vest) {
             //this.ppeForm.get('helmet').
             // this.ppeForm.get('helmet').markAsUntouched()
-
+          
             this.ppeForm.get('vest').setValue(true)
 
           }
@@ -283,7 +296,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else {
           console.log('ppe not vest')
-
+         
           this.ppeForm.get('vest').setValue(false)
           this.ppeForm.get('helmet').setValue(false)
 
@@ -296,12 +309,12 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         //   this.fireSmokeForm.get('fire').setValue(this.cameraData[0].fire_smoke_data[0].fire)
         //   this.fireSmokeForm.get('smoke').setValue(this.cameraData[0].fire_smoke_data[0].smoke)
 
-
-
+         
+         
         // }
         // else {
         //   console.log('ppe not vest')
-
+         
         //   this.fireSmokeForm.get('fire').setValue(false)
         //   this.fireSmokeForm.get('smoke').setValue(false)
 
@@ -309,9 +322,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
         // }
-
+       
         console.log(this.cameraData)
-
+      
       })
 
 
@@ -324,7 +337,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     //  })
 
 
-
+  
   }
 
   ngAfterViewInit(): void {
@@ -332,19 +345,30 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(document.getElementById('helmet'))
     this.makeNewROI()
 
-    this.ccObjectsMinMax.forEach((form: FormGroup) => {
-      form.valueChanges.subscribe(() => {
-        if (form.get(form.get('object').value).value && form.get('min').valid && form.get('min').valid) {
-          this.CCValid++
+    this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+      form.valueChanges.subscribe(()=>{
+
+        console.log('object form valid status',)
+        if(form.get(form.get('object').value).value && form.get('min').valid && form.get('min').valid){
+        this.CCValid++
         }
-        else {
-          this.CCValid = 0;
+        else{
+          this.CCValid=0;
         }
 
-        if (form.get('min').value > form.get('max').value || (form.get('min').value == form.get('max').value)) {
-          this.CCValid = 0;
+        if(form.get('min').value>form.get('max').value ||(form.get('min').value==form.get('max').value)){
+       this.CCValid=0;
         }
+        // if(  this.ccObjects[0].get('object').value || this.ccObjects[1].get('object').value||this.ccObjects[2].get('object').value||this.ccObjects[3].get('object').value){
+           
 
+
+        // }
+     
+     
+     
+     
+     
         console.log(this.CCValid)
       })
     })
@@ -352,33 +376,32 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.allCameraData)
     // this.canvasContainer.nativeElement.
     this.canvas.on('mouse:up', (options: any) => {
-      console.log(options,'mouse up')
-        if (this.roiType == 1 || this.AddCCRoi) {
-          if (options.button === 1) {
-            if (!((options.transform == null ? false : options.transform.action === 'modifyPolygon' ? false : true)) && !this.isEdit
-            ) {
-              console.log('polygon  is 1creating')
+      console.log('mouse up')
+      if (this.roiType == 1 || this.isAddCC ||this.isWater) {
+        if (options.button === 1&& !this.isPolygonDrawn) {
+          if (!((options.transform == null ? false : options.transform.action === 'modifyPolygon' ? false : true)) && !this.isEdit
+          ) {
+            console.log('polygon  is 1creating')
 
-              this.getClickCoords(options);
-
-            }
-          }
-          if (options.button === 3) {
-            if (this.isAddROI || this.isAddCC) {
-              if (this.newROIPoints.length < 4) {
-                console.log('polygon is  3creating')
-                this.isPolygonDrawn = false;
-              } else {
-                console.log('polygon is  3creating')
-                this.isPolygonDrawn = true;
-              }
-            }
+            this.getClickCoords(options);
 
           }
-        
+        }
+        if (options.button === 3) {
+          if (this.isAddROI ||this.isAddCC||this.isWater) {
+            if (this.newROIPoints.length < 4) {
+              console.log('polygon is  3creating')
+              this.isPolygonDrawn = false;
+            } else {
+              console.log('polygon is  3creating')
+              this.isPolygonDrawn = true;
+            }
+          }
+
+        }
       }
 
-      if (this.roiType == 2 && !this.isAddCC) {
+      if (this.roiType == 2&& !this.isAddCC && !this.isWater) {
         this.isMouseDown = false
         console.log('traffic count')
         this.SaveTrafficCountROI()
@@ -387,53 +410,37 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.canvas.on('mouse:down', (event: any) => {
-      //console.log('mouse down')
-
-
-        //this.CreateRectangle(event)
-        if (this.roiType === 1 || this.isAddCC) {
-          if (this.isAddROI || this.isAddCC
-          ) {
-            if (event.button === 3) {
-              if (this.newROIPoints.length < 3) {
-                this.isPolygonDrawn = false;
-              } else {
-                //this.makePolygon();
-                //this.OnAddingNewROI()
-                this.roiNameControl.markAsUntouched()
-                this.RoiName()
-                this.isPolygonDrawn = true;
-
-              }
+      console.log('mouse down')
+      //this.CreateRectangle(event)
+      if (this.roiType === 1 && (this.isAddCC ||this.isWater ||this.isAddROI) ){
+        if (this.isAddROI || this.isAddCC ||this.isWater ) {
+          if (event.button === 3) {
+            if (this.newROIPoints.length < 3) {
+              this.isPolygonDrawn = false;
+            } else {
+              //this.makePolygon();
+              //this.OnAddingNewROI()
+              this.roiNameControl.markAsUntouched()
+              this.RoiName()
+              this.isPolygonDrawn = true;
 
             }
-          }
-        
-        else if (this.roiType === 2) {
-          if ((event.transform == null ? true : event.transform.action === 'drag' ? false : true)) {
-            this.addingShapeOnMouseDown(event)
-          }
 
+          }
+        }
+      }
+      else if (this.roiType === 2) {
+        if ((event.transform == null ? true : event.transform.action === 'drag' ? false : true)) {
+          this.addingShapeOnMouseDown(event)
         }
 
-        this.canvas.on('mouse:move', (options: any) => {
-          // this.createRect2(options)
-          this.creatingShapeOnMouseMove(options)
-        })
-
-        this.canvas.on('touch:orientation', (options: any) => {
-          // this.createRect2(options)
-          console.log(options, "touch events")
-          // this.creatingShapeOnMouseMove(options)
-        })
-        this.canvas.on('touch:drag', (event: any) => {
-          // Handle touch drag event
-          console.log('Touch drag event:', event);
-        });
-
       }
-      })
 
+      this.canvas.on('mouse:move', (options: any) => {
+        // this.createRect2(options)
+        this.creatingShapeOnMouseMove(options)
+      })
+    })
 
 
 
@@ -442,89 +449,14 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.Modify()
     })
 
-    // const context = this.canvas.getContext("2d");
-
-    // //toouch events
-    // var cContainer:any = document.getElementById('canvas-container')
-    // //cContainer=cContainer.getContext("2d")
-    // cContainer.addEventListener("touch:end", (options: any) => {
-    //   console.log("touch start", options)
-    //   this.server.notification(options.JSON(),'okay',100000 )
-    //  // console.log(options)
-    //   if (this.roiType == 1 || this.AddCCRoi) {
-    //     if (!this.isEdit
-    //     ) {
-    //       console.log('polygon  is 1creating')
-
-    //       this.getClickCoords(options);
-
-    //     }
-
-    //     if (this.isAddROI || this.isAddCC) {
-    //       if (this.newROIPoints.length < 4) {
-    //         console.log('polygon is  3creating')
-    //         this.isPolygonDrawn = false;
-    //       } else {
-    //         console.log('polygon is  3creating')
-    //         this.isPolygonDrawn = true;
-    //       }
-    //     }
-
-
-    //   }
-    //   else if (this.roiType === 2) {
-
-    //     this.addingShapeOnMouseDown(event)
-
-
-    //   }
 
 
 
-
-    // }, false);
-    // this.canvas.on("touchmove", () => { console.log("touch move") }, false);
-    // cContainer.addEventListener("touchcancel", () => { console.log("touch cancel") }, false);
-    // this.canvas.on("touch:end", (options: any) => {
-
-    //   console.log("touch end",options)
-    //   if (this.roiType == 1 || this.AddCCRoi) {
-    //     if (!this.isEdit
-    //     ) {
-    //       console.log('polygon  is 1creating on mobile')
-
-    //       this.getClickCoords(options);
-
-    //     }
-
-    //     if (this.isAddROI || this.isAddCC) {
-    //       if (this.newROIPoints.length < 4) {
-    //         console.log('touch 1')
-    //         this.isPolygonDrawn = false;
-    //       } else {
-    //         console.log('touch2')
-    //         this.isPolygonDrawn = true;
-    //       }
-    //     }
-
-
-    //   }
-    //   else if (this.roiType === 2) {
-
-    //     this.addingShapeOnMouseDown(event)
-
-
-    //   }
-    // },
-    //   true);
 
   }
-
-
-  
   canvasSetup() {
     var cContainer = document.getElementById('canvas-container')
-    console.log(cContainer, 'canvas')
+    console.log(cContainer.clientWidth)
     this.canvas = new fabric.Canvas('canvasROI', { fireRightClick: true })
     console.log(this.canvas)
     this.canvas.selection = false
@@ -551,11 +483,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       // this.canvas.renderAll()
-      console.log(this.canvas.height,'canvas width')
-      console.log(this.canvas.width,'canvas height')
+      // console.log(this.canvas.height)
+      // console.log(this.canvas.width)
       //this.canvas.add(oImg);
     });
-    this.cameraData.length > 0 ? this.cameraData[0].roi_data !== null ? this.GetPanelPoints() : '' : ''
+    this.cameraData.length>0? this.cameraData[0].roi_data !== null ? this.GetPanelPoints() : '':''
 
   }
 
@@ -563,8 +495,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   RoiName() {
     this.isPolygonDrawn = true
     this.isAddROI = false
-    this.classIds = ['person']
-    if (this.isAddCC) {
+    
+
+    this.classIds=['person']
+    if(this.isAddCC){
 
       this.modalService.open(this.CCNameModal).result.then((result) => {
         // this.closeResult = `Closed with: ${result}`;
@@ -572,17 +506,19 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         //  this.OnAddingNewROI()
         // this.download = '',
         //   this.isalert = false
+        this.isAddCC=false
         console.log('cancel')
         this.roiNameControl.setValue(null)
         this.roiNameControl.reset()
         this.CrowdForm.get('min').reset()
-        this.newROIPoints.splice(0, this.newROIPoints.length)
-
-        this.CrowdForm.get("min").setValidators(Validators.required)
+        this.isPolygonDrawn=false
+        this.newROIPoints.splice(0,this.newROIPoints.length)
+        console.log('modal closed by backdrop')
+      this.CrowdForm.get("min").setValidators(Validators.required)
         this.CrowdForm.get('min').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
-
+  
         this.CrowdForm.get('max').reset()
-
+        
         this.CrowdForm.get("max").setValidators(Validators.required)
         this.CrowdForm.get('max').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
 
@@ -593,181 +529,37 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.newROIPoints.splice(0,this.newROIPoints.length)
         // this.OnAddingNewROI()
       }, (reason) => {
-        console.log('submit')
-
-        /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        // this.download = '',
-        //   this.isalert = false
-        this.CrowdForm.get('min').reset()
-        this.CrowdForm.get("min").setValidators(Validators.required)
-        this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
-
-        this.CrowdForm.get('max').reset()
-
-        this.CrowdForm.get("max").setValidators(Validators.required)
-        this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
-
-          ;
-      }
-      )
-    }
-    else {
-      this.modalService.open(this.RoiNameModal, { size: 'small', centered: true, backdrop: 'static' }).result.then((result) => {
-        // this.closeResult = `Closed with: ${result}`;
-        //  this.roiNameControl.setValue(null)
-        //  this.OnAddingNewROI()
-        // this.download = '',
-        //   this.isalert = false
+        this.isAddCC=false
+        this.isPolygonDrawn=false
         console.log('cancel')
         this.roiNameControl.setValue(null)
         this.roiNameControl.reset()
+        this.CrowdForm.get('min').reset()
+        this.newROIPoints.splice(0,this.newROIPoints.length)
+        console.log('modal closed by backdrop')
+      this.CrowdForm.get("min").setValidators(Validators.required)
+        this.CrowdForm.get('min').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
+  
+        this.CrowdForm.get('max').reset()
+        
+        this.CrowdForm.get("max").setValidators(Validators.required)
+        this.CrowdForm.get('max').setValidators(Validators.pattern(/^[^-a-zA-Z]+$/))
+
         this.roiNameControl.addValidators(Validators.required)
         console.log(this.roiNameControl.value)
         this.classIds = ['person']
         this.DeleteNewRoi()
-        // this.newROIPoints.splice(0,this.newROIPoints.length)
-        // this.OnAddingNewROI()
-      }, (reason) => {
-        console.log('submit')
-
-          /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-          // this.download = '',
-          //   this.isalert = false
-
-          ;
       }
-      )
+      )   
     }
-  }
+    else if(this.isWater){
+      this.isWater=false
+      this.modalService.open(this.fireROINameModal,{backdrop:'static',centered:true})
 
-  ModalOpen(modal: any) {
-    console.log('full frame')
-    this.modalService.open(modal, { backdrop: 'static', keyboard: true })
-  }
 
-  onCCTypeSelect(event: any) {
-    console.log(event)
-    console.log('crowd count select')
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
     }
-  }
-
-  nameSubmit() {
-    this.modalService.dismissAll()
-    console.log('name submit')
-    this.OnAddingNewROI()
-  }
-
-
-  getClickCoords(event: any) {
-    console.log(event,'in get click function')
-    if (this.isAddROI) {
-      this.newPt = {
-        x: Math.round(event.pointer.x),
-        y: Math.round(event.pointer.y)
-      };
-      this.newROIPoints.push(this.newPt);
-      console.log(this.newPt, this.newROIPoints)
-
-      // console.log(this.newROI)
-      this.canvas.add(this.newROI);
-
-      // console.log(this.points)
-      // if (this.points.length > 3) {
-      //   this.isPolygonDrawn = true;
-      // }
-    }
-
-    if(event.e.type=='touchend'){
-       if((event.e.touches.length)==2){
-       {alert('you touched twice')
-      this.RoiName()}
-       }
-    }
-  }
-
-
-  Back() {
-    // this.router.navigate(['app/CameraSettings'])
-    window.close()
-
-  }
-
-  makeNewROI() {
-    this.newROI = new fabric.Polygon(this.newROIPoints, this.polygonOptions)
-
-  }
-
-
-  AddNewROI() {
-    this.classIds = ['person']
-    this.polygonOptions.stroke = 'rgb(127, 255, 0)'
-    this.newROI.stroke = 'rgb(127, 255, 0)'
-
-    this.isAddROI = true
-    this.isEdit = false
-    this.roiType = 1
-    this.newROIPoints.splice(0, this.newROIPoints.length)
-    this.canvas.requestRenderAll()
-    this.isAddCC = false
-
-  }
-
-  AddNewLine() {
-    this.classIds = ['person']
-
-    this.roiType = 2
-    this.btnIndex = 1
-    this.isEdit = false
-    this.isAddROI = false
-    this.isAddCC = false
-    this.newROIPoints.splice(0, this.newROIPoints.length)
-  }
-  AddNewArrow() {
-    this.classIds = ['person']
-
-    this.roiType = 2
-    this.btnIndex = 2
-    this.isEdit = false
-  }
-
-
-
-  AddCCRoi() {
-    console.log('addcc')
-    this.newROIPoints.splice(0, this.newROIPoints.length)
-    this.isAddCC = true
-    this.isAddROI = true
-    this.isEdit = false
-    this.roiType = 1
-    this.CrowdForm.get('min').reset()
-    this.CrowdForm.get("min").setValidators(Validators.required)
-    this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
-
-    this.CrowdForm.get('max').reset()
-
-    this.CrowdForm.get("max").setValidators(Validators.required)
-    this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
-    this.newROI.stroke = 'rgb(0, 255, 255)'
-
-  }
-
-  AddCCForFrame() {
-    // var ele:HTMLElement=document.getElementById('ccWholeFrame')
-    // if(ele!=null){
-    //   ele.style.display='block'
-    // }
-
-    console.log('add cc for frame')
-    this.modalService.open(this.CCForFrame).result.then((result) => {
+    else{
+    this.modalService.open(this.RoiNameModal, { size: 'small', centered: true, backdrop: 'static' }).result.then((result) => {
       // this.closeResult = `Closed with: ${result}`;
       //  this.roiNameControl.setValue(null)
       //  this.OnAddingNewROI()
@@ -792,50 +584,240 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         ;
     }
     )
+  }
+  }
+
+  ModalOpen(modal:any)
+  {
+    console.log('full frame')
+    if(this.cameraData.length>0){
+      console.log(this.cameraData[0].alarm_ip_address)
+    this.alertForm.get('ip').setValue(this.cameraData[0].alarm_ip_address)
+    this.cameraData[0].delay? this.alertForm.get('delay').setValue(this.cameraData[0].delay):''
+    }
+    console.log(this.alertForm)
+    this.modalService.open(modal,{backdrop:'static',keyboard:true})
+  }
+
+  onCCTypeSelect(event:any){
+    console.log(event)
+   console.log('crowd count select')
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  nameSubmit() {
+    this.modalService.dismissAll()
+    console.log('name submit')
+    this.OnAddingNewROI()
+  }
 
 
+  getClickCoords(event: any) {
+    console.log(event)
+    if (this.isAddROI||this.isWater||this.isAddCC) {
+      this.newPt = {
+        x: Math.round(event.pointer.x),
+        y: Math.round(event.pointer.y)
+      };
+      this.newROIPoints.push(this.newPt);
+
+      // console.log(this.newROI)
+      this.canvas.add(this.newROI);
+
+      // console.log(this.points)
+      // if (this.points.length > 3) {
+      //   this.isPolygonDrawn = true;
+      // }
+    }
+  }
 
 
-
+  Back() {
+    // this.router.navigate(['app/CameraSettings'])
+    window.close()
 
   }
-  onSaveCCFrame() {
-    this.isAddROI = false
-    this.CCClasses = []
-    this.CCObjectCounts = []
-    this.ccObjectsMinMax.forEach((form: FormGroup) => {
-      if (form.get(form.get('object').value).value) {
-        var obj = { class_name: form.get('object').value, min_count: form.get('min').value, max_count: form.get('max').value }
-        //this.CCClasses.push(form.get('object').value)
-        this.CCObjectCounts.push(obj)
+
+  makeNewROI() {
+    this.newROI = new fabric.Polygon(this.newROIPoints, this.polygonOptions)
+
+  }
 
 
+  AddNewROI() {
+    this.classIds=['person']
+    this.polygonOptions.stroke=this.raROIColor
+    this.newROI.stroke=this.raROIColor
+   this.isWater=false
+    this.isAddROI = true
+    this.isEdit = false
+    this.roiType = 1
+    this.newROIPoints.splice(0,this.newROIPoints.length)
+    this.canvas.requestRenderAll()
+    this.isAddCC=false
+
+  }
+
+  AddNewLine() {
+    this.classIds=['person']
+    this.isWater=false
+    this.roiType = 2
+    this.btnIndex = 1
+    this.isWater=false
+    this.isEdit = false
+    this.isAddROI=false
+    this.isAddCC=false
+    this.newROIPoints.splice(0,this.newROIPoints.length)
+    this.canvas.requestRenderAll()
+
+  }
+  AddNewArrow() {
+    this.classIds=['person']
+  this.isWater=false
+    this.roiType = 2
+    this.btnIndex = 2
+    this.isEdit = false
+  }
+
+
+
+  AddCCRoi() {
+    console.log('addcc')
+    this.newROIPoints.splice(0,this.newROIPoints.length)
+    this.isAddCC = true
+    this.isAddROI=false
+    this.isEdit=false
+    this.isWater=false
+    this.roiType=1
+    this.CrowdForm.get('min').reset()
+    this.CrowdForm.get("min").setValidators(Validators.required)
+      this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
+
+      this.CrowdForm.get('max').reset()
+      
+      this.CrowdForm.get("max").setValidators(Validators.required)
+      this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
+    this.newROI.stroke='rgb(0, 255, 255)'
+
+  }
+
+  AddCCForFrame(){
+  // var ele:HTMLElement=document.getElementById('ccWholeFrame')
+  // if(ele!=null){
+  //   ele.style.display='block'
+  // }
+
+  console.log('add cc for frame')
+  this.modalService.open(this.CCForFrame).result.then((result) => {
+    // this.closeResult = `Closed with: ${result}`;
+    //  this.roiNameControl.setValue(null)
+    //  this.OnAddingNewROI()
+    // this.download = '',
+    //   this.isalert = false
+    console.log('cancel')
+    this.roiNameControl.setValue(null)
+    this.roiNameControl.reset()
+    this.roiNameControl.addValidators(Validators.required)
+    console.log(this.roiNameControl.value)
+    this.classIds = ['person']
+    this.DeleteNewRoi()
+    // this.newROIPoints.splice(0,this.newROIPoints.length)
+    // this.OnAddingNewROI()
+  }, (reason) => {
+    console.log('submit')
+
+      /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      // this.download = '',
+      //   this.isalert = false
+
+      ;
+  }
+  )
+
+
+
+
+
+
+
+  
+ 
+}
+onSaveCCFrame(){
+
+  for (let index = 0; index < this.ccObjectsMinMax.length; index++) {
+    const form:FormGroup = this.ccObjectsMinMax[index];
+    
+  
+
+      console.log('object form valid status',)
+      if(form.get(form.get('object').value).value && form.get('min').valid && form.get('min').valid && !(form.get('min').value>form.get('max').value ||(form.get('min').value==form.get('max').value))){
+      this.CCValid=1
       }
-      form.get(form.get('object').value).reset()
-      form.get('min').markAsUntouched()
-      form.get('min').setValue(0)
+      else{
+        this.CCValid=0;
+        break;
+      }
 
-      form.get('max').reset()
-      form.get('max').reset()
+      
+      // if(  this.ccObjects[0].get('object').value || this.ccObjects[1].get('object').value||this.ccObjects[2].get('object').value||this.ccObjects[3].get('object').value){
+         
 
-      //  form.get('object').reset()
 
-    })
+      // }
+   
+   
+   
+   
+   
+      console.log(this.CCValid)
+  }
+  if(this.CCValid==1){
+  this.isAddROI = false
+  this.CCClasses=[]
+  this.CCObjectCounts=[]
+  this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+    if(form.get(form.get('object').value).value){
+   var obj={class_name:form.get('object').value,min_count:form.get('min').value,max_count:form.get('max').value}
+   //this.CCClasses.push(form.get('object').value)
+   this.CCObjectCounts.push(obj)
 
-    var tempObj: any = {
-      roi_name_canvas: null,
-      roi_canvas: null,
-      roi_id: null,
-      roi_name: null,
-      cr_data: { bb_box: '', full_frame: true, roi_id: null, area_name: '', data_object: this.CCObjectCounts }
+
     }
+   form.get(form.get('object').value).reset()
+   form.get('min').markAsUntouched()
+   form.get('min').setValue(0)
+  
+   form.get('max').reset()
+   form.get('max').reset()
+
+ //  form.get('object').reset()
+    
+  })
+
+  var tempObj:any = {
+    roi_name_canvas: null,
+    roi_canvas: null,
+    roi_id: null,
+    roi_name: null,
+    cr_data: { bb_box: '',full_frame:true, roi_id:null,area_name: '', data_object:this.CCObjectCounts}
+  }
     this.CcRois.push(tempObj)
     // this.CameraData[0].ROI_data.push(tempObj.ROI_data)
     this.CrowdForm.get('min').reset()
     this.CrowdForm.get('max').reset()
 
     this.newROIPoints.splice(0, this.newROIPoints.length)
-
+   
     this.classIDPerson.reset()
     this.classIDBike.reset()
     this.classIDCar.reset()
@@ -843,16 +825,17 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     this.classIds = ['person']
     this.CrowdForm.get('min').reset()
     this.CrowdForm.get("min").setValidators(Validators.required)
-    this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
+      this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
 
-    this.CrowdForm.get('max').reset()
-
-    this.CrowdForm.get("max").setValidators(Validators.required)
-    this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
-    this.modalService.dismissAll()
+      this.CrowdForm.get('max').reset()
+      
+      this.CrowdForm.get("max").setValidators(Validators.required)
+      this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
+   this.modalService.dismissAll()
     this.AddCCData()
 
   }
+}
 
 
   OnAddingNewROI() {
@@ -862,7 +845,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       var roi_points: any[] = []
       const tempPoints = [...this.newROIPoints]
       console.log(tempPoints)
-      this.polygonOptions.stroke = 'rgb(127, 255, 0)'
+      this.polygonOptions.stroke=this.raROIColor
       var dimensions = this.newROI._calcDimensions()
       const currentROI = new fabric.Polygon(tempPoints, this.polygonOptions)
       console.log(currentROI)
@@ -899,13 +882,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvas.add(ROINameObject)
         this.canvas.renderAll()
 
-        var tempObj: any = {
+        var tempObj:any = {
           roi_name_canvas: ROINameObject,
           roi_canvas: currentROI,
           // roi_id: ROIName,need to check this one
           roi_name: ROIName,
-          roi_id: this.allCameraData.length - 1,
-          roi_data: { bb_box: roiPointsString, roi_name: ROIName, roi_id: this.allCameraData.length - 1, label_name: this.classIds }
+          roi_id: this.allCameraData.length-1,
+          roi_data: { bb_box: roiPointsString, roi_name: ROIName,roi_id:this.allCameraData.length-1, label_name: this.classIds }
         }
       }
       console.log(roiPointsString)
@@ -937,18 +920,136 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  OnAddingNewCCRoi() {
-    this.CCClasses = []
-    this.CCObjectCounts = []
-    this.isAddROI = false
 
+
+
+
+
+
+
+onAddingNewfireROI(){
+
+  this.isWater= false
+  if (this.roiNameControl.value !== null) {
+    fabric.util.resetObjectTransform(this.newROI)
+    var roi_points: any[] = []
+    const tempPoints = [...this.newROIPoints]
+    console.log(tempPoints)
+    this.polygonOptions.stroke='orange'
+    var dimensions = this.newROI._calcDimensions()
+    const currentROI = new fabric.Polygon(tempPoints, this.polygonOptions)
+    console.log(currentROI)
+    var ROIName = this.roiNameControl.value
+    if (ROIName !== null) {
+      console.log(ROIName)
+      this.isChanges = true
+      this.canvas.add(currentROI)
+      this.canvas.renderAll()
+      console.log(this.newROI)
+      for (let i = 0; i < this.newROIPoints.length; i++) {
+
+        let tempX = (this.newROIPoints[i].x)
+
+        let tempY = (this.newROIPoints[i].y)
+        roi_points.push(`${tempX};${tempY};`)
+      }
+      //to remove the ,
+      var comma = /,/g
+      var roiPointsString = roi_points.toString().replace(comma, '')
+      console.log(roiPointsString)
+      var ROINameObject = new fabric.Text(ROIName, {
+        fontSize: 20,
+        // bottom:5
+        backgroundColor: 'black',
+
+        selectable: false,
+        left: dimensions.left,
+        top: dimensions.top - 20,
+        stroke: 'orange',
+        fill: 'orange',
+      });
+      console.log(ROINameObject)
+      this.canvas.add(ROINameObject)
+      this.canvas.renderAll()
+
+      var tempObj:any = {
+        roi_name_canvas: ROINameObject,
+        roi_canvas: currentROI,
+        // roi_id: ROIName,need to check this one
+        roi_name: ROIName,
+        roi_id: this.WaterROIData.length+1,
+        roi_data: { bb_box: roiPointsString, roi_name: ROIName,roi_id:this.WaterROIData.length+1}
+      }
+    }
+    console.log(roiPointsString)
+    // this.CameraData[0].ROI_data.push(tempObj.ROI_data)
+console.log('water rois')
+    this.WaterROIData.push(tempObj)
+   console.log(this.WaterROIData)
+    console.log(this.allCameraData)
+    this.newROIPoints.splice(0, this.newROIPoints.length)
+    this.roiNameControl.setValue(null)
+    this.roiNameControl.reset()
+    this.roiNameControl.setValidators(Validators.required)
+    this.classIDPerson.reset()
+    this.classIDBike.reset()
+    this.classIDCar.reset()
+    this.classIDPerson.setValue('person')
+    this.classIds = ['person']
+
+  //  this.SaveChanges()
+
+  }
+  else {
+    // this.newROIPoints.splice(0, this.newROIPoints.length) 
+    // this.canvas.renderAll()
+    console.log('elsepart')
+    this.classIds = ['person']
+
+    this.DeleteNewRoi()
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  OnAddingNewCCRoi(){
+    this.CCClasses=[]
+    this.CCObjectCounts=[]
+    this.isAddROI = false
+    
     if (this.crowdCountRoiName.value !== null) {
       fabric.util.resetObjectTransform(this.newROI)
       var roi_points: any[] = []
       const tempPoints = [...this.newROIPoints]
       console.log(tempPoints)
       var dimensions = this.newROI._calcDimensions()
-      this.polygonOptions.stroke = 'rgb(0, 255, 255)'
+      this.polygonOptions.stroke='rgb(0, 255, 255)'
       const currentROI = new fabric.Polygon(tempPoints, this.polygonOptions)
       console.log(currentROI)
       var ccName = this.crowdCountRoiName.value
@@ -984,33 +1085,33 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvas.add(ROINameObject)
         this.canvas.renderAll()
 
-        this.ccObjectsMinMax.forEach((form: FormGroup) => {
-          if (form.get(form.get('object').value).value) {
-            var obj = { class_name: form.get('object').value, min_count: form.get('min').value, max_count: form.get('max').value }
-            //this.CCClasses.push(form.get('object').value)
-            this.CCObjectCounts.push(obj)
+        this.ccObjectsMinMax.forEach((form:FormGroup)=>{
+          if(form.get(form.get('object').value).value){
+         var obj={class_name:form.get('object').value,min_count:form.get('min').value,max_count:form.get('max').value}
+         //this.CCClasses.push(form.get('object').value)
+         this.CCObjectCounts.push(obj)
 
 
           }
-          form.get(form.get('object').value).reset()
-          form.get('min').markAsUntouched()
-          form.get('min').setValue(0)
+         form.get(form.get('object').value).reset()
+         form.get('min').markAsUntouched()
+         form.get('min').setValue(0)
+        
+         form.get('max').reset()
+         form.get('max').reset()
 
-          form.get('max').reset()
-          form.get('max').reset()
-
-          //  form.get('object').reset()
-
+       //  form.get('object').reset()
+          
         })
 
-        console.log(this.CCClasses, this.CCObjectCounts)
+        console.log(this.CCClasses,this.CCObjectCounts)
 
         var tempObj = {
           roi_name_canvas: ROINameObject,
           roi_canvas: currentROI,
           roi_id: ccName,
           roi_name: ccName,
-          cr_data: { bb_box: roiPointsString, full_frame: false, roi_id: this.CcRois.length, area_name: ccName, data_object: this.CCObjectCounts }
+          cr_data: { bb_box: roiPointsString,full_frame:false, roi_id:(++this.CCKeyId), area_name: ccName, data_object:this.CCObjectCounts}
         }
       }
       console.log(tempObj)
@@ -1018,21 +1119,21 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.CcRois.push(tempObj)
       this.modalService.dismissAll()
-      this.AddCCData()
+    this.AddCCData()
       console.log(this.allCameraData)
       this.newROIPoints.splice(0, this.newROIPoints.length)
       this.crowdCountRoiName.setValue(null)
       this.CrowdForm.get('min').reset()
-
+      
       this.CrowdForm.get("min").setValidators(Validators.required)
       this.CrowdForm.get('min').setValidators(Validators.pattern(/\d+/))
 
       this.CrowdForm.get('max').reset()
-
+      
       this.CrowdForm.get("max").setValidators(Validators.required)
       this.CrowdForm.get('max').setValidators(Validators.pattern(/\d+/))
       this.classIds = ['person']
-      console.log('cc rois', this.CcRois)
+      console.log('cc rois',this.CcRois)
 
     }
     else {
@@ -1045,12 +1146,12 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       this.CrowdForm.get('min').reset()
       this.CrowdForm.get('max').reset()
     }
-
+    
   }
 
   OnAddingNewRw() {
-
-
+    
+  
     this.isAddROI = false
     if (this.roiNameControl.value !== null) {
       fabric.util.resetObjectTransform(this.newROI)
@@ -1120,7 +1221,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.DeleteNewRoi()
     }
-
+  
   }
 
 
@@ -1276,14 +1377,20 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.allCameraData)
   }
 
-  isDelete(i: number, modal: any) {
+  isDelete(i: number, modal: any,field:any) {
+    console.log(i)
+    this.deleteField=field
     this.deleteID = i
+
+    
     this.modalService.open(modal, { centered: true, backdrop: 'static' })
   }
 
 
-  // delete ra roi
+// delete ra roi
   DeleteROI() {
+
+    if(this.deleteField=='RA'){
     var id = this.deleteID
     //var confirmDelete=confirm('Do you want to delete this ROI?')
     if (true) {
@@ -1312,90 +1419,101 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       this.canvas.renderAll()
     }
+  }
+
+  else if(this.deleteField=='Water'){
+
+  //  this.deleteID=id
+      console.log('deleting water roi',this.WaterROIData[this.deleteID])
+    this.DeleteWaterROIS(this.deleteID)
+  }
 
   }
 
-  //delete roi in backend 
-  DeleteCCROI() {
-    var id = this.deleteID
-    //var confirmDelete=confirm('Do you want to delete this ROI?')
-    if (true) {
-      var tempRoiCanvas = this.CcRois[id].roi_canvas
-      var tempTextCanvas = this.CcRois[id].roi_name_canvas
-      this.canvas.remove(tempRoiCanvas)
-      this.canvas.remove(tempTextCanvas)
-      var roi = this.CcRois[id]
-      var roi_id = roi.cr_data.roi_id
-      console.log(roi_id)
-      this.CcRois.splice(id, 1)
-      this.cameraData[0].cr_data.splice(id, 1)
-      var data = {
-        id: this.ID,
-        roi_id: String(roi_id),
-        ai_solutions: this.AISolutions
-      }
-      this.modalService.dismissAll()
-
-      this.server.deleteCCData(data).subscribe((data: any) => {
-        this.server.notification(data.message)
-        console.log(data)
-        this.modalService.dismissAll()
-      },
-        Err => {
-          this.modalService.dismissAll()
-          this.server.notification('Something went wrong', 'Retry')
-        })
-      this.canvas.renderAll()
+//delete roi in backend 
+DeleteCCROI() {
+  var id = this.deleteID
+  //var confirmDelete=confirm('Do you want to delete this ROI?')
+  if (true) {
+    var tempRoiCanvas = this.CcRois[id].roi_canvas
+    var tempTextCanvas = this.CcRois[id].roi_name_canvas
+    this.canvas.remove(tempRoiCanvas)
+    this.canvas.remove(tempTextCanvas)
+    var roi = this.CcRois[id]
+    var roi_id = roi.cr_data.roi_id
+    console.log(roi_id)
+    this.CcRois.splice(id, 1)
+    this.cameraData[0].cr_data.splice(id, 1)
+    var data = {
+      id: this.ID,
+      roi_id: String(roi_id),
+      ai_solutions:this.AISolutions
     }
+    this.modalService.dismissAll()
 
+    this.server.deleteCCData(data).subscribe((data: any) => {
+      if(data.success){
+        //window.location.reload()
+      }
+      this.server.notification(data.message)
+      console.log(data)
+      this.modalService.dismissAll()
+    },
+      Err => {
+        this.modalService.dismissAll()
+        this.server.notification('Something went wrong', 'Retry')
+      })
+    this.canvas.renderAll()
   }
+
+}
   AlterROIName(id: number) {
     this.isEditText = !this.isEditText
     this.selectedId = id
-    this.selectedEditId = id
+    this.selectedEditId=id
     this.tempROIID.setValue(this.allCameraData[id].roi_name)
     this.modalService.open(this.ROIChangeModal, { size: 'small', animation: true, centered: true, backdrop: 'static' })
   }
 
-  ChangeROIName() {
+  ChangeROIName() { 
     //this.cameraData[0].roi_data[this.selectedId].roi_id=this.tempROIID
     this.allCameraData[this.selectedId].roi_name = this.tempROIID.value
 
     this.allCameraData[this.selectedId].roi_name_canvas.text = this.tempROIID.value
-    this.allCameraData[this.selectedId].roi_data.roi_name = this.tempROIID.value
+    this.allCameraData[this.selectedId].roi_data.roi_name=this.tempROIID.value
     this.canvas.renderAll()
     this.modalService.dismissAll()
     this.SaveEditedRoi()
 
   }
-  ChangeCCName() {
+  ChangeCCName() { 
     //this.cameraData[0].roi_data[this.selectedId].roi_id=this.tempROIID
     this.CcRois[this.selectedId].roi_name = this.tempROIID.value
 
     this.CcRois[this.selectedId].roi_name_canvas.text = this.tempROIID.value
-    this.CcRois[this.selectedId].roi_data.roi_name = this.tempROIID.value
+    this.CcRois[this.selectedId].roi_data.roi_name=this.tempROIID.value
     this.canvas.renderAll()
     this.modalService.dismissAll()
-    var crowdCountData: any;
-    if (this.CcRois.length > 0) {
-      crowdCountData = this.CcRois[this.CcRois.length - 1].cr_data
-      console.log('crowd data', crowdCountData)
-    }
-    this.CcRois.length > 0 && this.AISolutions.indexOf('CR') < 0 ? this.AISolutions.push('CR') : ''
-    var data = {
-      id: this.ID,
-      ai_solutions: this.AISolutions,
-      cr_data: [crowdCountData]
+    var crowdCountData:any;
+    if(this.CcRois.length>0){
+     crowdCountData = this.CcRois[this.CcRois.length-1].cr_data
+      console.log('crowd data',crowdCountData)
+     }
+this.CcRois.length>0 && this.AISolutions.indexOf('CR')<0?this.AISolutions.push('CR'):''
+     var data={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+    cr_data:[crowdCountData]
 
-    }
+     }
 
-    console.log(data)
-    this.server.AddCrowdCount(data).subscribe((response: any) => {
+     console.log(data)
+     this.server.AddCrowdCount(data).subscribe((response:any)=>{
 
-      console.log(response)
+console.log(response)
 
 
-    })
+     })
     this.SaveEditedRoi()
 
   }
@@ -1404,13 +1522,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.peopleCrowdForm.get('min').value)
     console.log(this.peopleCrowdForm.get('max').value)
     var crowd_Data: any[] = []
-    var crowdCountData: any[] = []
-    if (this.CcRois.length > 0) {
-      this.CcRois.forEach(element => {
-        crowdCountData.push(element.cr_data)
-
-      });
-      console.log('crowd data', crowdCountData)
+    var crowdCountData:any[]=[]
+    if(this.CcRois.length>0){
+     this.CcRois.forEach(element => {
+       crowdCountData.push(element.cr_data)
+       
+     });
+     console.log('crowd data',crowdCountData)
     }
     if (this.peopleCrowdForm.get('min').value || this.peopleCrowdForm.get('max').value) {
       var crowTemp = {
@@ -1448,11 +1566,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       ppe_data: [this.ppeConfig],
       cr_data: crowdCountData,
       //edited
-      fire_smoke_data: [{
-        fire: this.fireSmokeForm.get('fire').value,
-        smoke: this.fireSmokeForm.get('smoke').value,
-        water: this.fireSmokeForm.get('water').value
-
+      fire_smoke_data:[{
+        fire:this.fireSmokeForm.get('fire').value,
+        smoke:this.fireSmokeForm.get('smoke').value,
+        water:this.fireSmokeForm.get('water').value
+        
       }]
 
 
@@ -1480,73 +1598,75 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  AddCCData() {
+  AddCCData(){
     this.crowdCountRoiName.reset()
-    var crowdCountData: any;
-    if (this.CcRois.length > 0) {
-      crowdCountData = this.CcRois[this.CcRois.length - 1].cr_data
-      console.log('crowd data', crowdCountData)
-    }
-    this.CcRois.length > 0 && this.AISolutions.indexOf('CR') < 0 ? this.AISolutions.push('CR') : ''
-    var data = {
-      id: this.ID,
-      ai_solutions: this.AISolutions,
-      cr_data: [crowdCountData]
+    var crowdCountData:any;
+    if(this.CcRois.length>0){
+     crowdCountData= this.CcRois[this.CcRois.length-1].cr_data
+      console.log('crowd data',crowdCountData)
+     }
+this.CcRois.length>0 && this.AISolutions.indexOf('CR')<0?this.AISolutions.push('CR'):''
+     var data={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+    cr_data:[crowdCountData]
 
-    }
+     }
 
-    console.log(data)
-    this.server.AddCrowdCount(data).subscribe((response: any) => {
+     console.log(data)
+     this.server.AddCrowdCount(data).subscribe((response:any)=>{
 
-      console.log(response)
-      if (response.success) {
-        this.server.notification(response.message)
-        this.RefreshCameraData()
+console.log(response)
+if(response.success){
+  window.location.reload()
+   this.server.notification(response.message)
+   this.RefreshCameraData()
 
-      }
-      else {
-        this.server.notification(response.message, 'Retry')
-        this.canvas.remove(this.CcRois[this.CcRois.length - 1].roi_canvas)
-        this.canvas.remove(this.CcRois[this.CcRois.length - 1].roi_name_canvas)
-        this.canvas.renderAll()
+}
+else{
+  this.server.notification(response.message,'Retry')
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_canvas)
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_name_canvas)
+   this.canvas.renderAll()
 
-      }
+}
 
 
-    }, Err => {
-      this.canvas.remove(this.CcRois[this.CcRois.length - 1].roi_canvas)
-      this.canvas.remove(this.CcRois[this.CcRois.length - 1].roi_name_canvas)
-      this.canvas.renderAll()
-      this.server.notification('Something went wrong', 'Retry')
-    })
+     },Err=>{
+      this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_canvas)
+   this.canvas.remove(this.CcRois[this.CcRois.length-1].roi_name_canvas)
+   this.canvas.renderAll()
+      this.server.notification('Something went wrong','Retry')
+     })
 
   }
 
-  AddTCData() {
-    var tcData: any = []
-    if (this.trafficCountData.length > 0) [
-      tcData = []
+  AddTCData(){
+    var tcData:any=[]
+    if(this.trafficCountData.length>0)[
+      tcData=[]
     ]
-    this.trafficCountData.length > 0 && this.AISolutions.indexOf('TC') < 0 ? this.AISolutions.push('TC') : ''
+    this.trafficCountData.length>0 && this.AISolutions.indexOf('TC')<0?this.AISolutions.push('TC'):''
 
-    var obj = {
-      id: this.ID,
-      ai_solutions: this.AISolutions,
-      tc_data: [this.trafficCountData[this.trafficCountData.length - 1]]
+    var obj={
+      id:this.ID,
+      ai_solutions:this.AISolutions,
+      tc_data:[this.trafficCountData[this.trafficCountData.length-1]]
 
     }
 
-    this.server.AddTCData(obj).subscribe((response: any) => {
+    this.server.AddTCData(obj).subscribe((response:any)=>{
       console.log(response)
-      if (response.success) {
+      if(response.success){
         this.RefreshCameraData()
         this.server.notification(response.message)
+        window.location.reload()
       }
-      else {
+      else{
         this.server.notification(response.message)
       }
-    }, Err => {
-      this.server.notification("Something went wrong", 'Retry')
+    },Err=>{
+      this.server.notification("Something went wrong",'Retry')
     })
 
   }
@@ -1567,9 +1687,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       ppe_data: [this.ppeConfig],
       cr_data: this.crowdConfig,
       //edited
-      fire_smoke_data: [{
-        fire: this.fireSmokeForm.get('fire').value,
-        smoke: this.fireSmokeForm.get('smoke').value
+      fire_smoke_data:[{
+        fire:this.fireSmokeForm.get('fire').value,
+        smoke:this.fireSmokeForm.get('smoke').value
       }]
     }
 
@@ -1595,10 +1715,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   DeleteNewRoi() {
     this.newROIPoints.splice(0, this.newROIPoints.length)
     this.canvas.renderAll()
-    if (this.roiType == 2 || this.btnIndex == 1) {
+    if(this.roiType==2 || this.btnIndex==1){
       this.DeleteNewTCRoi()
     }
-
+  
   }
 
 
@@ -1626,18 +1746,23 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       this.roiPoints.push(tempObj)
       console.log(tempObj)
     });
-    this.raObjects = this.RemoveDuplicates(this.raObjects)
-    console.log(this.raObjects)
+this.raObjects=this.RemoveDuplicates(this.raObjects)
+console.log(this.raObjects)
 
-    this.GetCCRoiPoints()
+   this.GetCCRoiPoints()
 
     this.DrawExistPanels()
   }
 
   GetCCRoiPoints() {
     this.cameraData[0].cr_data.forEach((points: any, id: number) => {
-      console.log(points)
+      console.log(points,'ccpoints')
+       this.CCKeyId= points.roi_id
       //accessing roi points
+      console.log(points.full_frame,'full frame')
+
+      points.full_frame?(this.ccTypeList=of([{label:'+ Crowd Count Types',items:[{label:'ROI',command:(onclick:any)=>{console.log(onclick) ,this.AddCCRoi();}}]}])):''
+
       var roi_points = points.bb_box.split(';')
       console.log(roi_points)
       var polyGon: any[] = []
@@ -1650,9 +1775,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
       }
       var tempObj = {
-        min_count: points.min_count,
-        max_count: points.max_count,
-        class_name: points.class_name,
+        min_count:points.min_count,
+        max_count:points.max_count,
+        class_name:points.class_name,
         bbox_points: polyGon,
         area_name: points.area_name
       }
@@ -1662,11 +1787,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     //this.GetTCPoints()
     this.DrawExistCCRois()
   }
-  DrawExistCCRois() {
+  DrawExistCCRois(){
     this.CCpoints.forEach((element: any, id: number) => {
-      console.log(element)
       console.log(element.roi)
-      this.polygonOptions.stroke = 'rgb(0, 255, 255)'
+      this.polygonOptions.stroke='rgb(0, 255, 255)'
       var Polygon = new fabric.Polygon(element.bbox_points, this.polygonOptions)
       // Polygon.id = uuid()
       console.log(Polygon)
@@ -1680,8 +1804,6 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: 'rgb(0, 255, 255)',
         fill: 'rgb(0, 255, 255)',
       });
-      console.log(Polygon)
-
       // var tempObj = {
 
       //   roi_name_canvas: text,
@@ -1699,8 +1821,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
       }
 
-      //      this.allCameraData.push(tempObj)
-      this.CcRois.push(tempObj)
+   //      this.allCameraData.push(tempObj)
+     this.CcRois.push(tempObj)
 
       this.canvas.add(Polygon, text);
       // console.log(this.canvas.get)
@@ -1709,10 +1831,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     )
     this.GetTCPoints()
   }
-
+  
   GetTCPoints() {
     var temp = {}
     this.trafficCountData = this.cameraData[0].tc_data
+    console.log(this.trafficCountData,'tc data from backebd')
     this.cameraData[0].tc_data.forEach((points: any, index: number) => {
       console.log(points)
       var tempPoints = points.line_bbox.line.split(';')
@@ -1723,11 +1846,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       //   const element = tempPoints[index];
       console.log(Number(tempPoints[index]))
       temp = [
-        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', area_name: points.area_name, roi_id: index },
-        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', area_name: points.area_name, roi_id: index },
+        { points: { x1: Number(tempArrowPoints[0]), y1: Number(tempArrowPoints[1]), x2: Number(tempArrowPoints[2]), y2: Number(tempArrowPoints[3]) }, type: 'arrow', area_name: points.area_name ,roi_id:this.trafficCountData[index].roi_id},
+        { points: { x1: Number(tempPoints[0]), y1: Number(tempPoints[1]), x2: Number(tempPoints[2]), y2: Number(tempPoints[3]) }, type: 'line', area_name: points.area_name ,roi_id:this.trafficCountData[index].roi_id},
 
       ]
       this.tempTCData.push(temp)
+      console.log(this.trafficCountData[index].roi_id,'${i} roi key id')
+      this.TCKeyId = points.roi_id
 
     }
 
@@ -1737,13 +1862,13 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
     );
     console.log(this.tempTCData)
-    this.drawExistTCRois(this.tempTCData)
+   this.drawExistTCRois(this.tempTCData)
   }
 
   DrawExistPanels() {
     this.roiPoints.forEach((element: any, id: number) => {
       console.log(element.roi)
-      this.polygonOptions.stroke = 'rgb(127, 255, 0)'
+      this.polygonOptions.stroke=this.raROIColor
       var Polygon = new fabric.Polygon(element.roi, this.polygonOptions)
       // Polygon.id = uuid()
       console.log(Polygon)
@@ -1752,11 +1877,11 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         // bottom:5
         backgroundColor: 'black',
         selectable: false,
-        left: Polygon.left + 10,
+        left: Polygon.left+10,
         // top: (Polygon.top != 0) && !(Polygon.top - 20 < 0) && (Polygon.top - 20 != 0) ? Polygon.top + 20 : 20,
-        top: Polygon.top + 30,
-        stroke: 'rgb(127, 255, 0)',
-        fill: 'rgb(127, 255, 0)',
+        top:Polygon.top+30,
+        stroke: this.raROIColor,
+        fill: this.raROIColor,
       });
       console.log(Polygon)
 
@@ -1768,7 +1893,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         roi_data: this.cameraData[0].roi_data[id]
 
       }
-
+      this.RAKeyId=element.key_id
       this.allCameraData.push(tempObj)
 
 
@@ -1790,10 +1915,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isMouseDown = true
     this.tempTCCanvas = []
     var temp: any[] = []
-    var line: any
-    var triangle: any
+    var line:any
+    var triangle:any
     data.forEach((TCROI: any, i: number) => {
-
+   console.log(TCROI,'tc data')
       temp = []
       for (let index = 0; index < TCROI.length; index++) {
         const pointer = TCROI[index];
@@ -1807,9 +1932,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(linePath)
           line = new fabric.Line(linePath,
             {
-              stroke: 'rgb(255, 81, 148)',
+              stroke: 'rgb(127, 255, 0)',
               strokeWidth: 3,
-              fill: 'rgb(255, 81, 148)',
+              fill: 'rgb(127, 255, 0)',
               originX: 'center',
               originY: 'center',
               hasControls: false,
@@ -1821,17 +1946,17 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
             });
           console.log(line)
           temp.push(line)
-          line.set({ x1: Math.round(pointer.points.x1), y1: Math.fround(pointer.points.y1) })
+       line.set({ x1: Math.round(pointer.points.x1), y1: Math.fround(pointer.points.y1) })
           this.canvas.add(line)
-          // this.activeObj = this.line;
+         // this.activeObj = this.line;
 
         }
         if (pointer.type == 'arrow') {
           var points = [pointer.points.x1, pointer.points.y1, pointer.points.x2, pointer.points.y2];
-          line = new fabric.Line(points, {
+         line = new fabric.Line(points, {
             strokeWidth: 3,
-            fill: 'rgb(255, 81, 148)',
-            stroke: 'rgb(255, 81, 148)',
+            fill: 'rgb(127, 255, 0)',
+            stroke: 'rgb(127, 255, 0)',
             originX: 'center',
             originY: 'center',
             id: 'arrow_line',
@@ -1842,8 +1967,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
             type: 'arrow'
           });
 
-
-          var centerX = (line.x1 + line.x2) / 2;
+       
+          var centerX = (line.x1 +line.x2) / 2;
           var centerY = (line.y1 + line.y2) / 2;
           this.deltaX = line.left - centerX;
           this.deltaY = line.top - centerY;
@@ -1858,22 +1983,22 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
             angle: this._FabricCalcArrowAngle(line.x1, line.y1, line.x2, line.y2),
             width: 20,
             height: 20,
-            fill: 'rgb(255, 81, 148)',
+            fill: 'rgb(127, 255, 0)',
             id: 'arrow_triangle',
-            uuid: line.uuid
+            uuid:line.uuid
           });
           temp.push(line, triangle)
-
+   
           this.canvas.add(line, triangle);
           var text = new fabric.Text(pointer.area_name, {
             fontSize: 16,
             // bottom:5
             backgroundColor: 'black',
             selectable: false,
-            left: line.left - 60,
+            left:line.left - 60,
             top: (line.top != 0) && !(line.top - 20 < 0) && (line.top - 20 != 0) ? line.top - 20 : 20,
-            stroke: 'rgb(255, 81, 148)',
-            fill: 'rgb(255, 81, 148)',
+            stroke: 'rgb(127, 255, 0)',
+            fill: 'rgb(127, 255, 0)',
           });
           temp.push(text)
           this.canvas.add(text)
@@ -1937,7 +2062,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       this.allCameraData[this.selectedEditId].roi_data.bb_box = roiPointsString
       console.log(this.allCameraData[this.selectedEditId].roi_data)
 
-      roiData.push({ ...this.allCameraData[this.selectedEditId].roi_data })
+      roiData.push({...this.allCameraData[this.selectedEditId].roi_data})
     }
     var cameraData: any = {
       id: this.ID,
@@ -2059,7 +2184,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
     this.savePpeConfig()
-    console.log('fire', this.fireSmokeForm.get('fire').value, 'smoke', this.fireSmokeForm.get('smoke').value)
+    console.log('fire',this.fireSmokeForm.get('fire').value,'smoke',this.fireSmokeForm.get('smoke').value)
     console.log(this.ppeConfig)
 
   }
@@ -2129,14 +2254,14 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   AddTrafficCountData() {
-
+     
 
     var temp: any = {}
-    var tempCanvas: any[] = []
+    var tempCanvas:any[]=[]
     temp.line = Math.round(this.trafficCountLineROIS[0].x1).toString() + ';' + Math.round(this.trafficCountLineROIS[0].y1).toString() + ';' + Math.round(this.trafficCountLineROIS[0].x2).toString() + ';' + Math.round(this.trafficCountLineROIS[0].y2).toString() + ';'
-    temp.arrow = Math.round(this.trafficCountLineROIS[1].x1).toString() + ';' + Math.round(this.trafficCountLineROIS[1].y1).toString() + ';' + Math.round(this.trafficCountLineROIS[1].x2).toString() + ';' + Math.round(this.trafficCountLineROIS[1].y2).toString() + ';'
+    temp.arrow = Math.round(this.trafficCountLineROIS[1].x1).toString() + ';' + Math.round( this.trafficCountLineROIS[1].y1).toString() + ';' +Math.round(this.trafficCountLineROIS[1].x2).toString() + ';' +Math.round(this.trafficCountLineROIS[1].y2).toString() + ';'
 
-    var tempObj = { class_name: this.classIds, line_bbox: temp, area_name: this.tcName.value, roi_id: (this.trafficCountData.length) }
+    var tempObj = { class_name: this.classIds, line_bbox: temp, area_name: this.tcName.value,roi_id:(++this.TCKeyId) }
     fabric.util.resetObjectTransform(this.newROI)
     var dimensionsLeft = this.line._getLeftToOriginX()
     var dimensionsTop = this.line._getTopToOriginY()
@@ -2148,10 +2273,10 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       selectable: false,
       left: dimensionsLeft - 20,
       top: dimensionsTop - 30,
-      stroke: 'rgb(255, 81, 148)',
-      fill: 'rgb(255, 81, 148)',
+      stroke: 'rgb(127, 255, 0)',
+      fill: 'rgb(127, 255, 0)',
     });
-    tempCanvas = [...this.trafficCountLineROIS, ROINameObject]
+    tempCanvas=[...this.trafficCountLineROIS,ROINameObject]
     console.log(ROINameObject)
     this.canvas.add(ROINameObject)
     this.canvas.renderAll()
@@ -2165,8 +2290,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     this.trafficCountLineROIS = []
     this.btnIndex = 1
     this.tempTCCanvas.push(tempCanvas)
-    // this.SaveChanges()
-    this.AddTCData()
+   // this.SaveChanges()
+   this.AddTCData()
     this.modalService.dismissAll()
   }
 
@@ -2183,9 +2308,9 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log(linePath)
       this.line = new fabric.Line(linePath,
         {
-          stroke: 'rgb(255, 81, 148)',
+          stroke: 'rgb(127, 255, 0)',
           strokeWidth: 3,
-          fill: 'rgb(255, 81, 148)',
+          fill: 'rgb(127, 255, 0)',
           originX: 'center',
           originY: 'center',
           hasControls: false,
@@ -2204,8 +2329,8 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
       var points = [pointer.x, pointer.y, pointer.x, pointer.y];
       this.line = new fabric.Line(points, {
         strokeWidth: 3,
-        fill: 'rgb(255, 81, 148)',
-        stroke: 'rgb(255, 81, 148)',
+        fill: 'rgb(127, 255, 0)',
+        stroke: 'rgb(127, 255, 0)',
         originX: 'center',
         originY: 'center',
         id: 'arrow_line',
@@ -2230,7 +2355,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
         angle: -45,
         width: 20,
         height: 20,
-        fill: 'rgb(255, 81, 148)',
+        fill: 'rgb(127, 255, 0)',
         id: 'arrow_triangle',
         uuid: this.line.uuid
       });
@@ -2244,38 +2369,39 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvas.requestRenderAll()
   }
 
-  IsDeleteTC(modal: any, index: any) {
-    this.deleteID = index
-    this.modalService.open(modal, { backdrop: 'static', size: 'xs' })
-
-  }
-  OnDeleteTCROI() {
-    var index = this.deleteID
+   IsDeleteTC(modal:any,index:any){
+    this.deleteID=index
     console.log(this.deleteID)
-    console.log(this.tempTCCanvas)
+    this.modalService.open(modal,{backdrop:'static',size:'xs'})
+
+   }
+  OnDeleteTCROI() {
+    var index=this.deleteID
+    console.log(this.deleteID)
+    console.log( this.tempTCCanvas)
     console.log(this.TCCanvasData[index])
 
-    console.log(this.trafficCountData[index])
+    console.log( this.trafficCountData[index])
     this.tempTCCanvas[index].forEach((roi: any) => {
       this.canvas.remove(roi)
       this.canvas.renderAll()
     });
     this.trafficCountLineROIS = []
     this.btnIndex = 1
-    var data = {
-      id: this.ID,
-      roi_id: this.trafficCountData[index].roi_id,
-      ai_solutions: this.AISolutions
+   var data={
+    id:this.ID,
+    roi_id:this.trafficCountData[index].roi_id,
+    ai_solutions:this.AISolutions
+   }
+  this.server.deleteTCData(data).subscribe((response:any)=>{
+    this.server.notification(response.message)
+    if(response.success){
+      this.trafficCountData.splice(index,1)
+      this.modalService.dismissAll()
     }
-    this.server.deleteTCData(data).subscribe((response: any) => {
-      this.server.notification(response.message)
-      if (response.success) {
-        this.trafficCountData.splice(index, 1)
-        this.modalService.dismissAll()
-      }
-    })
+  })
     //to modify need to implement  api to delete  tc roi
-
+    
   }
 
 
@@ -2342,18 +2468,18 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvas.requestRenderAll()
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(){
     this.modalService.dismissAll()
   }
 
-  RefreshCameraData() {
+  RefreshCameraData(){
     this.server.GetRACameraData(this.ID).subscribe((response: any) => {
-
-      if (response.success) {
-        this.cameraData = response.message
-        this.trafficCountData = this.cameraData[0].tc_data
-
-      }
+     
+     if(response.success){
+      this.cameraData=response.message
+      this.trafficCountData=this.cameraData[0].tc_data
+      
+     }
     })
 
   }
@@ -2372,10 +2498,41 @@ export class CameraRoiComponent implements OnInit, AfterViewInit, OnDestroy {
     return (angle * 180 / Math.PI + 90);
   };
 
-  RemoveDuplicates(arr: any[]) {
+RemoveDuplicates(arr:any[]) {
     return arr.filter((item,
-      index) => arr.indexOf(item) === index);
-  }
+        index) => arr.indexOf(item) === index);
+}
+
+
+AddFireROI() {
+  this.polygonOptions.stroke='orange'
+  this.newROI.stroke='orange'
+
+  this.isAddROI = false
+  this.isWater=true
+  this.isEdit = false
+  this.roiType = 1
+  this.isTCRoi=false
+  this.newROIPoints.splice(0,this.newROIPoints.length)
+  this.canvas.requestRenderAll()
+  this.isAddCC=false
+
+}
+
+
+DeleteWaterROIS(i:number){
+  console.log(i)
+  console.log(this.WaterROIData,'water roi data')
+  console.log(this.WaterROIData[i].roi_canvas)
+  console.log(this.WaterROIData[i].roi_name_canvas)
+ this.canvas.remove(this.WaterROIData[i].roi_canvas)
+ this.canvas.remove(this.WaterROIData[i].roi_name_canvas)
+ //after api of delete water color change integrating need to splice the waterroidata
+
+ //this.WaterROIData.splice(i,1)
+
+}
+
 
 
 }

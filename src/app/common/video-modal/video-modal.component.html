@@ -6,9 +6,10 @@
     </div>
         <div class="modal video-modal" style="background-color: transparent !important; border: 2px solid white;border-radius:7px">
 
-            
-            <ngb-carousel *ngIf="Data" class="">
-                <ng-template ngbSlide *ngFor="let data of Data;">
+            <ngb-carousel #carousal *ngIf="Data" class="" [activeId]="SelectedId|json">
+                <ng-container *ngFor="let data of Data;let i=index">
+
+                <ng-template ngbSlide [id]="i|json" >
                     <div class="video-container">
                         <video width="500" height="300" [poster]="data.poster_image" preload="none" controls>
                             <source [src]="data.video_name" type="video/mp4">
@@ -21,7 +22,9 @@
                     </div>
                 </ng-template>
 
+</ng-container>
 
             </ngb-carousel>
+
         </div>
 </ng-template>

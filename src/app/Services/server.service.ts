@@ -158,6 +158,8 @@ DownloadJobsheet(){
   return this.http.get(this.IP+'/excel_download',{observe:'response',responseType:'arraybuffer'})
 
 }
+
+//camera apis
 AddCameraDetails(details:any){
 return this.http.post(this.IP+'/add_camera',details)
 }
@@ -167,6 +169,20 @@ DeleteCameraDetails(id:string){
 AddRACamerabyRtsp(details:any){
   return this.http.post(this.IP+'/add_camera_rtsp',details)
 }
+
+EditCamera(details:any){
+
+  return this.http.post(this.IP+'/edit_camera',details)
+}
+
+
+//alarm apis
+
+EditAlarm(details:any){
+
+  return this.http.post(this.IP+'/edit_alarmdetails',details)
+}
+
 
 //camera analytics api
 AddROI(data:any){

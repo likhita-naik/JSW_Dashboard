@@ -315,16 +315,19 @@ input:checked + .switch:active::before {
   /* border-left:3px solid var(--primary-color); */
   margin: 0.25em;
   padding:1em;
-  border-left: 1px solid #ccc;
-  border-top: 1px solid #ccc ;
+  /* border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
   border-right: 1px solid #ccc ;
-  border-bottom: 1px solid #ccc ;
+  border-bottom: 1px solid #ccc ; */
+  border:1px dashed var(--label-color) !important;
  border-radius: 10px;
   display:flex;
   /* flex: 1fr 1fr 1fr; */
   position: relative;
   align-items: center;
+  margin-top:0.5rem;
   justify-content: center;
+  background:#F0F5F9;
  
 
 }

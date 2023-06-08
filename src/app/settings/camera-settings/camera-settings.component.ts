@@ -59,6 +59,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   sensgiz:any = new FormArray([])
   SensGizInfo:any[]=[]
   sensgizModal:any
+  selectedCamera:any
   licenseMessage: string = "You have reached the limit of cameras that you can add to this application"
   startAppConfig: FormControl = new FormControl('0', Validators.required)
   voiceLanguages: Observable<any[]> = of([{ text: 'English', id: 0 },
@@ -121,8 +122,32 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
     plant: new FormControl('', Validators.required),
+    department:new FormControl('',Validators.required),
     area: new FormControl('', Validators.required),
     port: new FormControl('', Validators.required),
+    rtsp_url: new FormControl(''),
+    isHooter: new FormControl(''),
+    isRelay: new FormControl(''),
+
+    isSensgiz:new FormControl(''),
+    hooterIp: new FormControl(''),
+    hooterConfig: new FormControl(''),
+    relayIp: new FormControl(''),
+    voiceLang: new FormControl('')//altered voice language settings
+
+  })
+
+
+  EditCameraForm:FormGroup=  new FormGroup({
+    cameraname: new FormControl('', Validators.required),
+    // camera_brand: new FormControl('', Validators.required),
+    cameraip: new FormControl('', Validators.required),
+    // username: new FormControl('', Validators.required),
+    // password: new FormControl('', Validators.required),
+    plant: new FormControl('', Validators.required),
+    department:new FormControl('',Validators.required),
+    area: new FormControl('', Validators.required),
+    //port: new FormControl('', Validators.required),
     rtsp_url: new FormControl(''),
     isHooter: new FormControl(''),
     isRelay: new FormControl(''),
@@ -157,8 +182,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     };
 
     this.sensgiz.push(new FormGroup({
-      coinId:new FormControl(''),
-      angle:new FormControl('')
+      coinId:new FormControl('',Validators.required),
+      angle:new FormControl('',Validators.required)
     }))
     this.server.CheckApplicationStatus().subscribe((response: any) => {
       console.log(response)
@@ -170,12 +195,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     })
     this.AddCameraForm.valueChanges.subscribe(value => {
       console.log(value)
-      if (this.AddCameraForm.get('cameraname').value && this.AddCameraForm.get('cameraip').value && this.AddCameraForm.get('port').value && this.AddCameraForm.get('camera_brand').value && this.AddCameraForm.get('username').value && this.AddCameraForm.get('password').value && this.AddCameraForm.get('plant').value && this.AddCameraForm.get('area').value && this.AddCameraForm.get('cameraip').value) {
+      if (this.AddCameraForm.get('cameraname').value && this.AddCameraForm.get('cameraip').value && this.AddCameraForm.get('department').value && this.AddCameraForm.get('port').value && this.AddCameraForm.get('camera_brand').value && this.AddCameraForm.get('username').value && this.AddCameraForm.get('password').value && this.AddCameraForm.get('plant').value && this.AddCameraForm.get('area').value && this.AddCameraForm.get('cameraip').value) {
         console.log('adding manually')
         this.isFormValid = true
       }
 
-      else if (this.AddCameraForm.get('cameraname').value && this.AddCameraForm.get('camera_brand').value && this.AddCameraForm.get('rtsp_url').value && this.AddCameraForm.get('area').value && this.AddCameraForm.get('plant').value) {
+      else if (this.AddCameraForm.get('cameraname').value && this.AddCameraForm.get('camera_brand').value&& this.AddCameraForm.get('department').value && this.AddCameraForm.get('rtsp_url').value && this.AddCameraForm.get('area').value && this.AddCameraForm.get('plant').value) {
         this.isFormValid = true
 
       }
@@ -270,12 +295,27 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.isFail = false
           this.isSuccess = false
           this.isLoading = false
+          this.sensgiz.reset()
+
+          this.sensgiz=new FormArray([])
+          this.sensgiz.push(new FormGroup({
+            coinId:new FormControl('',Validators.required),
+            angle:new FormControl('',Validators.required)
+          }))
+          this.SensGizInfo.splice(0,this.SensGizInfo.length)
           // this.newROIPoints.splice(0,this.newROIPoints.length)
           // this.OnAddingNewROI()
         }, (reason) => {
           this.isHooter = false
           this.isRelay = false
           this.isVoiceAlert = false
+          this.sensgiz.reset()
+
+          this.sensgiz=new FormArray([])
+          this.sensgiz.push(new FormGroup({
+            coinId:new FormControl('',Validators.required),
+            angle:new FormControl('',Validators.required)
+          }))
           console.log('submit')
           this.isLoading = false
           /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -284,6 +324,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.AddCameraForm.reset()
           this.isFail = false
           this.isSuccess = false
+          this.sensgiz.reset()
+          this.SensGizInfo.splice(0,this.SensGizInfo.length)
 
             ;
         }
@@ -371,7 +413,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       this.isSensgiz=false
 
     }
-    if (event.target.value == 'sensgiz') {
+    if (event.target.value == 'sensegiz') {
       this.isVoiceAlert = false
       this.isSensgiz=true
       this.isHooter = false
@@ -384,7 +426,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   editSensgiz(modal:any){
-    this.modalService.open(modal)
+   this.sensgizModal= this.modalService.open(modal)
 
   }
   HooterSettings(event: any) {
@@ -431,9 +473,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             camera_brand: this.AddCameraForm.value['camera_brand'][0].text,
             plant: this.AddCameraForm.value['plant'],
             area: this.AddCameraForm.value['area'],
+            department:this.AddCameraForm.value['department'],
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             ai_solution: [],
             alarm_type: 'hooter',
+            alarm_enable:true,
+            coin_details:null,
             alarm_ip_address: this.AddCameraForm.value['hooterIp']
 
           }
@@ -448,7 +493,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             alarm_type: 'relay',
             alarm_ip_address: this.AddCameraForm.value['relayIp'],
-            ai_solution: []
+            ai_solution: [],
+            coin_details:null,
+            alarm_enable:true,
+
+            department:this.AddCameraForm.value['department'],
+
 
           }
 
@@ -462,6 +512,10 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             area: this.AddCameraForm.value['area'],
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             alarm_type: 'voiceAlert',
+            coin_details:null,
+            department:this.AddCameraForm.value['department'],
+            alarm_enable:true,
+
             alarm_ip_address: this.AddCameraForm.value['voiceLanguage'],
             ai_solution: []
 
@@ -474,9 +528,12 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             plant: this.AddCameraForm.value['plant'],
             area: this.AddCameraForm.value['area'],
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
-            alarm_type: 'sensgiz',
+            department:this.AddCameraForm.value['department'],
+            alarm_enable:true,
+
+            alarm_type: 'sensegiz',
             // alarm_type: null,
-            alarm_ip_address: null,
+            alarm_ip_address: '',
             coin_details:this.SensGizInfo,
             // alarm_ip_address: this.AddCameraForm.value['voiceLanguage'],
             ai_solution: []
@@ -492,6 +549,10 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             rtsp_url: this.AddCameraForm.value['rtsp_url'],
             ai_solution: [],
             alarm_type: null,
+            coin_details:null,
+            department:this.AddCameraForm.value['department'],
+            alarm_enable:true,
+
             alarm_ip_address: null,
 
 
@@ -554,6 +615,9 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             port: this.AddCameraForm.value['port'],
             alarm_type: 'hooter',
             alarm_ip_address: this.AddCameraForm.value['hooterIp'],
+            coin_details:null,
+            alarm_enable:true,
+            department:this.AddCameraForm.value['department'],
 
             ai_solution: []
           }
@@ -570,7 +634,11 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             port: this.AddCameraForm.value['port'],
             alarm_type: 'relay',
             alarm_ip_address: this.AddCameraForm.value['relayIp'],
-            ai_solution: []
+            ai_solution: [],
+            coin_details:null,
+            alarm_enable:true,
+            department:this.AddCameraForm.value['department'],
+
           }
         }
         else if(this.isSensgiz){
@@ -585,6 +653,9 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             port: this.AddCameraForm.value['port'],
             alarm_type: 'sensgiz',
             alarm_ip_address: null,
+            alarm_enable:true,
+            department:this.AddCameraForm.value['department'],
+
             coin_details:this.SensGizInfo,
 
             // alarm_ip_address: this.AddCameraForm.value['relayIp'],
@@ -602,6 +673,10 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             cameraip: this.AddCameraForm.value['cameraip'],
             port: this.AddCameraForm.value['port'],
             ai_solution: [],
+            coin_details:null,
+            alarm_enable:true,
+            department:this.AddCameraForm.value['department'],
+
             alarm_type: null,
             alarm_ip_address: null,
           }
@@ -956,8 +1031,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 AddSensgizData(){
   this.sensgiz.push(new FormGroup({
-    coinId:new FormControl(),
-    angle:new FormControl()
+    coinId:new FormControl('',Validators.required),
+    angle:new FormControl('',Validators.required)
   }))
 }
 
@@ -971,6 +1046,7 @@ SensgizModal(modal:any){
 
 
 SaveSensgizInfo(){
+  this.SensGizInfo=[]
   this.sensgiz.controls.forEach((element:any,index:number) => {
     this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle'],coin_key_id:index})
     
@@ -980,11 +1056,52 @@ SaveSensgizInfo(){
 }
 
 EditCameraModal(modal:any,data:any){
-  this.AddCameraForm.get('cameraname').setValue(data.cameraname)
-  this.AddCameraForm.get('camera_brand').setValue(data.camera_brand)
-  this.AddCameraForm.get('plant').setValue(data.plant)
-  this.AddCameraForm.get('area').setValue(data.area)
-  this.AddCameraForm.get('cameraip').setValue(data.camera_ip)
+  this.SensGizInfo=[]
+  this.sensgiz.reset()
+  this.sensgiz =new FormArray([])
+  this.selectedCamera=data
+  this.EditCameraForm.get('cameraname').setValue(data.cameraname)
+  // this.EditCameraForm.get('camera_brand').setValue(data.camera_brand)
+  this.EditCameraForm.get('plant').setValue(data.plant)
+  this.EditCameraForm.get('area').setValue(data.area)
+  this.EditCameraForm.get('cameraip').setValue(data.camera_ip)
+  this.EditCameraForm.get('department').setValue(data.department)
+  if(data.alarm_type=='hooter'){
+    this.isHooter=true
+    this.isRelay=false
+    this.isSensgiz=false
+    this.EditCameraForm.get('isHooter').setValue('hooter')
+  }
+
+  if(data.alarm_type=='relay'){
+    this.isHooter=false
+    this.isRelay=true
+    this.isSensgiz=false
+    this.EditCameraForm.get('isHooter').setValue('relay')
+  }
+
+
+  if(data.alarm_type=='sensegiz'){
+    this.SensGizInfo=data.coin_details
+    this.isHooter=false
+    this.isRelay=false
+    this.isSensgiz=true
+
+    data.coin_details.forEach((value:any,index:number) => {
+      
+   
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl('',Validators.required),
+      angle:new FormControl('',Validators.required)
+    }))
+
+    this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
+    this.sensgiz.controls[index].get('angle').setValue(value.angle)
+
+  });
+      this.EditCameraForm.get('isHooter').setValue('sensegiz')
+  }
+
   // this.AddCameraForm.get('password').setValue(data.password)
   // this.AddCameraForm.get('useraname').setValue(data.camera_name)
   // this.AddCameraForm.get('port').setValue(data.camera_name)
@@ -992,8 +1109,224 @@ EditCameraModal(modal:any,data:any){
 
 
 
-  this.modalService.open(modal,{size:'lg'})
+  this.modalService.open(modal,{size:'lg'}).result.then((result) => {
+    // this.closeResult = `Closed with: ${result}`;
+    //  this.roiNameControl.setValue(null)
+    //  this.OnAddingNewROI()
+    // this.download = '',
+    //   this.isalert = false.
+    this.isHooter = false
+    this.isRelay = false
+    this.isVoiceAlert = false
+    console.log('cancel')
+    this.sensgiz.reset()
+    this.sensgiz=new FormArray([])
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl('',Validators.required),
+      angle:new FormControl('',Validators.required)
+    }))
+
+    this.AddCameraForm.reset()
+    this.isFail = false
+    this.isSuccess = false
+    this.isLoading = false
+    // this.newROIPoints.splice(0,this.newROIPoints.length)
+    // this.OnAddingNewROI()
+  }, (reason) => {
+    this.isHooter = false
+    this.isRelay = false
+    this.isVoiceAlert = false
+    console.log('submit')
+    this.isLoading = false
+    /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    // this.download = '',
+    //   this.isalert = false
+    this.AddCameraForm.reset()
+    this.isFail = false
+    this.sensgiz.reset()
+    this.sensgiz=new FormArray([])
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl('',Validators.required),
+      angle:new FormControl('',Validators.required)
+    }))    
+    
+    this.isSuccess = false
+
+      ;
+  }
+  )
+
 }
+
+
+
+OnEditCameraDetails() {
+  // this.AddCameraForm.get('rtsp_url').value?this.removeValidators():''
+  this.EditCameraForm.updateValueAndValidity()
+  if (true) {  
+    this.isLoading = true
+    var formData = new FormData()
+    this.isFail = false
+    this.isSuccess = false
+    console.log(this.EditCameraForm.value)
+    for (let k in this.EditCameraForm.value) {
+      console.log(k, this.EditCameraForm.value[k])
+      if (k === 'camera_brand') {
+        formData.append(k, this.EditCameraForm.value[k].text)
+      }
+      else {
+        formData.append(k, this.EditCameraForm.value[k])
+
+      }
+    }
+
+    // if (this.AddCameraForm.get('rtsp_url').value) {
+      console.log('rtsp adding')
+      var ai_solution = Array
+      console.log(ai_solution)
+      if (this.isHooter) {
+        var data1: any = {
+          id:this.selectedCamera._id.$oid,
+
+          cameraname: this.EditCameraForm.value['cameraname'],
+         // camera_brand: this.EditCameraForm.value['camera_brand'][0].text,
+          plant: this.EditCameraForm.value['plant'],
+          area: this.EditCameraForm.value['area'],
+          department:this.EditCameraForm.value['department'],
+         // rtsp_url: this.EditCameraForm.value['rtsp_url'],
+        //  ai_solution: [],
+          alarm_type: 'hooter',
+          // coin_details:null,
+          alarm_ip_address: this.EditCameraForm.value['hooterIp']
+
+        }
+        console.log(data1)
+      }
+      else if (this.isRelay) {
+        var data1: any = {
+          id:this.selectedCamera._id.$oid,
+
+          cameraname: this.EditCameraForm.value['cameraname'],
+          // camera_brand: this.EditCameraForm.value['camera_brand'][0].text,
+          plant: this.EditCameraForm.value['plant'],
+          area: this.EditCameraForm.value['area'],
+         // rtsp_url: this.EditCameraForm.value['rtsp_url'],
+          alarm_type: 'relay',
+          alarm_ip_address: this.EditCameraForm.value['relayIp'],
+         // ai_solution: [],
+          // coin_details:null,
+          department:this.EditCameraForm.value['department'],
+
+
+        }
+
+      }
+      //altered
+      else if (this.isVoiceAlert) {
+        var data1: any = {
+          id:this.selectedCamera._id.$oid,
+
+          cameraname: this.EditCameraForm.value['cameraname'],
+          // camera_brand: this.EditCameraForm.value['camera_brand'][0].text,
+          plant: this.EditCameraForm.value['plant'],
+          area: this.EditCameraForm.value['area'],
+          // rtsp_url: this.EditCameraForm.value['rtsp_url'],
+          alarm_type: 'voiceAlert',
+          // coin_details:null,
+          department:this.EditCameraForm.value['department'],
+
+          alarm_ip_address: this.EditCameraForm.value['voiceLanguage'],
+        //  ai_solution: []
+
+        }
+      }
+      else if (this.isSensgiz) {
+        var data1: any = {
+          id:this.selectedCamera._id.$oid,
+
+          cameraname: this.EditCameraForm.value['cameraname'],
+          // camera_brand: this.EditCameraForm.value['camera_brand'][0].text,
+          plant: this.EditCameraForm.value['plant'],
+          area: this.EditCameraForm.value['area'],
+         // rtsp_url: this.EditCameraForm.value['rtsp_url'],
+          department:this.EditCameraForm.value['department'],
+
+          alarm_type: 'sensegiz',
+          // alarm_type: null,
+          // alarm_ip_address: '',
+          coin_details:this.SensGizInfo,
+          // alarm_ip_address: this.AddCameraForm.value['voiceLanguage'],
+         // ai_solution: []
+
+        }
+      }
+      else {
+        var data1: any = {
+          id:this.selectedCamera._id.$oid,
+
+          cameraname: this.EditCameraForm.value['cameraname'],
+          // camera_brand: this.AddCameraForm.value['camera_brand'][0].text,
+          plant: this.EditCameraForm.value['plant'],
+          area: this.EditCameraForm.value['area'],
+          //rtsp_url: this.AddCameraForm.value['rtsp_url'],
+          ai_solution: [],
+          alarm_type: null,
+          coin_details:null,
+          department:this.EditCameraForm.value['department'],
+
+          alarm_ip_address: null,
+
+
+        }
+      }
+      // this.AddCameraForm.removeControl('username')
+      // this.AddCameraForm.removeControl('password')
+      // this.AddCameraForm.removeControl('cameraip')
+      // this.AddCameraForm.removeControl('port')
+      this.server.EditCamera(data1).subscribe((response: any) => {
+        console.log(response)
+        // this.AddCameraForm.addControl('username', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('password', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('cameraip', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('port', new FormControl('', Validators.required))
+
+        if (response.success) {
+          this.isLoading = false
+          this.isSuccess = true
+
+          this.responseMessage = response.message
+
+          this.isHooter = false
+          this.isRelay = false
+          this.server.notification(response.message)
+          setTimeout(() => {
+            this.modalService.dismissAll()
+
+          }, 1000);
+          this.GetCameraList()
+        }
+        else {
+          this.isLoading = false
+          this.responseMessage = response.message
+          this.isFail = true
+          //this.AddCameraForm.reset()
+        }
+      },
+        Err => {
+          this.isFail = true
+          this.responseMessage = "Error while adding camera,retry"
+          this.isLoading = false
+          // this.AddCameraForm.reset()
+        })
+
+
+    // }
+
+      }
+
+    }
+
+
   ngOnDestroy(): void {
     this.modalService.dismissAll()
   }

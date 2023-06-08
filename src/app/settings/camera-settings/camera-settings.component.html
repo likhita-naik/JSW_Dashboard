@@ -39,27 +39,30 @@
   </div>
 
   <div class="row mb-3">
-    <h5 class="sub-header mb-2 ms-3">Upload Excel</h5>
-    <div class="float-end">
-      <button class="btn default-outline float-end">Download Sample Sheet</button>
-    </div>
-    <div class="mt-2 row">
+    <h5 class="sub-header mb-2 ms-3 col-12">Upload Excel</h5>
+    <div style="border-radius:4px" class="col-12 p-3">
+      <div class="float-end mb-2">
+        <button class="btn default-outline float-end"><fa-icon icon="file-arrow-down"></fa-icon> Download Sample
+          Sheet</button>
+      </div>
+      <div class="container p-2">
 
-      <div class="container">
-        <div>
-          <p class="mb-2 text-muted">Select excel sheet of camera's IP and RTSP to check camera's status</p>
+        <div class="">
+          <div>
+            <p class="mb-2 text-muted">Select excel sheet of camera's IP and RTSP to check camera's status</p>
 
-          <div id="ExcelContainer" class="mb-2">
-            <input class="form-control form-control-lg" id="formFileLg"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              (change)="OnFileSelect($event)" type="file">
-          </div>
-          <div class="d-flex justify-centent-center mt-2" style="width:100%">
-            <button class="btn default" style="width:inherit;" (click)="DownloadCameraExcel()"
-              *ngIf="isDownload"><fa-icon class="me-2" *ngIf="!isDownloading" icon="download"></fa-icon>
-              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"
-                *ngIf="isDownloading"></span>
-              Download</button>
+            <div id="ExcelContainer" class="mb-2">
+              <input class="form-control form-control-lg" id="formFileLg"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                (change)="OnFileSelect($event)" type="file">
+            </div>
+            <div class="d-flex justify-centent-center mt-2" style="width:100%">
+              <button class="btn default" style="width:inherit;" (click)="DownloadCameraExcel()"
+                *ngIf="isDownload"><fa-icon class="me-2" *ngIf="!isDownloading" icon="download"></fa-icon>
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"
+                  *ngIf="isDownloading"></span>
+                Download</button>
+            </div>
           </div>
         </div>
       </div>
@@ -125,7 +128,7 @@
                 <button class="btn" (click)="EditCameraModal(cameraEditModal,camera)">
                   <fa-icon class="text-black" icon="pen-to-square"></fa-icon>
                 </button>
-                
+
                 <button class="btn" (click)="goToRoiEdit(camera._id.$oid,camera.imagename)">
 
                   <fa-icon icon="cog" class="text-dark"></fa-icon>
@@ -195,8 +198,14 @@
               id="Area">
             <label for="Area">Area</label>
           </div>
+          <div class="form-floating">
+            <input type="text" formControlName="department" placeholder="Department" class="form-control"
+              [ngClass]="AddCameraForm.get('department').invalid && AddCameraForm.get('department').touched?'is-invalid':''"
+              id="department">
+            <label for="department">Department</label>
+          </div>
         </div>
-       
+
         <div class="camera-display" id="input">
           <div class="form-floating">
             <input type="text" formControlName="username" placeholder="User name" class="form-control"
@@ -265,10 +274,10 @@
               <label for="relay" class="form-check-label text-muted">Relay</label>
             </div>
             <div class="form-check form-check-inline" id="custome">
-              <input type="radio" formControlName="isHooter" value="sensgiz"
+              <input type="radio" formControlName="isHooter" value="sensegiz"
                 (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensgiz"
                 class="form-check-input">
-              <label for="sensgiz" class="form-check-label text-muted">Sensgiz</label>
+              <label for="sensgiz" class="form-check-label text-muted">Sensegiz</label>
             </div>
             <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
@@ -354,7 +363,7 @@
 
 <!-- template to edit the camera details
  -->
- <ng-template let-modal #cameraEditModal>
+<ng-template let-modal #cameraEditModal>
   <div class="border">
     <div class="" id="formContent">
       <div style="font-family: 'Times New Roman',
@@ -368,87 +377,69 @@
       </button>
     </div>
     <div class="modal-body">
-      <form action="" class="" [formGroup]="AddCameraForm" id="addCameraForm">
+      <form action="" class="" [formGroup]="EditCameraForm" id="addCameraForm">
         <div class="wrapper-two" id="input">
           <div class="form-floating">
             <input type="text"
-              [ngClass]="AddCameraForm.get('cameraname').invalid && AddCameraForm.get('cameraname').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('cameraname').invalid && EditCameraForm.get('cameraname').touched?'is-invalid':''"
               formControlName="cameraname" placeholder="Camera name" class="form-control" id="cameraname">
             <label for="cameraname">Camera Name</label>
           </div>
-          <div class="form-floating" id="cameraBrand">
-            <!-- <input type="text"
-            [ngClass]="AddCameraForm.get('camera_brand').invalid && AddCameraForm.get('camera_brand').touched?'is-invalid':''"
-            formControlName="camera_brand" placeholder="Camera brand" class="form-control" id="camerabrand">
-          <label for="camerabrand">Camera Brand</label> -->
+          <!-- <div class="form-floating" id="cameraBrand">
+         
             <ng-multiselect-dropdown #singleSelect [placeholder]="'Camera Brand'" [settings]="dropdownSettings2|async"
               [data]="cameraBrandList|async" formControlName="camera_brand">
             </ng-multiselect-dropdown>
-            <!-- <label>Camera brand</label> -->
-          </div>
+        
+          </div> -->
 
           <div class="form-floating">
             <input type="text" formControlName="plant" placeholder="Plant" class="form-control"
-              [ngClass]="AddCameraForm.get('plant').invalid && AddCameraForm.get('plant').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('plant').invalid && EditCameraForm.get('plant').touched?'is-invalid':''"
               id="plant">
             <label for="plant">Plant</label>
           </div>
           <div class="form-floating">
             <input type="text" formControlName="area" placeholder="Area" class="form-control"
-              [ngClass]="AddCameraForm.get('area').invalid && AddCameraForm.get('area').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('area').invalid && EditCameraForm.get('area').touched?'is-invalid':''"
               id="Area">
             <label for="Area">Area</label>
           </div>
-        </div>
-       
-        <div class="camera-display" id="input">
+
+
           <div class="form-floating">
+            <input type="text" formControlName="department" placeholder="Department" class="form-control"
+              [ngClass]="EditCameraForm.get('department').invalid && EditCameraForm.get('department').touched?'is-invalid':''"
+              id="department">
+            <label for="department">Department</label>
+          </div>
+        
+          <!-- <div class="form-floating">
             <input type="text" formControlName="username" placeholder="User name" class="form-control"
-              [ngClass]="AddCameraForm.get('username').invalid && AddCameraForm.get('username').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('username').invalid && EditCameraForm.get('username').touched?'is-invalid':''"
               id="username">
             <label for="username">User name</label>
           </div>
           <div class="form-floating">
-          </div>
-          <div></div>
+          </div> -->
 
 
-          <div class="form-floating">
-            <input type="text" type="password" formControlName="password" placeholder="Password" class="form-control"
-              [ngClass]="AddCameraForm.get('password').invalid && AddCameraForm.get('password').touched?'is-invalid':''"
-              id="password">
-            <label for="password">Password</label>
-          </div>
-          <div class="icon-circle-medium  icon-circle-lg bg-info-light">
-            <div class="or">
-              <div class="ms-2 me-2 mt-2 mb-2">
-                or
-              </div>
-            </div>
-          </div>
-          <div class="">
-            <div class="form-floating">
-              <input type="text" formControlName="rtsp_url" placeholder="User name" class="form-control"
-                [ngClass]="AddCameraForm.get('rtsp_url').invalid && AddCameraForm.get('rtsp_url').touched?'is-invalid':''"
-                id="username">
-              <label for="username">Rtsp Url</label>
-            </div>
-          </div>
+
+    
           <div class="form-floating">
             <input type="text" formControlName="cameraip" placeholder="Camera ip" class="form-control"
-              [ngClass]="AddCameraForm.get('cameraip').invalid && AddCameraForm.get('cameraip').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('cameraip').invalid && EditCameraForm.get('cameraip').touched?'is-invalid':''"
               id="cameraip">
             <label for="cameraip">Camera IP</label>
           </div>
 
-          <div></div>
-          <div></div>
+<!--          
           <div class="form-floating">
             <input type="text" formControlName="port" placeholder="Port" class="form-control"
-              [ngClass]="AddCameraForm.get('port').invalid && AddCameraForm.get('port').touched?'is-invalid':''"
+              [ngClass]="EditCameraForm.get('port').invalid && EditCameraForm.get('port').touched?'is-invalid':''"
               id="port">
             <label for="port">Port</label>
-          </div>
+          </div> -->
         </div>
 
         <div class="d-flex justify-centent-center align-items-center mt-3">
@@ -469,10 +460,10 @@
               <label for="relay" class="form-check-label text-muted">Relay</label>
             </div>
             <div class="form-check form-check-inline" id="custome">
-              <input type="radio" formControlName="isHooter" value="sensgiz"
-                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensgiz"
+              <input type="radio" formControlName="isHooter" value="sensegiz"
+                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensegiz" id="senesgiz"
                 class="form-check-input">
-              <label for="sensgiz" class="form-check-label text-muted">Sensgiz</label>
+              <label for="sensegiz" class="form-check-label text-muted">Sensegiz</label>
             </div>
             <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
@@ -542,7 +533,7 @@
         <div class="alert alert-danger mb-2 mt-3" *ngIf="isFail" role="alert">
           {{responseMessage}}
         </div>
-        <button type="submit" class="mt-3" (click)="OnAddCameraDetails()" [disabled]="(!isFormValid)||isLoading"><span
+        <button type="submit" class="mt-3" (click)="OnEditCameraDetails()" [disabled]="isLoading"><span
             *ngIf="!isLoading">Submit</span>
           <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" *ngIf="isLoading"></span>
 
@@ -568,7 +559,7 @@
 
 
 
- 
+
 
 <ng-template let-modal #stopAppModal>
   <div class="modal-body">
@@ -708,7 +699,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn default float-end" (click)="SaveSensgizInfo()">
+    <button class="btn default float-end" [disabled]="!sensgiz.valid" (click)="SaveSensgizInfo()">
       Save
     </button>
   </div>

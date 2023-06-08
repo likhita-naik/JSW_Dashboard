@@ -157,7 +157,7 @@
                                 <td>
                                     <!-- <button class="btn btn-sm default me-2" (click)="Edit(i)">Edit</button> -->
                                     <button class="btn btn-sm danger me-2"
-                                        (click)="isDelete(i,deleteModal)">Delete</button>
+                                        (click)="isDelete(i,deleteModal,'RA')">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -242,7 +242,7 @@
                                         </td>
                                         <td>
                                             <button class="btn btn-sm danger me-2"
-                                                (click)="isDelete(i,deleteModal)">Delete</button>
+                                                (click)="isDelete(i,deleteModal,'RA')">Delete</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -295,42 +295,271 @@
 
     <div class="row mt-3">
         <div class="col-12">
-            <div class="card">
-                <div class="list-group-item">
-                    <div class="row">
-                        <span class="d-flex justify-centent-center align-items-center">
-                            <h5 class="" style="color: #178489;">Alert Details</h5>
+            <div class="card" *ngIf="cameraData.length>0">
+                <li class="list-group-item">
+                    <div class="row mb-3">
+                        <span class="row col-2">
+                            <h5 class="" style="color: #178489;">Alert Settings</h5>
                         </span>
                     </div>
 
                     <div class="row">
-                        
+
 
                         <div class="col-xl-12 col-lg-6 col-md-12 col-sm-6 col-xs-6">
                             <!-- <div class="div mb-3 "> Alert Configaration</div> -->
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <div class="d-flex justify-content-center align-items-center" style="flex-direction:column">
-                                        <div> <span class="text-muted" >Enabled Alert Type: </span> <span
-                                                class="ms-2" ><b>{{cameraData[0].alarm_type?cameraData[0].alarm_type.charAt(0).toUpperCase()+cameraData[0].alarm_type.slice(1):'---'}}
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div> <span class="text-muted">Enabled Alert Type: </span> <span
+                                                class="ms-2"><b>{{ cameraData[0].alarm_type!=null?
+                                                    cameraData[0].alarm_type.charAt(0).toUpperCase()+cameraData[0].alarm_type.slice(1):'---'}}
                                                 </b></span>
                                         </div>
-                                        <li class="list-group-item mt-2" *ngIf="cameraData[0].alarm_type!=null">
-                                            <span
-                                                class="text-muted me-2" >{{cameraData[0].alarm_type.charAt(0).toUpperCase()+cameraData[0].alarm_type.slice(1)}}'s
-                                                IP :  </span><span
-                                                class="float-end
-                                        ">{{cameraData[0].alarm_ip_address?cameraData[0].alarm_ip_address: '---'}}</span>
-                                        </li>
-                                        </div>
-                                      
+                                    </div>
                                 </div>
-                                
+                                <div class="col-12">
+                                    <div class="">
+                                        <div class="p-2 m-3" *ngIf="cameraData[0].alarm_type!=null">
+
+                                            <span class="mb-3"><b>Details</b> </span>
+                                            <div class="d-flex justify-content-between mt-3 border ">
+                                                <span>
+                                                    <ul class="d-flex justify-centent-space-between align-items-center">
+                                                        <li class="list-group-item me-2">
+                                                            <span
+                                                                class="text-muted">{{cameraData[0].alarm_type.charAt(0).toUpperCase()+cameraData[0].alarm_type.slice(1)}}'s
+
+                                                                IP : </span><span class="float-end"
+                                                                *ngIf="cameraData[0].alarm_ip_address!=null">{{cameraData[0].alarm_ip_address?cameraData[0].alarm_ip_address:'---'}}</span>
+                                                        </li>
+                                                        <li class="list-group-item ms-2">
+                                                            <span class="text-muted">Delay : </span><span
+                                                                class="float-end">2 seconds</span>
+
+
+                                                        </li>
+
+                                                    </ul>
+                                                </span>
+                                                <span class="float-end btn default-tertiary"
+                                                    (click)="ModalOpen(editAlert)">
+                                                    <fa-icon icon="pen-to-square" class=""></fa-icon> Edit
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 p-2" *ngIf="cameraData[0].alarm_ip_address!=null">
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <div class="me-2"><b>Select Violation Type</b></div>
+
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item"
+                                                            *ngIf="cameraData[0].roi_data.length>0">
+                                                            <div class="form-check form-check-inline" id="custome">
+                                                                <input type="checkbox" id="RAalert" value="RA"
+                                                                    defaultValue="" (change)="PPE_Config($event)"
+                                                                    class="form-check-input">
+                                                                <label for="RAalert"
+                                                                    class="form-check-label text-muted">RA</label>
+                                                                <div [formGroup]="alarmRAObjects">
+                                                                    <div class="mb-3 mt-3 d-flex justify-content-center"
+                                                                        *ngIf="raObjects.length>0">
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="subCheckbox"
+                                                                            *ngIf="raObjects.indexOf('person')>=0">
+                                                                            <input formControlName="person"
+                                                                                type="checkbox"
+                                                                                [defaultValue]="'person'"
+                                                                                [value]="'person'" checked
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="0">
+                                                                            <label for="0"
+                                                                                class="form-check-label">Person</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="subCheckbox"
+                                                                            *ngIf="raObjects.indexOf('car')>=0">
+                                                                            <input formControlName="car" type="checkbox"
+                                                                                [value]="'car'" [defaultValue]="'car'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="1">
+                                                                            <label for="1"
+                                                                                class="form-check-label">Car</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="subCheckbox"
+                                                                            *ngIf="raObjects.indexOf('bike')>=0">
+                                                                            <input formControlName="bike"
+                                                                                type="checkbox" [value]="'bike'"
+                                                                                [defaultValue]="'bike'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="2">
+                                                                            <label for="2"
+                                                                                class="form-check-label">Bike</label>
+                                                                        </div>
+                                                                        <!-- truck is removed from this  -->
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="subCheckbox"
+                                                                            *ngIf="raObjects.indexOf('truck')>=0">
+                                                                            <input type="checkbox"
+                                                                                formControlName="truck"
+                                                                                [value]="'truck'"
+                                                                                [defaultValue]="'truck'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="3">
+                                                                            <label for="3"
+                                                                                class="form-check-label">Truck</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list-group-item"
+                                                            *ngIf="ppeConfig.helmet || ppeConfig.vest">
+                                                            <div class="form-check form-check-inline" id="custome">
+                                                                <input type="checkbox" name="" value="PPE"
+                                                                    (change)="PPE_Config($event)" defaultValue="PPE"
+                                                                    id="PPEalert" class="form-check-input">
+                                                                <label for="PPEalert"
+                                                                    class="form-check-label text-muted">PPE</label>
+                                                                <div class="mb-3 mt-3 d-flex justify-content-center">
+
+                                                                    <div class="form-check form-check-inline"
+                                                                        id="custome" *ngIf="ppeConfig.helmet">
+                                                                        <input type="checkbox" id="helmetAlert"
+                                                                            value="helmet" defaultValue=""
+                                                                            (change)="OnPPEAlarmObjects($event)"
+                                                                            class="form-check-input">
+                                                                        <label for="helmetAlert"
+                                                                            class="form-check-label text-muted">Helmet</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline"
+                                                                        id="custome" *ngIf="ppeConfig.vest">
+                                                                        <input type="checkbox" name="" value="vest"
+                                                                            (change)="OnPPEAlarmObjects($event)"
+                                                                            defaultValue="vest" id="vestAlert"
+                                                                            class="form-check-input">
+                                                                        <label for="vestAlert"
+                                                                            class="form-check-label text-muted">Vest</label>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <div class="form-check form-check-inline" id="custome">
+                                                                <input type="checkbox" name="" value="fire"
+                                                                    (change)="PPE_Config($event)" defaultValue="fire"
+                                                                    id="fireAlert" class="form-check-input">
+                                                                <label for="fireAlert"
+                                                                    class="form-check-label text-muted">Fire</label>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <div class="form-check form-check-inline" id="custome">
+                                                                <input type="checkbox" name="" value="smoke"
+                                                                    (change)="PPE_Config($event)" defaultValue="smoke"
+                                                                    id="smokeAlert" class="form-check-input">
+                                                                <label for="smokeAlert"
+                                                                    class="form-check-label text-muted">Smoke</label>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list-group-item"
+                                                            *ngIf="cameraData[0].cr_data.length>0">
+                                                            <div class="form-check form-check-inline" id="custome">
+                                                                <input type="checkbox" id="RAalert" value="RA"
+                                                                    defaultValue="" (change)="PPE_Config($event)"
+                                                                    class="form-check-input">
+                                                                <label for="RAalert"
+                                                                    class="form-check-label text-muted">
+                                                                    Crowd
+                                                                    Count</label>
+                                                                <div [formGroup]="alarmRAObjects">
+                                                                    <div
+                                                                        class="mb-3 mt-3 d-flex justify-content-center">
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="custome"
+                                                                            *ngIf="raObjects.indexOf('person')>=0">
+                                                                            <input formControlName="person"
+                                                                                type="checkbox"
+                                                                                [defaultValue]="'person'"
+                                                                                [value]="'person'" checked
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="0">
+                                                                            <label for="0"
+                                                                                class="form-check-label">Person</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="custome"
+                                                                            *ngIf="raObjects.indexOf('car')>=0">
+                                                                            <input formControlName="car" type="checkbox"
+                                                                                [value]="'car'" [defaultValue]="'car'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="1">
+                                                                            <label for="1"
+                                                                                class="form-check-label">Car</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="custome"
+                                                                            *ngIf="raObjects.indexOf('bike')>=0">
+                                                                            <input formControlName="bike"
+                                                                                type="checkbox" [value]="'bike'"
+                                                                                [defaultValue]="'bike'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="2">
+                                                                            <label for="2"
+                                                                                class="form-check-label">Bike</label>
+                                                                        </div>
+                                                                        <!-- truck is removed from this  -->
+                                                                        <div class="form-check form-check-inline"
+                                                                            id="custome"
+                                                                            *ngIf="raObjects.indexOf('truck')>=0">
+                                                                            <input type="checkbox"
+                                                                                formControlName="truck"
+                                                                                [value]="'truck'"
+                                                                                [defaultValue]="'truck'"
+                                                                                class="form-check-input"
+                                                                                (change)="OnRAAlarmObjects($event)"
+                                                                                name="" id="3">
+                                                                            <label for="3"
+                                                                                class="form-check-label">Truck</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+
+
+
+                                                    </ul>
+                                                </div>
+
+
+
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
-                </div>
+                </li>
 
             </div>
         </div>
@@ -461,22 +690,6 @@
                                 </div>
 
                             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                             <!-- <div class="row">
@@ -823,5 +1036,56 @@
                 </div> -->
             </div>
         </div>
+    </div>
+</ng-template>
+
+<ng-template let-modal #editAlert>
+    <div class="modal-header flex-column">
+        <!-- <div class="icon-box">
+<i class="material-icons">&#xE5CD;</i>
+</div> -->
+        <h4 class="modal-title w-100">Edit Alert</h4>
+        <!-- <button type="button" class="btn"  aria-hidden="true">&times;</button> -->
+    </div>
+    <div class="modal-body">
+
+        <div class="col-12">
+            <form class="border p-3" style="border-radius: 10px;" [formGroup]="alertForm">
+                <div class="m-3">
+                    <label for="ip_address" class="mb-1"><b>Alarm Type</b></label>
+
+                    <input type="text" formControlName="ip" id="ip_address" class="form-control"
+                        placeholder="New ip address">
+                </div>
+                <div class="m-3">
+                    <label for="ip_address" class="mb-1"><b>IP</b></label>
+
+                    <input type="text" formControlName="ip" id="ip_address" class="form-control"
+                        placeholder="New ip address">
+                </div>
+                <div class="m-3">
+                    <label for="delay" class="mb-1"><b> Delay</b></label>
+
+                    <input formControlName="delay" type="text" id="delay" class="form-control"
+                        placeholder="New delay value">
+                </div>
+
+
+
+            </form>
+            <!-- <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
+                    data-dismiss="modal">Cancel</button>
+                <button type="button" (click)="modal.close('Cross click')" class="btn default">Got it</button>
+              </div> -->
+
+            <div class="mt-2 btn-wrapper">
+                <button class="btn default-outline me-1" (click)="modal.close('Cross click')">Cancel</button>
+                <button class="btn default">Submit</button>
+            </div>
+
+
+        </div>
+
     </div>
 </ng-template>

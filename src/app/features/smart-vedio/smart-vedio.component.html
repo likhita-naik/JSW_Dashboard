@@ -62,7 +62,7 @@
                         
                     </div></td> -->
                     <td>
-                        <div class="btn-icon" (click)="openVideoModal()" ><fa-icon icon="video"></fa-icon></div>
+                        <div class="btn-icon" (click)="openVideoModal(i)" ><fa-icon icon="video"></fa-icon></div>
                     </td>
 
                 </tr>
@@ -73,5 +73,5 @@
 
 </div>
 
-<app-video-modal #modal [Data]="Data"
+<app-video-modal #modal [Data]="Data" [SelectedId]="selectedVideoId"
 ></app-video-modal>
