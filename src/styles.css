@@ -805,7 +805,7 @@ font-size: 0.5rem;
   /* Toggling the sidebar header content, 
      hide the big heading [h3] and showing the small heading [strong] and vice versa
   */
-  #sidebar .sidebar-header strong {
+  /* #sidebar .sidebar-header strong {
       display: none;
   }
   #sidebar.active .sidebar-header h3 {
@@ -813,10 +813,10 @@ font-size: 0.5rem;
   }
   #sidebar.active .sidebar-header strong {
       display: block;
-  }
+  } */
 
   /* Downsize the navigation links font size */
-  #sidebar.active ul li a {
+  /* #sidebar.active ul li a {
       padding: 20px 10px;
       font-size: 0.85em;
   }
@@ -826,19 +826,19 @@ font-size: 0.5rem;
       display: block;
       font-size: 1.8em;
       margin-bottom: 5px;
-  }
+  } */
 
 
-  #sidebar.active .sidebar-header #CollapseImg{
+  /* #sidebar.active .sidebar-header #CollapseImg{
     display: none !important;
   }#sidebar.active .sidebar-header strong #Img{
     display: block;
-  }
+  } */
   
   /* Adjust the dropdown links padding*/
-  #sidebar.active ul ul a {
+  /* #sidebar.active ul ul a {
       padding: 10px !important;
-  }
+  } */
 
   /* Changing the arrow position to bottom center position, 
     translateX(50%) works with right: 50% 
@@ -985,7 +985,7 @@ font-size: 0.5rem;
 
 
 /* styling of sidebars toggle in mobile */
-@media screen and (max-width:460px) {
+@media screen and (max-width:769px) {
 
   .dashboard-wrapper.active{
     left: 0rem;
@@ -1067,18 +1067,14 @@ font-size: 0.5rem;
 
   
   /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
-  #sidebar.active .sidebar-header strong {
+  /* #sidebar.active .sidebar-header strong {
     display: none;
   }
   #sidebar.active .sidebar-header h3 {
     display: none;
   }
-  
-  #sidebar.active .sidebar-header #CollapseImg{
-    display: block;
-  }#sidebar.active .sidebar-header strong #Img{
-    display: block;
-  }
+   */
+
   
   #sidebar.active ul li a {
     text-align: center;
@@ -1103,6 +1099,13 @@ font-size: 0.5rem;
   font-size: 1.1rem;
   }
   
+
+
+  #sidebar.active .sidebar-header #CollapseImg{
+    display: none !important;
+  }#sidebar.active .sidebar-header strong #Img{
+    display: block;
+  }
 }
 
 
@@ -1136,6 +1139,69 @@ display: none;
   /* transition: all 3s; */
   transition: color .15s ease-in-out, background-color .5s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !important;
 }
+
+
+/* switch button's css  */
+.switch {
+  display: inline-block;
+  position: relative;
+  width: 50px;
+  height: 25px;
+  border-radius: 20px;
+  background: #dfd9ea;
+  transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  vertical-align: middle;
+  cursor: pointer;
+}
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background: #fafafa;
+  border-radius: 50%;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.switch:active::before {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+}
+input:checked + .switch {
+  background:var(--bg-success);
+}
+input:checked + .switch::before {
+  left: 27px;
+  background: #fff;
+}
+input:checked + .switch:active::before {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+}
+
+.btn.default-outline {
+  border: 2px solid var(--prime-color) !important;
+  color:  var(--prime-color) !important;
+  background-color:transparent !important;
+  border-radius: 5px !important;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+
+}
+
+.btn.default-outline:active {
+  background-color: #dae8f2 !important;
+  color: var(--prime-color) !important;
+  -moz-transform: scale(0.95);
+  -webkit-transform: scale(0.95);
+  -o-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  border-radius: 5px !important;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+
+  transform: scale(0.95);
+  /* transition: all 3s; */
+  transition: color .15s ease-in-out, background-color .5s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !important;
+}
+
 
 
 

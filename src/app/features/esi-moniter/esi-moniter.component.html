@@ -497,51 +497,7 @@
     </div>
   </div>
 </td>
-<!-- <td scope="col" id="success" *ngIf="showRack"> -->
-<!-- <button *ngIf="panel" class="btn default btn default-tertiary">
-                                                  <a [routerLink]="['/app/jobsheetViolation']"
-                                                      [queryParams]="{ id:data['_id'].$oid,type:data['plant'],image_name:data.image_name}"
-                                                      target="_blank">
-                                                      Rack in</a>
-                                              </button> -->
-<!-- <tr *ngIf="data.riro_data[1]!=null;else elsep">
-            <div (click)="RackEditModal(editRack,data,'rack_process')" style="cursor:pointer;" class=""
-              *ngIf="data.riro_data[1].rack_process!=null;else elsep">
-              <td>
 
-                <div style="pointer-events:none" class="" *ngIf="data.riro_data[1].rack_process==='rack_in'">
-                  <input type="checkbox" [checked]="data.riro_data[1].rack_process==='rack_in'" class="form-check-input"
-                    name="RackIn" [id]="'rackIn'+i">&nbsp;<label class="form-check-label" [for]="'rackIn'+i">Rack
-                    In</label>
-                  <div class="mt-2">
-
-                  </div>
-                </div>
-              </td>
-              <td style="pointer-events:none" id="success">
-                <div class="" *ngIf="data.riro_data[1].rack_process==='rack_out'">
-                  <input type="checkbox" [checked]="data.riro_data[1].rack_process==='rack_out'" class="form-check-input"
-                    name="RackIn" [id]="'rackOut'+i">&nbsp; <label class="form-check-label" [for]="'rackOut'+i">Rack
-                    Out</label>
-
-
-                </div>
-              </td>
-
-              <td style="pointer-events:none" id="success">
-                <div class="" *ngIf="data.riro_data[1].rack_process==='maintenance'">
-                  <input type="checkbox" [checked]="data.riro_data[1].rack_process==='maintenance'" class="form-check-input"
-                    name="RackIn" [id]="'maintenance'+i">&nbsp; <label class="form-check-label"
-                    [for]="'maintenance'+i">Maintenance
-                  </label>
-
-
-                </div>
-              </td>
-            </div>
-            <ng-template #elsep>---</ng-template>
-          </tr>
-          </td> -->
 
 <td *ngIf="showRackITime">
   <div *ngIf="data.type=='HT';else noHT">

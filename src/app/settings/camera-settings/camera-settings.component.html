@@ -301,7 +301,7 @@
           <div class="form-floating" *ngIf="isSensgiz">
 
             <div class="form-control">
-              <div>
+              <div class="d-flex align-items-center justify-centent-between">
 
                 <span>Sensgiz Details</span>
                 <span class="float-end">
@@ -413,7 +413,7 @@
               id="department">
             <label for="department">Department</label>
           </div>
-        
+
           <!-- <div class="form-floating">
             <input type="text" formControlName="username" placeholder="User name" class="form-control"
               [ngClass]="EditCameraForm.get('username').invalid && EditCameraForm.get('username').touched?'is-invalid':''"
@@ -425,7 +425,7 @@
 
 
 
-    
+
           <div class="form-floating">
             <input type="text" formControlName="cameraip" placeholder="Camera ip" class="form-control"
               [ngClass]="EditCameraForm.get('cameraip').invalid && EditCameraForm.get('cameraip').touched?'is-invalid':''"
@@ -433,7 +433,7 @@
             <label for="cameraip">Camera IP</label>
           </div>
 
-<!--          
+          <!--          
           <div class="form-floating">
             <input type="text" formControlName="port" placeholder="Port" class="form-control"
               [ngClass]="EditCameraForm.get('port').invalid && EditCameraForm.get('port').touched?'is-invalid':''"

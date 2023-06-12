@@ -1059,6 +1059,11 @@ EditCameraModal(modal:any,data:any){
   this.SensGizInfo=[]
   this.sensgiz.reset()
   this.sensgiz =new FormArray([])
+  this.sensgiz.push(new FormGroup({
+    coinId:new FormControl('',Validators.required),
+    angle:new FormControl('',Validators.required)
+  }))
+
   this.selectedCamera=data
   this.EditCameraForm.get('cameraname').setValue(data.cameraname)
   // this.EditCameraForm.get('camera_brand').setValue(data.camera_brand)
@@ -1082,6 +1087,7 @@ EditCameraModal(modal:any,data:any){
 
 
   if(data.alarm_type=='sensegiz'){
+    this.sensgiz=new FormGroup([])
     this.SensGizInfo=data.coin_details
     this.isHooter=false
     this.isRelay=false
@@ -1121,11 +1127,7 @@ EditCameraModal(modal:any,data:any){
     console.log('cancel')
     this.sensgiz.reset()
     this.sensgiz=new FormArray([])
-    this.sensgiz.push(new FormGroup({
-      coinId:new FormControl('',Validators.required),
-      angle:new FormControl('',Validators.required)
-    }))
-
+    
     this.AddCameraForm.reset()
     this.isFail = false
     this.isSuccess = false

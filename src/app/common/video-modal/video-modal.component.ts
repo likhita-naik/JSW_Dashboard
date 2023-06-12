@@ -1,5 +1,5 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { NgbCarouselConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NgbCarousel, NgbCarouselConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalConfig } from '../models.model';
 
 @Component({
@@ -7,19 +7,28 @@ import { ModalConfig } from '../models.model';
   templateUrl: './video-modal.component.html',
   styleUrls: ['./video-modal.component.css']
 })
-export class VideoModalComponent {
+export class VideoModalComponent implements OnInit {
    @Input() public Data:any
-   @Input() SelectedId:string
+   @Input() public  SelectedId:string
   @Input() public modalConfig?:any 
-  @ViewChild('modal') modalContainer:TemplateRef<VideoModalComponent>
-  // @ViewChild('carousal',{static:true}) carousal:any
+  @ViewChild('modal') modalContainer:TemplateRef<any>
+  //@ViewChild('carousal',{static:false}) carousal:NgbCarousel
 
 constructor(private modalService:NgbModal,public config: NgbCarouselConfig){
-  console.log(this.SelectedId)
+  
   config.wrap=false
+
+}
+
+ngOnInit(): void {
 }
 
 open(){
+  //this.carousal.activeId=this.SelectedId
+  
+  console.log(this.SelectedId)
+  console.log(this.SelectedId)
+  console.log(this.Data)
 this.modalService.open(this.modalContainer,{size:'lg'})
 console.log(this.modalContainer)
 // this.carousal.select(String(this.SelectedId))

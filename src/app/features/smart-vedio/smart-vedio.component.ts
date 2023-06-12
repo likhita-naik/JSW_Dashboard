@@ -12,7 +12,10 @@ export class SmartVedioComponent implements AfterViewInit {
   selectedMoments: { startDate: Moment | any, endDate: Moment | any }
   fromDate:any
   toDate:any
-  selectedVideoId:string
+  selectedVideoId:Observable< string>=of('')
+  pageSize:number=2;
+  collectionSize:number=4
+  page=0;
   @ViewChild('modal') private modalComponent: VideoModalComponent
   Data:any[]=[{
     si_no:1,
@@ -52,6 +55,7 @@ export class SmartVedioComponent implements AfterViewInit {
 }]
   coinIdList:Observable<any[]>= of([])
   cameraList:Observable<any[]>=of([])
+  total:Observable<number>=of(4)
   selectedCoinId:any
   selectedCamera:any
 constructor(){
@@ -72,12 +76,23 @@ constructor(){
 
   openVideoModal(id:number)
   {
-    this.selectedVideoId= String(id)
+    this.selectedVideoId=of( String(id))
+    console.log(this.selectedVideoId.subscribe(value=>{
+      console.log(value)
+    }),'smart video component')
+    setTimeout(() => {
+      
     this.modalComponent.open()
+  }, 1000);
+
   }
  
   ngAfterViewInit(): void {
    
+  }
+
+  sliceData(){
+
   }
 
 }

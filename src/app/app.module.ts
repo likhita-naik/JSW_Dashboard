@@ -35,6 +35,7 @@ import * as CanvasJSAngularChart from '../assets/canvasjs/canvasjs.angular.compo
 
 import { NgChartsConfiguration, NgChartsModule } from 'ng2-charts';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AlertSettingsComponent } from './settings/alert-settings/alert-settings.component';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
@@ -46,6 +47,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     HomeComponent,
    
     alertComponent,
+        AlertSettingsComponent,
 
    // RackEditComponent,
   ],

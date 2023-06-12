@@ -9,7 +9,7 @@ import { arrow, bottom, right } from '@popperjs/core';
 import 'fabric'
 //import { CustomFabricPolygon, CustomFabricRect } from '../../common/models.model';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CheckboxControlValueAccessor, CheckboxRequiredValidator, FormControl, FormControlDirective, FormGroup, Validators } from '@angular/forms';
+import { CheckboxControlValueAccessor, CheckboxRequiredValidator, FormArray, FormControl, FormControlDirective, FormGroup, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { RoiSettingsComponent } from 'src/app/features/roi-settings/roi-settings.component';
 declare const fabric: any
@@ -93,6 +93,10 @@ deleteField:any=''
   TCKeyId:number=0
   CCKeyId:number=0
   RAKeyId:number=0
+  isAlertFormValid:boolean=false
+  isFail:boolean=false
+  isSuccess:boolean=false
+  responseMessage:any
   raROIColor:string='rgb(127, 255, 0)'
    fireAndSmoke={
     fire:false,
@@ -147,6 +151,14 @@ deleteField:any=''
     
     
    })
+
+   isHooter = false
+   isRelay = false
+   isSensgiz=false
+  isVoiceAlert = false
+  sensgiz:any = new FormArray([])
+  SensGizInfo:any[]=[]
+  sensgizModal:any
   crowdCountRoiName: FormControl = new FormControl('', Validators.required)
   @ViewChild('roiInfo') infoModal: ElementRef<any>
   @ViewChild('crowdCount') CCNameModal: ElementRef<any>
@@ -156,8 +168,17 @@ deleteField:any=''
   tcName: FormControl = new FormControl('', Validators.required)
   TrafficConfig: any
   isTCRoi: any
+  editAlertForm:FormGroup=new FormGroup({
+    alarmType:new FormControl('',Validators.required),
+    alarmIp:new FormControl('',Validators.required
+    ),
+    alarmEnable:new FormControl(false),
+    hooterIp:new FormControl('',Validators.required),
+    relayIp:new FormControl('',Validators.required),
+    delay:new FormControl('',Validators.required)
 
-
+  })
+ 
   peopleCrowdForm: FormGroup = new FormGroup(
     {
       min: new FormControl(null, Validators.pattern('^(?!-)\d+$')),
@@ -213,6 +234,7 @@ deleteField:any=''
 
   roiNameControl: FormControl = new FormControl('', Validators.required)
   roiPoints: any[] = []
+  alertType:FormControl=new FormControl('',Validators.required)
   @ViewChild('ROINameChangeModal', { static: false }) ROIChangeModal: TemplateRef<any>
   @ViewChild('canvasContainer', { static: true }) canvasContainer: ElementRef
   @ViewChild('ROINameModal', { static: false }) RoiNameModal: TemplateRef<any>
@@ -342,6 +364,29 @@ deleteField:any=''
 
   ngAfterViewInit(): void {
     this.canvasSetup()
+    // this.sensgiz.valueChanges((value:any)=>{
+
+    // })
+    this.editAlertForm.valueChanges.subscribe((value:any)=>{
+
+      if(this.editAlertForm.get('alarmType').value=='hooter'||this.editAlertForm.get('alarmType').value=='relay'){
+      if(this.editAlertForm.get('alarmType').value!=null && this.editAlertForm.get('alarmIp').value!=''){
+        this.isAlertFormValid=true
+
+      }
+    }
+    else  if(this.editAlertForm.get('alarmType').value=='sensegiz'){
+      if(this.editAlertForm.get('alarmType').value!=null && this.editAlertForm.get('alarmIp').value!='' &&this.sensgiz.length>0){
+        this.isAlertFormValid=true
+
+      }
+
+      else  {
+        this.isAlertFormValid=false
+
+      }
+    }
+    })
     console.log(document.getElementById('helmet'))
     this.makeNewROI()
 
@@ -2534,6 +2579,361 @@ DeleteWaterROIS(i:number){
 }
 
 
+hooterOrRelayConfig(event: any,modal?:any) {
+  console.log(event.target.checked)
+  if (event.target.value == 'hooter') {
+    this.isHooter = true
+    this.isRelay = false
+    this.isSensgiz=false
+    this.isVoiceAlert = false
+
+  }
+  if (event.target.value == 'relay') {
+    this.isHooter = false
+    this.isRelay = true
+    this.isSensgiz=false
+    this.isVoiceAlert = false
+
+  }
+
+  if (event.target.value == 'voiceAlert') {
+    this.isVoiceAlert = true
+    this.isHooter = false
+    this.isRelay = false
+    this.isSensgiz=false
+
+  }
+  if (event.target.value == 'sensegiz') {
+    this.isVoiceAlert = false
+    this.isSensgiz=true
+    this.isHooter = false
+    this.isRelay = false
+    this.SensgizModal(modal)
+  
+  }
+
+
+}
+
+
+SensgizModal(modal:any){
+  this.sensgizModal =this.modalService.open(modal)
+ }
+
+ SaveSensgizInfo(){
+  this.SensGizInfo=[]
+  this.sensgiz.controls.forEach((element:any,index:number) => {
+    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle'],coin_key_id:index})
+    
+  }); 
+  if(this.editAlertForm.get('alarmType').value=='sensegiz'){
+    if(this.editAlertForm.get('alarmType').value!=null && this.editAlertForm.get('alarmIp').value!='' &&this.sensgiz.length>0){
+      this.isAlertFormValid=true
+
+    }
+  }
+  this.sensgizModal.close()
+  console.log(this.SensGizInfo)
+}
+
+AddSensgizData(){
+  this.sensgiz.push(new FormGroup({
+    coinId:new FormControl('',Validators.required),
+    angle:new FormControl('',Validators.required)
+  }))
+}
+DeleteSensgizData(i:number){
+  this.sensgiz.controls.splice(i,1)
+}
+
+EditAlert(modal:any){
+  this.sensgiz.reset()
+  this.sensgiz=new FormArray([])
+
+  this.sensgiz.push(new FormGroup({
+    coinId:new FormControl('',Validators.required),
+    angle:new FormControl('',Validators.required)
+  }))
+  // if(this.cameraData[0].alarm_type!=null){
+  //   this.editAlertForm.get('alarmType').setValue(this.cameraData[0].alarm_type)
+  // }
+  this.editAlertForm.get('alarmEnable').setValue(this.cameraData[0].alarm_enable)
+  if(this.cameraData[0].alarm_type=='hooter'){
+    this.isHooter=true
+    this.isRelay=false
+    this.isSensgiz=false
+    this.editAlertForm.get('alarmType').setValue('hooter')
+    this.editAlertForm.get('alarmIp').setValue(this.cameraData[0].alarm_ip_address)
+  }
+ else if(this.cameraData[0].alarm_type=='relay'){
+  this.isHooter=false
+  this.isRelay=true
+  this.isSensgiz=false
+  this.editAlertForm.get('alarmType').setValue('relay')
+  this.editAlertForm.get('alarmIp').setValue(this.cameraData[0].alarm_ip_address)
+  }
+ else if(this.cameraData[0].alarm_type=='sensegiz'){
+  this.sensgiz=new FormArray([])
+  this.SensGizInfo=this.cameraData[0].coin_details
+  this.isHooter=false
+  this.isRelay=false
+  this.isSensgiz=true
+
+  this.cameraData[0].coin_details.forEach((value:any,index:number) => {
+    
+ 
+  this.sensgiz.push(new FormGroup({
+    coinId:new FormControl('',Validators.required),
+    angle:new FormControl('',Validators.required)
+  }))
+
+  this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
+  this.sensgiz.controls[index].get('angle').setValue(value.angle)
+
+});
+    this.editAlertForm.get('alarmType').setValue('sensegiz')
+  }
+
+  else{
+
+  }
+
+  this.modalService.open(modal)
+
+
+}
+
+OnEditAlertDetails() {
+  // this.AddCameraForm.get('rtsp_url').value?this.removeValidators():''
+  this.editAlertForm.updateValueAndValidity()
+  console.log(this.editAlertForm.value)
+  if (true) {  
+    this.isLoading = true
+    var formData = new FormData()
+    this.isFail = false
+    this.isSuccess = false
+    console.log(this.editAlertForm.value)
+ 
+
+    // if (this.AddCameraForm.get('rtsp_url').value) {
+      console.log('rtsp adding')
+      var ai_solution = Array
+      console.log(ai_solution)
+      if (this.isHooter) {
+        var data1: any = {
+          id:this.cameraData[0]._id.$oid,
+
+         // camera_brand: this.editAlertForm.value['camera_brand'][0].text,
+        
+         // rtsp_url: this.editAlertForm.value['rtsp_url'],
+        //  ai_solution: [],
+          alarm_type: 'hooter',
+          // coin_details:null,
+          alarm_ip_address: this.editAlertForm.value['alarmIp'],
+          alarm_enable:this.editAlertForm.get('alarmEnable').value
+
+        }
+        console.log(data1)
+      }
+      else if (this.isRelay) {
+        var data1: any = {
+          id:this.cameraData[0]._id.$oid,
+
+     
+          // camera_brand: this.editAlertForm.value['camera_brand'][0].text,
+        
+         // rtsp_url: this.editAlertForm.value['rtsp_url'],
+          alarm_type: 'relay',
+          alarm_ip_address: this.editAlertForm.value['alarmIp'],
+          alarm_enable:this.editAlertForm.value['alarmEnable']
+         // ai_solution: [],
+          // coin_details:null,
+        
+
+
+        }
+
+      }
+      //altered
+      else if (this.isVoiceAlert) {
+        var data1: any = {
+          id:this.cameraData[0]._id.$oid,
+
+          
+        
+          alarm_type: 'voiceAlert',
+          // coin_details:null,
+
+          alarm_ip_address: this.editAlertForm.value['voiceLanguage'],
+          alarm_enable:this.editAlertForm.get('alarmEnable').value
+
+        //  ai_solution: []
+
+        }
+      }
+      else if (this.isSensgiz) {
+        var data1: any = {
+          id:this.cameraData[0]._id.$oid,
+
+          
+
+          alarm_type: 'sensegiz',
+        
+          coin_details:this.SensGizInfo,
+           alarm_enable:this.editAlertForm.get('alarmEnable').value
+
+        }
+      }
+      else {
+        var data1: any = {
+          id:this.cameraData[0]._id.$oid,
+
+      
+          // camera_brand: this.AddCameraForm.value['camera_brand'][0].text,
+         
+          ai_solution: [],
+          alarm_type: null,
+          coin_details:null,
+          alarm_enable:false,
+
+
+          alarm_ip_address: null,
+
+
+        }
+      }
+      // this.AddCameraForm.removeControl('username')
+      // this.AddCameraForm.removeControl('password')
+      // this.AddCameraForm.removeControl('cameraip')
+      // this.AddCameraForm.removeControl('port')
+      this.server.EditAlarm(data1).subscribe((response: any) => {
+        console.log(response)
+        // this.AddCameraForm.addControl('username', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('password', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('cameraip', new FormControl('', Validators.required))
+        // this.AddCameraForm.addControl('port', new FormControl('', Validators.required))
+
+        if (response.success) {
+          this.isLoading = false
+          this.isSuccess = true
+          this.GetAlertInfo()
+          this.responseMessage = response.message
+
+          this.isHooter = false
+          this.isRelay = false
+          this.server.notification(response.message)
+          setTimeout(() => {
+            this.modalService.dismissAll()
+
+          }, 1000);
+          // this.GetCameraList()
+        }
+        else {
+          this.isLoading = false
+          this.responseMessage = response.message
+          this.isFail = true
+          //this.AddCameraForm.reset()
+        }
+      },
+        Err => {
+          this.isFail = true
+          this.responseMessage = "Error while adding camera,retry"
+          this.isLoading = false
+          // this.AddCameraForm.reset()
+        })
+
+
+    // }
+
+      }
+
+    }
+
+  
+
+    GetAlertInfo(){
+      this.server.GetRACameraData(this.ID).subscribe((response: any) => {
+        console.log(response.message)
+        this.cameraData = response.message
+        this.AISolutions=this.cameraData[0].ai_solutions?this.cameraData[0].ai_solution:[]
+        console.log(this.AISolutions)
+        this.currentArea = response.area
+        this.currentPlant = response.plant
+        this.CameraDataObservable = of(response.message)
+        this.isCameraData = true
+
+        if (this.cameraData[0].ppe_data.length > 0) {
+          this.ppeForm.get('helmet').valueChanges.subscribe((value:any)=>{
+            console.log(value)
+          })
+          this.ppeConfig =  this.cameraData[0].ppe_data[0]
+          console.log(this.ppeConfig)
+          if (this.cameraData[0].ppe_data[0].helmet) {
+            //this.ppeForm.get('helmet').
+            this.ppeForm.get('helmet').setValue(true)
+            this.ppeForm.get('helmet').markAsUntouched()
+            
+
+          }
+          else {
+            console.log('ppe not vest')
+            this.ppeForm.get('helmet').setValue(false)
+
+            // var temp: any = document.getElementById('helmet')
+            // temp.checked = false
+
+          }
+          if (this.cameraData[0].ppe_data[0].vest) {
+            //this.ppeForm.get('helmet').
+            // this.ppeForm.get('helmet').markAsUntouched()
+          
+            this.ppeForm.get('vest').setValue(true)
+
+          }
+          else {
+            console.log('ppe not vest')
+            this.ppeForm.get('vest').setValue(false)
+
+
+            // var temp: any = document.getElementById('vest')
+            // temp.checked = false
+
+          }
+        }
+        else {
+          console.log('ppe not vest')
+         
+          this.ppeForm.get('vest').setValue(false)
+          this.ppeForm.get('helmet').setValue(false)
+
+
+
+
+        }
+        //edited
+        // if (this.cameraData[0].fire_smoke_data.length > 0) {
+        //   this.fireSmokeForm.get('fire').setValue(this.cameraData[0].fire_smoke_data[0].fire)
+        //   this.fireSmokeForm.get('smoke').setValue(this.cameraData[0].fire_smoke_data[0].smoke)
+
+         
+         
+        // }
+        // else {
+        //   console.log('ppe not vest')
+         
+        //   this.fireSmokeForm.get('fire').setValue(false)
+        //   this.fireSmokeForm.get('smoke').setValue(false)
+
+
+
+
+        // }
+       
+        console.log(this.cameraData)
+      
+      })
+
+    }
 
 }
 

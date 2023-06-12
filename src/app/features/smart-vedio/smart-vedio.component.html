@@ -69,9 +69,22 @@
   
             </tbody>
         </table>
+        <div class="d-flex mx-auto justify-content-center p-1">
+            <ngb-pagination [collectionSize]="total|async" [(page)]="page" [pageSize]="pageSize"
+              style="width: 95vw;overflow-x: auto;" (pageChange)="sliceData()">
+            </ngb-pagination>
+          
+            <div class="d-flex mx-auto justify-content-start">
+              <select class="form-select" style="width:auto" [(ngModel)]="pageSize" (ngModelChange)="sliceData()">
+                <option [ngValue]="10">10</option>
+                <option [ngValue]="15">15</option>
+                <option [ngValue]="20">20</option>
+              </select>
+            </div>
+          </div>
     </div>
 
 </div>
 
-<app-video-modal #modal [Data]="Data" [SelectedId]="selectedVideoId"
+<app-video-modal #modal  [SelectedId]="selectedVideoId|async" [Data]="Data"
 ></app-video-modal>

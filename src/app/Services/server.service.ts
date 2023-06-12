@@ -184,6 +184,7 @@ EditAlarm(details:any){
 }
 
 
+
 //camera analytics api
 AddROI(data:any){
   return this.http.post(this.IP+'/add_roi',data)
