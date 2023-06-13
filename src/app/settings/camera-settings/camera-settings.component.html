@@ -74,7 +74,7 @@
     <div class="card" id="dataTable">
       <div class="card-header">
         <h5 class="float-start"><b>Camera Details</b></h5>
-        <div class="col-xl-2 col-lg-2 col-sm-6 col-xs-6 col-md-6 float-end">
+        <div class="col-xl-2 col-lg-2 col-sm-6 col-xs-12 col-md-6 float-end">
           <ng-multiselect-dropdown [placeholder]="'Hide Column'" [settings]="dropdownSettings" [data]="headers"
             [(ngModel)]="selectedColumn" (onSelect)="onHideColumn($event)" (onDeSelect)="onShowColumn($event)">
           </ng-multiselect-dropdown>

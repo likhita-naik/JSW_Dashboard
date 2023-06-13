@@ -1087,7 +1087,7 @@ EditCameraModal(modal:any,data:any){
 
 
   if(data.alarm_type=='sensegiz'){
-    this.sensgiz=new FormGroup([])
+    this.sensgiz=new FormArray([])
     this.SensGizInfo=data.coin_details
     this.isHooter=false
     this.isRelay=false

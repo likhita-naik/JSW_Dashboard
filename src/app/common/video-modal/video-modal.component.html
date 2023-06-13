@@ -1,12 +1,17 @@
-<ng-template #modal let-modal>
-    <div class="modal-header" style="background:transparent !important">
+    <!-- <div class="modal-header" style="background:transparent !important">
         <button type="button" class="btn btn-default close float-end" aria-label="Close" (click)="modal.close('Cross click')">
             <span aria-hidden="true" class="text-dark">&times;</span>
         </button>
-    </div>
-        <div class="modal video-modal" style="background-color: transparent !important; border: 2px solid white;border-radius:7px">
-
-            <ngb-carousel #carousal *ngIf="Data" class="" [activeId]="SelectedId|json">
+    </div> -->
+    <div class="d-flex">
+        <div class="" style="background:transparent !important">
+            <button type="button" class="btn default-tertiary close float-end" aria-label="Close" (click)="Close()">
+                <span aria-hidden="true" class="font-primary">&times;</span>
+            </button>
+        </div>
+        <div class="video-modal" style="background-color: transparent !important; border: 2px solid white;border-radius:7px">
+           
+            <ngb-carousel #carousal="ngbCarousel" *ngIf="Data" class="" >
                 <ng-container *ngFor="let data of Data;let i=index">
 
                 <ng-template ngbSlide [id]="i|json" >
@@ -17,8 +22,9 @@
                         </video>
                     </div>
                     <div class="carousel-caption">
-                        <div><span class="tex">Camera Name :</span><b>{{data.camera_name}}</b></div>
-                        <div><span class="tex">Coin ID :</span><b>{{data.coin_id}}</b></div>
+                        <div><span>SI Number: {{i}} </span></div>
+                        <div><span class="text">Camera Name :</span><b>{{data.camera_name}}</b></div>
+                        <div><span class="text">Coin ID :</span><b>{{data.coin_id}}</b></div>
                     </div>
                 </ng-template>
 
@@ -27,4 +33,4 @@
             </ngb-carousel>
 
         </div>
-</ng-template>
+        </div>

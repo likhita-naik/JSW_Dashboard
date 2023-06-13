@@ -52,6 +52,7 @@
     --bs-modal-bg:transparent !important;
   }
 
+
   ngb-pagination ::ng-deep ul > li:not(.active) > a {
     background-color:  #f8f8f8 !important;
     border-radius: 5px !important;

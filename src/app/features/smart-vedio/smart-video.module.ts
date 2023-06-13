@@ -6,11 +6,12 @@ import { NgxDaterangepickerMd } from "ngx-daterangepicker-material";
 import { TreeSelectModule } from "primeng/treeselect";
 import { CommonModules } from "src/app/common/common.module";
 import { SmartVedioComponent } from "./smart-vedio.component";
+import { NgScrollbarModule } from "ngx-scrollbar";
 
 const routes:Routes=[{path:'',component:SmartVedioComponent}]
 @NgModule({
     exports:[],
-    imports:[CommonModules,RouterModule.forChild(routes), NgxDaterangepickerMd.forRoot({}),TreeSelectModule],
+    imports:[CommonModules,RouterModule.forChild(routes), NgxDaterangepickerMd.forRoot({}),TreeSelectModule,NgScrollbarModule],
     declarations:[SmartVedioComponent]
 })
 

@@ -38,14 +38,14 @@
                 [(ngModel)]="selectedViolation" (onSelect)="onViolationTypeSelect($event)">
             </ng-multiselect-dropdown>
         </div> -->
-<div class="col-2">
+<div class="col-xl-2 col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3">
 <div class="row">
             <p-treeSelect  containerStyleClass="w-full" [(ngModel)]="selectedViolation"  [ngModelOptions]=" 
             {standalone: true}" [options]="violationTypeList|async" (onNodeSelect)="onViolationTypeSelect($event)"  placeholder="Select Violation"></p-treeSelect>
         </div>
         </div>
 
-        <div class="col-2">
+        <div class="col-xl-2 col-xs-12 col-sm-12 col-md-6 col-lg-6 mb-3">
             <div class="row">
                         <p-treeSelect  containerStyleClass="w-full" [ngModelOptions]=" 
                         {standalone: true}"  containerStyleClass="w-full" [(ngModel)]="selectedItems" (onNodeSelect)="onCameraIdSelect($event)"  [options]="dropdownList|async" placeholder="Select Camera"></p-treeSelect>
@@ -53,7 +53,7 @@
                     </div>
        
 
-        <div class="col-xl-3 col-sm-12 col-lg-6 col-xs-12 col-md-6 mb-3">
+        <div class="col-xl-3 col-sm-12 col-lg-12 col-xs-12 col-md-12 mb-3">
             <button class="btn default text-white me-3 ms-1" style="width:80px" (click)="Submit()" style="width:80px"
                 [disabled]="(selectedMoments.startDate===null || selectedMoments.endDate===null)"><span
                     *ngIf="!loading">Submit</span>

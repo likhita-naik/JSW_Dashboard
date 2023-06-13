@@ -4,6 +4,7 @@
     height: inherit;
     flex-direction: row;
     align-items: center;
+    position: relative;
     background-color: transparent !important;
     justify-content: center;
 }
