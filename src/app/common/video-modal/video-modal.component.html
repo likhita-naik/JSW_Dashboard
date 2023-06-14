@@ -3,13 +3,11 @@
             <span aria-hidden="true" class="text-dark">&times;</span>
         </button>
     </div> -->
-    <div class="d-flex">
-        <div class="" style="background:transparent !important">
-            <button type="button" class="btn default-tertiary close float-end" aria-label="Close" (click)="Close()">
-                <span aria-hidden="true" class="font-primary">&times;</span>
-            </button>
+    <div class="d-flex justify-centent-center align-items-center">
+        <div class="">
+            
         </div>
-        <div class="video-modal" style="background-color: transparent !important; border: 2px solid white;border-radius:7px">
+        <div class="video-modal" >
            
             <ngb-carousel #carousal="ngbCarousel" *ngIf="Data" class="" >
                 <ng-container *ngFor="let data of Data;let i=index">

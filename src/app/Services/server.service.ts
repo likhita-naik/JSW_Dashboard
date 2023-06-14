@@ -481,6 +481,14 @@ GetConveyorImg(data:any){
 stopApp(){
   return this.http.get(this.IP+'/stop_app_common')
 }
+
+StartSmartApp(){
+  return this.http.get(this.IP+'/create_smart_config')
+}
+
+StopSmartApp(){
+return this.http.get(this.IP+'/stop_smart_record')
+}
 }
 
 

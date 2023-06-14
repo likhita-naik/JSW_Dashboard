@@ -36,6 +36,7 @@ import * as CanvasJSAngularChart from '../assets/canvasjs/canvasjs.angular.compo
 import { NgChartsConfiguration, NgChartsModule } from 'ng2-charts';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AlertSettingsComponent } from './settings/alert-settings/alert-settings.component';
+import { SmartVedioService } from './features/smart-vedio/smartVideo.service';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
@@ -73,7 +74,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgMultiSelectDropDownModule.forRoot(),
   ],
   entryComponents: [alertComponent],
-  providers: [ServerService, DatePipe, AuthGuard,  { provide: NgChartsConfiguration, useValue: { generateColors: false }}],
+  providers: [ServerService, DatePipe, AuthGuard,  { provide: NgChartsConfiguration, useValue: { generateColors: false }},SmartVedioService],
   bootstrap: [AppComponent],
 })
 export class AppModule {

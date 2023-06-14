@@ -1,14 +1,18 @@
-<div class="container-fluid dashboard-conent">
+<div class="container-fluid dashboard-content">
     <h3 class="page-header">
         Smart Video Recording
     </h3>
+    <div class="row mb-2">
+        <div class="col-12">
 
-    <div class="card" id="data-card">
-        <div class="col-xl-12">
-            <!-- <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar"
+    </div>
+    <div class="row">
+        <div class="card" id="data-card">
+            <div class="col-xl-12">
+                <!-- <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar"
             [autoHeightDisabled]="false" [disabled]="false"> -->
 
-            <div class="d-flex flex-row-reverse align-items-center" >
+                <div class="d-flex flex-row-reverse align-items-center">
 
 
                     <div class="p-2">
@@ -36,75 +40,81 @@
                     </div>
 
 
+                </div>
+                <!-- </ng-scrollbar> -->
+
             </div>
-            <!-- </ng-scrollbar> -->
-
-        </div>
-        <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
-            [disabled]="false">
+            <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
+                [disabled]="false">
 
 
-            <table class="table mt-3" style="max-width:100%;overflow-x: scroll;">
+                <table class="table mt-3" style="max-width:100%;overflow-x: scroll;">
 
-                <thead style="border:2px solid #e0dfdf;border-radius:5px;">
-                    <tr>
+                    <thead style="border:2px solid #e0dfdf;border-radius:5px;">
+                        <tr>
 
-                        <th scope="col">
-                            SI no
-                        </th>
-                        <th scope="col">Coin ID</th>
+                            <th scope="col">
+                                SI no
+                            </th>
+                            <th scope="col">Coin ID</th>
 
-                        <th scope="col">Camera Name</th>
-                        <th scope="col">Video</th>
+                            <th scope="col">Camera Name</th>
+                            <th scope="col">Video</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let data of Data;let i=index" class="p-3">
-                        <td>{{data.si_no}}</td>
-                        <td>{{data.coin_id}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of Data;let i=index" class="p-3">
+                            <td>{{data.si_no}}</td>
+                            <td>{{data.coin_id}}</td>
 
-                        <td>{{data.camera_name}}</td>
-                        <!-- <td><div>
+                            <td>{{data.camera_name}}</td>
+                            <!-- <td><div>
                         <video width="200" height="55" [poster]="data.poster_image"preload="none"  controls>
                             <source [src]="data.video_name" type="video/mp4">
                           
                         </video>
                         
                     </div></td> -->
-                        <td>
-                            <div class="btn-icon" (click)="openVideoModal(i)"><fa-icon icon="video"></fa-icon></div>
-                        </td>
+                            <td>
+                                <div class="btn-icon" (click)="openVideoModal(i)"><fa-icon icon="video"></fa-icon></div>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                </tbody>
-            </table>
-        </ng-scrollbar>
-        <div class="d-flex mx-auto justify-content-center p-1">
-            <ngb-pagination [collectionSize]="total|async" [(page)]="page" [pageSize]="pageSize"
-                style="width: 95vw;overflow-x: auto;" (pageChange)="sliceData()">
-            </ngb-pagination>
+                    </tbody>
+                </table>
+            </ng-scrollbar>
+            <div class="d-flex mx-auto justify-content-center p-1">
+                <ngb-pagination [collectionSize]="total|async" [(page)]="page" [pageSize]="pageSize"
+                    style="width: 95vw;overflow-x: auto;" (pageChange)="sliceData()">
+                </ngb-pagination>
 
-            <div class="d-flex mx-auto justify-content-start">
-                <select class="form-select" style="width:auto" [(ngModel)]="pageSize" (ngModelChange)="sliceData()">
-                    <option [ngValue]="10">10</option>
-                    <option [ngValue]="15">15</option>
-                    <option [ngValue]="20">20</option>
-                </select>
+                <div class="d-flex mx-auto justify-content-start">
+                    <select class="form-select" style="width:auto" [(ngModel)]="pageSize" (ngModelChange)="sliceData()">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="15">15</option>
+                        <option [ngValue]="20">20</option>
+                    </select>
+                </div>
             </div>
         </div>
+
+    </div>
     </div>
 
-</div>
-
-<ng-template #modal let-modal>
-    <div class="d-flex justify-content-center align-items-center">
-        <!--  <div class="container"> -->
-        <div class="modal-body">
-            <app-video-modal (closeModal)="modalClose($event)" [SelectedId]="selectedVideoId|async"
-                [Data]="Data"></app-video-modal>
-        </div>
-    </div>
-    <!-- </div> -->
-</ng-template>
+    <ng-template #modal let-modal>
+        <div class="modal-header">Smart Video Recordings
+            <button type="button" class="btn default-tertiary close float-end" aria-label="Close" (click)="modal.close('Cross click')">
+                <span aria-hidden="true" class="font-primary">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <!--  <div class="container"> -->
+            <div class="">
+                <app-video-modal (closeModal)="modalClose($event)" [SelectedId]="selectedVideoId|async"
+                    [Data]="Data"></app-video-modal>
+            </div>
+            </div>
+        <!-- </div> -->
+    </ng-template>

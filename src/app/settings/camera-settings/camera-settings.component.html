@@ -25,11 +25,19 @@
     <div class="float-end">
       <button *ngIf="!isActive" class="float-end ms-2 btn primary" (click)="StartAppModal(startAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Start Application
+        Start DocketRun Main App
+      </button>
+      <button *ngIf="!isActive2" class="float-end ms-2 btn primary" (click)="StartAppModal(startHydroAppModal)">
+        <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
+        Start  Smart Record App
       </button>
       <button *ngIf="isActive" class="float-end ms-2 btn danger" (click)="StopAppModal(stopAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Stop Application
+        Stop  DocketRun Main App
+      </button>
+      <button *ngIf="isActive2" class="float-end ms-2 btn danger" (click)="StopAppModal(stopHydroAppModal)" >
+        <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
+        Stop  Smart Record App
       </button>
       <button class="float-end btn default" (click)=openCameraAddModal(cameraAddModal)>
         <fa-icon icon="plus" class="me-2"></fa-icon>Add
@@ -275,9 +283,9 @@
             </div>
             <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="sensegiz"
-                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensgiz"
+                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensegiz"
                 class="form-check-input">
-              <label for="sensgiz" class="form-check-label text-muted">Sensegiz</label>
+              <label for="sensegiz" class="form-check-label text-muted">Sensegiz</label>
             </div>
             <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
@@ -301,9 +309,9 @@
           <div class="form-floating" *ngIf="isSensgiz">
 
             <div class="form-control">
-              <div class="d-flex align-items-center justify-centent-between">
+              <div class="">
 
-                <span>Sensgiz Details</span>
+                <span>Sensegiz Details</span>
                 <span class="float-end">
                   <fa-icon icon="pen-to-square" style="cursor: pointer;"
                     (click)="editSensgiz(sensgizDetails)"></fa-icon>
@@ -461,7 +469,7 @@
             </div>
             <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="sensegiz"
-                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensegiz" id="senesgiz"
+                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensegiz" id="sensegiz"
                 class="form-check-input">
               <label for="sensegiz" class="form-check-label text-muted">Sensegiz</label>
             </div>
@@ -489,7 +497,7 @@
             <div class="form-control">
               <div>
 
-                <span>Sensgiz Details</span>
+                <span>Sensegiz Details</span>
                 <span class="float-end">
                   <fa-icon icon="pen-to-square" style="cursor: pointer;"
                     (click)="editSensgiz(sensgizDetails)"></fa-icon>
@@ -545,22 +553,6 @@
 
 </ng-template>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <ng-template let-modal #stopAppModal>
   <div class="modal-body">
     <div class="modal-confirm">
@@ -584,6 +576,31 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template let-modal #stopHydroAppModal>
+  <div class="modal-body">
+    <div class="modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header flex-column">
+          <div class="icon-box">
+            <i class="material-icons">&#xE5CD;</i>
+          </div>
+          <h4 class="modal-title w-100">Are you sure?</h4>
+          <!-- <button type="button" class="btn"  aria-hidden="true">&times;</button> -->
+        </div>
+        <div class="modal-body">
+          <p>Do you really want to stop this Application</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
+            data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn danger" (click)="StopSensgizApp()">Stop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 
 
 <ng-template let-modal #errorMessage>
@@ -669,6 +686,45 @@
           <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
             data-dismiss="modal">Cancel</button>
           <button type="button" class="btn default" (click)="StartApplication()">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template let-modal #startHydroAppModal>
+  <div class="modal-body">
+    <div class="modal-confirm">
+      <div class="modal-content">
+        <!-- <div class="modal-header"> -->
+        <!-- <div class="icon-box">
+              <i class="material-icons">&#xE5CD;</i>
+            </div>
+            <h4 class="modal-title w-100">Are you sure?</h4> -->
+        <!-- <button type="button" class="btn"  aria-hidden="true">&times;</button> -->
+        <!-- </div> -->
+        <div class="modal-body flex-column">
+          <h5 class="text-dark">Do you want to start the Application ?</h5>
+          <!-- <p class="text-muted"><small> If the jobsheet contains panels of named 'NA' it will be deleted.So Please edit those panels,further proceed</small></p> -->
+          <form action="">
+            <p class="text-muted"> Select Configaration Method </p>
+
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" [formControl]="startAppConfig" [value]=0 (change)="StartAppConfig($event)"
+                [defaultValue]=0 id="rackin" class="form-check-input">
+              <label for="rackin" class="form-check-label text-muted">RTSP </label>
+            </div>
+            <div class="form-check form-check-inline" id="custome">
+              <input type="radio" [formControl]="startAppConfig" [value]=1 (change)="StartAppConfig($event)"
+                [defaultValue]=1 id="rackout" class="form-check-input">
+              <label for="rackout" class="form-check-label text-muted">RTSPT </label>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Cross click')"
+            data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn default" (click)="StartSensgizApp()">Start</button>
         </div>
       </div>
     </div>

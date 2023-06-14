@@ -370,13 +370,13 @@ deleteField:any=''
     this.editAlertForm.valueChanges.subscribe((value:any)=>{
 
       if(this.editAlertForm.get('alarmType').value=='hooter'||this.editAlertForm.get('alarmType').value=='relay'){
-      if(this.editAlertForm.get('alarmType').value!=null && this.editAlertForm.get('alarmIp').value!=''){
+      if(this.editAlertForm.get('alarmIp').value!=''){
         this.isAlertFormValid=true
 
       }
     }
     else  if(this.editAlertForm.get('alarmType').value=='sensegiz'){
-      if(this.editAlertForm.get('alarmType').value!=null && this.editAlertForm.get('alarmIp').value!='' &&this.sensgiz.length>0){
+      if( this.sensgiz.length>0){
         this.isAlertFormValid=true
 
       }

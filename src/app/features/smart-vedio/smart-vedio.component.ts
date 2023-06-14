@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Moment } from 'moment';
 import { Observable, of } from 'rxjs';
 import { VideoModalComponent } from 'src/app/common/video-modal/video-modal.component';
+import { SmartVedioService } from './smartVideo.service';
 
 @Component({
   selector: 'app-smart-vedio',
@@ -59,7 +60,7 @@ export class SmartVedioComponent implements AfterViewInit {
   total:Observable<number>=of(4)
   selectedCoinId:any
   selectedCamera:any
-constructor(public modalService:NgbModal){
+constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioService){
 
 }
 
@@ -80,7 +81,7 @@ constructor(public modalService:NgbModal){
     this.selectedVideoId=of( String(id))
    
     setTimeout(() => {
-      this.modalService.open(this.modalComponent,{centered:true})
+      this.modalService.open(this.modalComponent,{centered:true,size:'xl'})
 
   });
 
@@ -99,4 +100,11 @@ constructor(public modalService:NgbModal){
 
   }
 
+
+  StartApplication(){
+    this.SmartVideoService.StartApplication().subscribe((response:any)=>{
+      this.SmartVideoService.notification(response.message)
+       
+    })
+  }
 }

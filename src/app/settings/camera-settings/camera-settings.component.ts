@@ -52,6 +52,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   tempData: any[] = []
   isVoiceAlert: boolean = false
   isActive: boolean = false
+  isActive2:boolean=false
   AppConfig: number = 0
   isDownload: boolean = false
   alarmEnabledViolations: any[] = []
@@ -190,7 +191,18 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       if (response.success) {
         //this.isActive=true
         localStorage.setItem('appStatus', response.message[0].process_status)
-        this.isActive = response.message[0].process_status
+        var process = response.message.find((el: any) => {
+
+          return el.process_name == 'docketrun-app' ? el : ''
+        })
+        this.isActive = process.process_status
+
+        var process2 = response.message.find((el: any) => {
+
+          return el.process_name == 'smrec' ? el : ''
+        })
+
+        this.isActive2 = process2.process_status
       }
     })
     this.AddCameraForm.valueChanges.subscribe(value => {
@@ -1329,6 +1341,42 @@ OnEditCameraDetails() {
     }
 
 
+    StartSensgizApp(){
+      this.server.ConfigRtsp(this.AppConfig).subscribe((res: any) => {
+        if (res.success) {
+      this.server.StartSmartApp().subscribe((response:any)=>{
+        this.server.notification(response.message)
+        if(response.success){
+          this.isActive2=true
+          this.modalService.dismissAll()
+
+        }
+      },
+      Err=>{
+        this.server.notification('Something Went Wrong','Retry')
+      })}
+    else{
+      this.server.notification(res.message)
+    }
+  },
+  Err=>{
+    this.server.notification('Error while Setting the flag','Retry')
+  })
+    }
+
+    StopSensgizApp(){
+      this.server.StopSmartApp().subscribe((response:any)=>{
+        this.server.notification(response.message)
+        if(response.success){
+          this.isActive2=false
+          this.modalService.dismissAll()
+        }
+
+      },
+      Err=>{
+        this.server.notification('Something Went Wrong','Retry')
+      })
+    }
   ngOnDestroy(): void {
     this.modalService.dismissAll()
   }

@@ -355,9 +355,9 @@
                                                 </div>
                                             </div>
                                             </div>
-                                            <div class="col-12 p-2" *ngIf="cameraData[0].alarm_ip_address!=null">
+                                            <div class="col-12 p-2"*ngIf="cameraData[0].alarm_type!='sensegiz'" >
 
-                                                <div class="row mt-3" *ngIf="cameraData[0].alarm_type!='sensegiz'">
+                                                <div class="row mt-3" *ngIf="cameraData[0].alarm_ip_address!=null" >
                                                     <div class="col-12">
                                                         <div class="me-2"><b>Select Violation Type</b></div>
 
@@ -557,6 +557,7 @@
                                                     </div>
 
                                                 </div>
+                                                </div>
 
                                                 <div *ngIf="cameraData[0].alarm_type=='sensegiz'"
                                                     class="col-12 d-flex justify-centent-center">
@@ -581,7 +582,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -1136,7 +1136,7 @@
 
                         <input type="text" formControlName="alarmIp" placeholder="User name" class="form-control"
                             id="relayIp">
-                        <label for="relayIp"></label>
+                        <label for="relayIp">Relay IP</label>
                     </div>
                     <div class="form-floating" *ngIf="isSensgiz">
 
