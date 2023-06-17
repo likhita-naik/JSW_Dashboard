@@ -562,18 +562,22 @@
                                                 <div *ngIf="cameraData[0].alarm_type=='sensegiz'"
                                                     class="col-12 d-flex justify-centent-center">
 
-                                                    <table class="table">
+                                                    <table class="table table-bordered">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Coin ID</th>
-                                                                <th scope="col">Angle</th>
+                                                                <th scope="col">Preset ID</th>
+
+                                                                <th scope="col">Location</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr
                                                                 *ngFor="let coin of cameraData[0].coin_details;let i=index">
                                                                 <td>{{coin.coin_id}}</td>
-                                                                <td>{{coin.angle}}</td>
+                                                                <td>{{coin.preset_id}}</td>
+
+                                                                <td>{{coin.coin_location}}</td>
                                                             </tr>
                                                         </tbody>
 
@@ -1107,6 +1111,12 @@
                                 id="sensgiz" class="form-check-input">
                             <label for="sensgiz" class="form-check-label text-muted">Sensegiz</label>
                         </div>
+                        <div class="form-check form-check-inline" id="custome">
+                            <input type="radio" formControlName="alarmType" value=""
+                                (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue=""
+                                id="none" class="form-check-input">
+                            <label for="none" class="form-check-label text-muted">None</label>
+                        </div>
                         <!-- <div class="form-check form-check-inline" id="custome">
                         <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
                           defaultValue="voiceAlert" id="voiceAlert" class="form-check-input">
@@ -1158,7 +1168,9 @@
                     <input formControlName="delay" type="text" id="delay" class="form-control"
                         placeholder="New delay value">
                 </div>
-
+<div class="m-2 alert alert-danger" *ngIf="responseMessage!=''">
+    {{responseMessage}}
+</div>
 
 
             </form>
@@ -1190,15 +1202,31 @@
         </button>
         <div *ngFor="let form of sensgiz.controls;let i=index" class="p-2" style="">
             <ng-container class="d-flex justify-centent-center" [formGroup]="form">
-                <div class="form-inline d-flex align-items-center">
-                    <input class="form-control w-30 m-2" placeholder="Coin ID" formControlName="coinId">
-                    <input class="form-control w-30 m-2" placeholder="Angle" formControlName="angle">
-                    <!-- <span class="circle"> -->
-                    <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
-                        (click)="DeleteSensgizData(i)"></fa-icon>
-                    <!-- </span> -->
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="form-floating">
+        
+                  <input class="form-control w-20 me-2" id="coinId" placeholder="Coin ID" formControlName="coinId">
+                  <label for="coinId">Coin Id</label>
+        
+                  </div>
+                  <div class="form-floating">
+                  <input type="number" class="form-control w-20 me-2" id="number-input" placeholder="Preset Id"  formControlName="presetId">
+                  <label for="number-input">Preset Id</label>
+        
                 </div>
-            </ng-container>
+        
+        
+                <div class="form-floating">
+                  <input class="form-control w-20 me-2" id="loc" placeholder="Location" formControlName="coinLocation">
+                  <label for="loc">Location</label>
+                  </div>
+                  <!-- <span class="circle"> -->
+                  <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
+                    (click)="DeleteSensgizData(i)"></fa-icon>
+                  <!-- </span> -->
+                </div>
+              </ng-container>
+        
 
         </div>
     </div>

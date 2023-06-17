@@ -293,6 +293,15 @@ GetCameraDetails(){
    return this.http.get(this.IP+ '/camera_details')
 }
 
+getCameraExcelSample(){
+  const headers = new HttpHeaders({
+      'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  //   'Accept-Language': 'en-US,en;q=0.5',
+  //  ' Accept-Encoding':' gzip, deflate',
+   
+  })
+  return this.http.get(this.IP+"/get_samplefileFORCHECKCAMERA",{observe:'response',headers:headers,responseType:'blob'})
+}
 DeleteRoi(data:any){
   return this.http.post(this.IP+'/delete_roi',data)
 }

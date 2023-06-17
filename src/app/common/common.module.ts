@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ImageCarousalComponent } from './image-carousal/image-carousal.component';
-import { ImageCarouselComponent } from './image-carousel/image-carousel.component';
+
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { NgbdSortableHeader } from './sortable.directive';
 import { NgxImageZoomModule } from 'ngx-image-zoom';

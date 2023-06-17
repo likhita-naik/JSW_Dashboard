@@ -372,3 +372,18 @@ input[type=file]::file-selector-button:hover {
 .default-outline{
  box-shadow: none !important;
 }
+
+#number-input {
+  /* Hides the spinner */
+  -moz-appearance: textfield;
+  appearance: textfield;
+  -webkit-appearance: none;
+}
+
+/* For Firefox */
+.number-input::-webkit-inner-spin-button,
+.number-input::-webkit-outer-spin-button {
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}

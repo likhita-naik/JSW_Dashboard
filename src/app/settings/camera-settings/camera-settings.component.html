@@ -50,7 +50,7 @@
     <h5 class="sub-header mb-2 ms-3 col-12">Upload Excel</h5>
     <div style="border-radius:4px" class="col-12 p-3">
       <div class="float-end mb-2">
-        <button class="btn default-outline float-end"><fa-icon icon="file-arrow-down"></fa-icon> Download Sample
+        <button class="btn default-outline float-end" (click)="GetCameraSampleSheet()"><fa-icon icon="file-arrow-down"></fa-icon> Download Sample
           Sheet</button>
       </div>
       <div class="container p-2">
@@ -742,9 +742,24 @@
     </button>
     <div *ngFor="let form of sensgiz.controls;let i=index" class="p-2" style="">
       <ng-container class="d-flex justify-centent-center" [formGroup]="form">
-        <div class="form-inline d-flex align-items-center">
-          <input class="form-control w-30 m-2" placeholder="Coin ID" formControlName="coinId">
-          <input class="form-control w-30 m-2" placeholder="Angle" formControlName="angle">
+        <div class="form-inline d-flex align-items-center justify-content-between">
+          <div class="form-floating">
+
+          <input class="form-control w-20 me-2" id="coinId" placeholder="Coin ID" formControlName="coinId">
+          <label for="coinId">Coin Id</label>
+
+          </div>
+          <div class="form-floating">
+          <input type="number" class="form-control w-20 me-2" id="number-input" placeholder="Preset Id"  formControlName="presetId">
+          <label for="number-input">Preset Id</label>
+
+        </div>
+
+
+        <div class="form-floating">
+          <input class="form-control w-20 me-2" id="loc" placeholder="Location" formControlName="coinLocation">
+          <label for="loc">Location</label>
+          </div>
           <!-- <span class="circle"> -->
           <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
             (click)="DeleteSensgizData(i)"></fa-icon>
@@ -775,7 +790,9 @@
       <ng-container class="d-flex justify-centent-center" [formGroup]="form">
         <div class="form-inline d-flex align-items-center">
           <input class="form-control w-30 m-2" placeholder="Coin ID" formControlName="coinId">
-          <input class="form-control w-30 m-2" placeholder="Angle" formControlName="angle">
+          <input class="form-control w-30 m-2" placeholder="Preset Id" formControlName="presetId">
+
+          <input class="form-control w-30 m-2" placeholder="Angle" formControlName="coinLocation">
           <!-- <span class="circle"> -->
           <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
             (click)="DeleteSensgizData(i)"></fa-icon>

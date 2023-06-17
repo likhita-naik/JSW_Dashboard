@@ -368,7 +368,7 @@ deleteField:any=''
 
     // })
     this.editAlertForm.valueChanges.subscribe((value:any)=>{
-
+   this.responseMessage=''
       if(this.editAlertForm.get('alarmType').value=='hooter'||this.editAlertForm.get('alarmType').value=='relay'){
       if(this.editAlertForm.get('alarmIp').value!=''){
         this.isAlertFormValid=true
@@ -2588,7 +2588,7 @@ hooterOrRelayConfig(event: any,modal?:any) {
     this.isVoiceAlert = false
 
   }
-  if (event.target.value == 'relay') {
+  else if (event.target.value == 'relay') {
     this.isHooter = false
     this.isRelay = true
     this.isSensgiz=false
@@ -2596,20 +2596,27 @@ hooterOrRelayConfig(event: any,modal?:any) {
 
   }
 
-  if (event.target.value == 'voiceAlert') {
+ else if (event.target.value == 'voiceAlert') {
     this.isVoiceAlert = true
     this.isHooter = false
     this.isRelay = false
     this.isSensgiz=false
 
   }
-  if (event.target.value == 'sensegiz') {
+  else if (event.target.value == 'sensegiz') {
     this.isVoiceAlert = false
     this.isSensgiz=true
     this.isHooter = false
     this.isRelay = false
     this.SensgizModal(modal)
   
+  }
+
+  else{
+    this.isVoiceAlert=false
+    this.isSensgiz=false
+    this.isHooter=false
+    this.isRelay=false
   }
 
 
@@ -2623,7 +2630,7 @@ SensgizModal(modal:any){
  SaveSensgizInfo(){
   this.SensGizInfo=[]
   this.sensgiz.controls.forEach((element:any,index:number) => {
-    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle'],coin_key_id:index})
+    this.SensGizInfo.push({coin_id:element.value['coinId'],preset_id:element.value['coinId'],coin_location:element.value['coinLocation'],coin_key_id:index})
     
   }); 
   if(this.editAlertForm.get('alarmType').value=='sensegiz'){
@@ -2633,13 +2640,15 @@ SensgizModal(modal:any){
     }
   }
   this.sensgizModal.close()
+  this.editAlertForm.updateValueAndValidity()
   console.log(this.SensGizInfo)
 }
 
 AddSensgizData(){
   this.sensgiz.push(new FormGroup({
     coinId:new FormControl('',Validators.required),
-    angle:new FormControl('',Validators.required)
+    coinLocation:new FormControl('',Validators.required),
+    presetId:new FormControl('',Validators.required)
   }))
 }
 DeleteSensgizData(i:number){
@@ -2652,7 +2661,8 @@ EditAlert(modal:any){
 
   this.sensgiz.push(new FormGroup({
     coinId:new FormControl('',Validators.required),
-    angle:new FormControl('',Validators.required)
+    coinLocation:new FormControl('',Validators.required),
+    presetId:new FormControl('',Validators.required)
   }))
   // if(this.cameraData[0].alarm_type!=null){
   //   this.editAlertForm.get('alarmType').setValue(this.cameraData[0].alarm_type)
@@ -2684,11 +2694,14 @@ EditAlert(modal:any){
  
   this.sensgiz.push(new FormGroup({
     coinId:new FormControl('',Validators.required),
-    angle:new FormControl('',Validators.required)
+    coinLocation:new FormControl('',Validators.required),
+    presetId:new FormControl('',Validators.required)
   }))
 
   this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
-  this.sensgiz.controls[index].get('angle').setValue(value.angle)
+  this.sensgiz.controls[index].get('coinLocation').setValue(value.coin_location)
+  this.sensgiz.controls[index].get('presetId').setValue(value.preset_id)
+
 
 });
     this.editAlertForm.get('alarmType').setValue('sensegiz')
@@ -2698,12 +2711,25 @@ EditAlert(modal:any){
 
   }
 
-  this.modalService.open(modal)
+  this.modalService.open(modal).result.then((result) => {
+    // this.closeResult = `Closed with: ${result}`;
+    //  this.roiNameControl.setValue(null)
+    //  this.OnAddingNewROI()
+    // this.download = '',
+    //   this.isalert = false.
+   this.responseMessage=''
+  }, (reason) => {
+    this.responseMessage=''
+
+      
+  }
+  )
 
 
 }
 
 OnEditAlertDetails() {
+  this.responseMessage=''
   // this.AddCameraForm.get('rtsp_url').value?this.removeValidators():''
   this.editAlertForm.updateValueAndValidity()
   console.log(this.editAlertForm.value)
@@ -2793,7 +2819,7 @@ OnEditAlertDetails() {
          
           ai_solution: [],
           alarm_type: null,
-          coin_details:null,
+          // coin_details:null,
           alarm_enable:false,
 
 
@@ -2818,18 +2844,19 @@ OnEditAlertDetails() {
           this.isSuccess = true
           this.GetAlertInfo()
           this.responseMessage = response.message
-
+          this.responseMessage=''
           this.isHooter = false
           this.isRelay = false
           this.server.notification(response.message)
           setTimeout(() => {
             this.modalService.dismissAll()
 
-          }, 1000);
+          }, 500);
           // this.GetCameraList()
         }
         else {
           this.isLoading = false
+        //  this.server.notification(response.message,'Retry')
           this.responseMessage = response.message
           this.isFail = true
           //this.AddCameraForm.reset()
@@ -2839,6 +2866,7 @@ OnEditAlertDetails() {
           this.isFail = true
           this.responseMessage = "Error while adding camera,retry"
           this.isLoading = false
+
           // this.AddCameraForm.reset()
         })
 

@@ -8,13 +8,13 @@
     </div>
     <div class="row">
         <div class="card" id="data-card">
+           
             <div class="col-xl-12">
-                <!-- <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar"
-            [autoHeightDisabled]="false" [disabled]="false"> -->
-
-                <div class="d-flex flex-row-reverse align-items-center">
+             
+                <div class="d-flex flex-row-reverse align-items-center" >
 
 
+        
                     <div class="p-2">
                         <div class="container p-3">
                             <fa-icon icon="filter"></fa-icon>
@@ -41,9 +41,10 @@
 
 
                 </div>
-                <!-- </ng-scrollbar> -->
+
 
             </div>
+        
             <ng-scrollbar #scrollable track="horizontal" pointerEventsMethod="scrollbar" [autoHeightDisabled]="false"
                 [disabled]="false">
 
@@ -104,7 +105,7 @@
     </div>
 
     <ng-template #modal let-modal>
-        <div class="modal-header">Smart Video Recordings
+        <div class="modal-header"><h3>Smart Video Recordings</h3>
             <button type="button" class="btn default-tertiary close float-end" aria-label="Close" (click)="modal.close('Cross click')">
                 <span aria-hidden="true" class="font-primary">&times;</span>
             </button>

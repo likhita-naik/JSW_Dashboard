@@ -184,7 +184,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
     this.sensgiz.push(new FormGroup({
       coinId:new FormControl('',Validators.required),
-      angle:new FormControl('',Validators.required)
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
     }))
     this.server.CheckApplicationStatus().subscribe((response: any) => {
       console.log(response)
@@ -312,7 +313,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.sensgiz=new FormArray([])
           this.sensgiz.push(new FormGroup({
             coinId:new FormControl('',Validators.required),
-            angle:new FormControl('',Validators.required)
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
           }))
           this.SensGizInfo.splice(0,this.SensGizInfo.length)
           // this.newROIPoints.splice(0,this.newROIPoints.length)
@@ -326,7 +328,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.sensgiz=new FormArray([])
           this.sensgiz.push(new FormGroup({
             coinId:new FormControl('',Validators.required),
-            angle:new FormControl('',Validators.required)
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
           }))
           console.log('submit')
           this.isLoading = false
@@ -438,9 +441,34 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   editSensgiz(modal:any){
-   this.sensgizModal= this.modalService.open(modal)
+    this.sensgiz=new FormArray([])
+    //this.SensGizInfo=this.SensGizInfo.coin_details
+    this.isHooter=false
+    this.isRelay=false
+    this.isSensgiz=true
+    if(this.SensGizInfo!=null){
+
+ 
+
+    this.SensGizInfo.forEach((value:any,index:number) => {
+      
+   
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl('',Validators.required),
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
+    }))
+
+    this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
+    this.sensgiz.controls[index].get('coinLocation').setValue(value.location)
+    this.sensgiz.controls[index].get('presetId').setValue(value.location)
+
+
+  });
+   this.sensgizModal= this.modalService.open(modal,{size:'lg'})
 
   }
+}
   HooterSettings(event: any) {
     console.log(event)
     if (event.target.checked) {
@@ -663,8 +691,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             password: this.AddCameraForm.value['password'],
             cameraip: this.AddCameraForm.value['cameraip'],
             port: this.AddCameraForm.value['port'],
-            alarm_type: 'sensgiz',
-            alarm_ip_address: null,
+            alarm_type: 'sensegiz',
+            alarm_ip_address: '',
             alarm_enable:true,
             department:this.AddCameraForm.value['department'],
 
@@ -1044,7 +1072,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 AddSensgizData(){
   this.sensgiz.push(new FormGroup({
     coinId:new FormControl('',Validators.required),
-    angle:new FormControl('',Validators.required)
+    coinLocation:new FormControl('',Validators.required),
+    presetId:new FormControl('',Validators.required)
   }))
 }
 
@@ -1053,17 +1082,18 @@ DeleteSensgizData(i:number){
 }
 
 SensgizModal(modal:any){
- this.sensgizModal =this.modalService.open(modal)
+ this.sensgizModal =this.modalService.open(modal,{size:'lg'})
 }
 
 
 SaveSensgizInfo(){
   this.SensGizInfo=[]
   this.sensgiz.controls.forEach((element:any,index:number) => {
-    this.SensGizInfo.push({coin_id:element.value['coinId'],angle:element.value['angle'],coin_key_id:index})
+    this.SensGizInfo.push({coin_id:element.value['coinId'],coin_location:element.value['coinLocation'],coin_key_id:index,preset_id:element.value['presetId']})
     
   }); 
   this.sensgizModal.close()
+
   console.log(this.SensGizInfo)
 }
 
@@ -1073,7 +1103,8 @@ EditCameraModal(modal:any,data:any){
   this.sensgiz =new FormArray([])
   this.sensgiz.push(new FormGroup({
     coinId:new FormControl('',Validators.required),
-    angle:new FormControl('',Validators.required)
+    coinLocation:new FormControl('',Validators.required),
+    presetId:new FormControl('',Validators.required)
   }))
 
   this.selectedCamera=data
@@ -1104,19 +1135,26 @@ EditCameraModal(modal:any,data:any){
     this.isHooter=false
     this.isRelay=false
     this.isSensgiz=true
+    if(data.coin_details!=null){
+
+ 
 
     data.coin_details.forEach((value:any,index:number) => {
       
    
     this.sensgiz.push(new FormGroup({
       coinId:new FormControl('',Validators.required),
-      angle:new FormControl('',Validators.required)
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
     }))
 
     this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
-    this.sensgiz.controls[index].get('angle').setValue(value.angle)
+    this.sensgiz.controls[index].get('coinLocation').setValue(value.location)
+    this.sensgiz.controls[index].get('presetId').setValue(value.location)
+
 
   });
+}
       this.EditCameraForm.get('isHooter').setValue('sensegiz')
   }
 
@@ -1161,7 +1199,8 @@ EditCameraModal(modal:any,data:any){
     this.sensgiz=new FormArray([])
     this.sensgiz.push(new FormGroup({
       coinId:new FormControl('',Validators.required),
-      angle:new FormControl('',Validators.required)
+      coinLocation:new FormControl('',Validators.required),
+      presetId:new FormControl('',Validators.required)
     }))    
     
     this.isSuccess = false
@@ -1377,6 +1416,26 @@ OnEditCameraDetails() {
         this.server.notification('Something Went Wrong','Retry')
       })
     }
+
+GetCameraSampleSheet(){
+   this.server.getCameraExcelSample().subscribe((response:any)=>{
+    // var blob=new Blob([response.body],{type:'.xlsx'})
+    // var fileName="Camera_Ref_Excel_Sheet.xlsx"
+    // var file= new File([blob],fileName,{type:'xlsx'})
+    const contentDispositionHeader = response.headers.get('content-disposition');
+    console.log(response.headers)
+    const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = fileNameRegex.exec(contentDispositionHeader);
+    const fileName = matches && matches.length > 1 ? matches[1] : 'Add_camera_excel.xlsx';
+    
+    saveAs(response.body,fileName)
+  },
+  Err=>{
+    console.log(Err)
+    this.server.notification('Error while Downloading the Sheet','Retry')
+  })
+}
+
   ngOnDestroy(): void {
     this.modalService.dismissAll()
   }
