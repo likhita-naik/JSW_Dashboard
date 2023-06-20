@@ -11,6 +11,7 @@ export class VideoModalComponent implements OnInit,AfterViewInit {
    @Input() public Data:any
    @Input() public  SelectedId:string
   @Input() public modalConfig?:any 
+  @Input() public IP:any
   @Output()public closeModal= new EventEmitter()
  // @ViewChild('modal') modalContainer:TemplateRef<any>
   @ViewChild('carousal') carousal:NgbCarousel
@@ -18,6 +19,8 @@ export class VideoModalComponent implements OnInit,AfterViewInit {
 constructor(private modalService:NgbModal,public config: NgbCarouselConfig){
   
   config.wrap=false
+  config.pauseOnFocus=true
+  config.pauseOnHover=true
 
 }
 

@@ -4,7 +4,7 @@
 $grey:  #777;
 $grey2: #dfe3e4;
 $blue:  #2183dd;
-$blue-light:#b0ceff;
+$blue-light:#e5efff;
 $green: #009900;
 $white: #fff;
 $danger:hsl(4, 81%, 41%);
@@ -763,7 +763,8 @@ ng-scrollbar {
 // carousal stylings
 
 .carousel-indicators [data-bs-target]{
-  background-color: #c5c0c0;
+
+  background-color: #1B98C5;
 }
 
 .carousel-control-prev-icon {
@@ -774,6 +775,10 @@ ng-scrollbar {
 .carousel-control-next-icon{
   filter: invert(100%) grayscale(100) !important;
   background-image:  url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}
+
+.carousal-inner{
+  width:120% !important;
 }
 
 

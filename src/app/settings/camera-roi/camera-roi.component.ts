@@ -2630,7 +2630,7 @@ SensgizModal(modal:any){
  SaveSensgizInfo(){
   this.SensGizInfo=[]
   this.sensgiz.controls.forEach((element:any,index:number) => {
-    this.SensGizInfo.push({coin_id:element.value['coinId'],preset_id:element.value['coinId'],coin_location:element.value['coinLocation'],coin_key_id:index})
+    this.SensGizInfo.push({coin_id:element.value['coinId'],preset_id:element.value['presetId'],coin_location:element.value['coinLocation'],coin_key_id:index})
     
   }); 
   if(this.editAlertForm.get('alarmType').value=='sensegiz'){

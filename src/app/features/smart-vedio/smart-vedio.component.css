@@ -2,32 +2,36 @@
 
     box-shadow: none !important;
     border-radius: 10px !important;
-    border: 1px solid #ccc !important;
+    /* border: 1px solid #ccc !important; */
 }
 
 .date-picker{
     position: relative;
     border: 2px solid var(--gray-light);
-  /* background-color:var(--light-black) !important; */
+  background-color:white !important;
   padding: 5px;
   border-radius: 10px;
     display: flex;
-    height: 2.5em;
+    height: 2.9rem;
+    /* height: 2.5em; */
     justify-content: space-between;
     align-items: center;
     box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 8px rgba(94,104,121,0.3) !important;
 
 }
 .container{
-    position: relative;
-  background-color:var(--light-black) !important;
+  position: relative;
+  background-color:white !important;
+  opacity: 1;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 10px;
+  border:1px solid #ccc;
     display: flex;
-    height: 2.5em;
-    width:auto;
+    height: 2.9em;
     justify-content: space-between;
     align-items: center;
+    /* display: inline; */
+    box-shadow:  5px 5px 8px rgba(94,104,121,0.3) !important;
 }
 .date-picker input{
     /* background-color: var(--light-black) !important; */
@@ -68,4 +72,17 @@
   
     box-shadow: none;
   
+  }
+
+  thead{
+    background-color: var(--base-light) !important;
+    height: 3.5rem;
+    text-align: center;
+    border-radius: 10px !important;
+  
+  }
+
+  td {
+    text-align:center !important;
+    height: 2rem !important;
   }

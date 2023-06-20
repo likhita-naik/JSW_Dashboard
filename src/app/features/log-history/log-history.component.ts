@@ -91,6 +91,7 @@ export class LogHistoryComponent implements OnDestroy {
   ExcelRange: number
   time: any
   relayInterval:any
+  delay:number
   objectKeys = Object.keys
   isdate: boolean = false
   form = new FormGroup({
@@ -162,7 +163,7 @@ export class LogHistoryComponent implements OnDestroy {
     localStorage.getItem('alert')=='true'?this.alert=true:this.alert=false
     console.log( localStorage.getItem('audioOff'),localStorage.getItem('alert'))
   this.scrollStrategy = this.sso.reposition();
-  this.relayDelay=this.webServer.relayDelay
+   this.delay=this.webServer.logInterval
   console.log(this.relayDelay)
   this.hooterDelay=this.webServer.delay
   this.getCameraList()
@@ -274,7 +275,7 @@ ngOnInit(): void {
 
     }
   })
-var table = document.getElementById('content')
+var table = document.getElementById('dataTable')
 table?.classList.add('loading')
 
   // console.log(this.violLength)
@@ -458,7 +459,7 @@ public dataread() {
           })
         }
         }
-      }, 5000)
+      }, this.delay)
 }
 
 

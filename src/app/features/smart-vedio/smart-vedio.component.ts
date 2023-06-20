@@ -1,85 +1,74 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Moment } from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable, interval, of } from 'rxjs';
 import { VideoModalComponent } from 'src/app/common/video-modal/video-modal.component';
 import { SmartVedioService } from './smartVideo.service';
+import { FormControl } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-smart-vedio',
   templateUrl: './smart-vedio.component.html',
   styleUrls: ['./smart-vedio.component.css']
 })
-export class SmartVedioComponent implements AfterViewInit {
+export class SmartVedioComponent implements AfterViewInit ,OnInit{
   selectedMoments: { startDate: Moment | any, endDate: Moment | any }
   fromDate:any
+  IP:any=''
   toDate:any
   selectedVideoId:Observable< string>=of('')
-  pageSize:number=2;
+  pageSize:number=10;
   collectionSize:number=4
   page=0;
+ table:HTMLElement
+ selectedDate:any=''
+ selectedCoin:any=''
+ selectedCam:any=''
+ interval:any
+ isLive:boolean=null
+ videoData:any[]=[]
+  violationDetails:Observable<any[]>=of([])
+  tempData:any[]=[]
   @ViewChild('modal',{static:false}) private modalComponent: any
-  Data:any[]=[{
-    si_no:1,
-    coin_id:"Coin_1",
-    camera_name:"sm2_entry_gate",
-    video_name:"https://www.w3schools.com/html/mov_bbb.mp4#t=0.5",
-    poster_image:"https://images.pexels.com/photos/5420465/pexels-photo-5420465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-  },
-  {
-    si_no:2,
-    coin_id:"Coin_2",
-    camera_name:"sm2_entry_gate",
-    video_name:"https://www.w3schools.com/html/mov_bbb.mp4#t=0.5",
-    poster_image:"https://images.pexels.com/photos/5420465/pexels-photo-5420465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-  },
-  {
-    si_no:3,
-    coin_id:"Coin_3",
-    camera_name:"sm2_entry_gate",
-    video_name:"https://www.w3schools.com/html/mov_bbb.mp4",
-    poster_image:"https://images.pexels.com/photos/5420465/pexels-photo-5420465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-  }
-,
-{
-  si_no:4,
-  coin_id:"Coin_4",
-  camera_name:"sm2_entry_gate",
-  vedio_name:"https://player.vimeo.com/video/403652508?title=0&portrait=0&byline=0&autoplay=1&muted=true",
-  poster_image:"https://images.pexels.com/photos/5420465/pexels-photo-5420465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-},
-{
-  si_no:5,
-  coin_id:"Coin_5",
-  camera_name:"sm2_entry_gate",
-  vedio_name:"https://player.vimeo.com/video/403652508?title=0&portrait=0&byline=0&autoplay=1&muted=true",
-  poster_image:"https://images.pexels.com/photos/5420465/pexels-photo-5420465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-}]
+
   coinIdList:Observable<any[]>= of([])
   cameraList:Observable<any[]>=of([])
   total:Observable<number>=of(4)
   selectedCoinId:any
   selectedCamera:any
-constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioService){
-
+constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioService,public Datepipe:DatePipe){
+ this.IP=this.SmartVideoService.IP
 }
-
+ngOnInit(): void {
+  this.GetViolData()
+  this.GetApplicationStatus()
+this.interval= setInterval(()=>{
+this.GetViolData()
+this.GetApplicationStatus()
+},30000)
+this.GetCoinIdList()
+this.GetCameraList()
+}
   dateUpdated(event:any){
     console.log(event)
-    this.fromDate=this.selectedMoments.startDate.format('YYYY-MM-DD HH:mm:ss')
-    this.toDate=this.selectedMoments.endDate.format('YYYY-MM-DD HH:mm:ss')
+    // this.fromDate=this.selectedMoments.startDate?this.selectedMoments.startDate.format('YYYY-MM-DD HH:mm:ss'):' '
+    // this.toDate=this.selectedMoments.endDate.format('YYYY-MM-DD HH:mm:ss')
 
   }
   OnCoinIdSelect(event:any){
+
+  }
+
+  OnCameraSelect(event:any){
   
 
   }
 
-
   openVideoModal(id:number)
   {
-    this.selectedVideoId=of( String(id))
-   
+    this.selectedVideoId=of( String(id-1))
+   this.videoData=[...this.tempData]
     setTimeout(() => {
       this.modalService.open(this.modalComponent,{centered:true,size:'xl'})
 
@@ -93,18 +82,146 @@ constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioSer
   }
  
   ngAfterViewInit(): void {
-   
+   this.table=document.getElementById('dataTable')
+   this.selectedDate= this.Datepipe.transform(new Date(),'YYYY-MM-dd')
+
   }
 
+  GetCoinIdList(){
+
+    var coins:any[]=[]
+    var coinList:any[]=[{key:0,label:'All Coin Id',data:' '}]
+    this.SmartVideoService.GetCoinIdList().subscribe((data:any)=>{
+      if (data.success === true) {
+        data.message.forEach((el: any, i: number) => {
+          coins.push({ d: i, data: el })
+        });
+        console.log(coins)
+        coins = coins.filter((el, i, a) => i === a.indexOf(el))
+        console.log(coins)
+        coins.forEach((element: any, i: number) => {
+         // cameralist[i + 1] = { item_id: element.cameraid, item_text: element.cameraname }
+         var obj;
+          console.log(element)
+         obj={key:((i+1).toString()),label:element.data,data:element.data}
+       
+       coinList.push(obj)
+        });
+  
+       
+        console.log(coinList)
+        this.coinIdList = of(coinList)
+      }
+  
+    })
+  }
+
+  GetCameraList(){
+    var coins:any[]=[]
+    var coinList:any[]=[{key:0,label:'All Camera',data:' '}]
+    this.SmartVideoService.GetCameraList().subscribe((data:any)=>{
+      if (data.success === true) {
+        data.message.forEach((el: any, i: number) => {
+          coins.push({ d: i, data: el })
+        });
+        console.log(coins)
+        coins = coins.filter((el, i, a) => i === a.indexOf(el))
+        console.log(coins)
+        coins.forEach((element: any, i: number) => {
+         // cameralist[i + 1] = { item_id: element.cameraid, item_text: element.cameraname }
+         var obj;
+          console.log(element)
+         obj={key:((i+1).toString()),label:element.data,data:element.data}
+       
+       coinList.push(obj)
+        });
+  
+       
+        console.log(coinList)
+        this.cameraList = of(coinList)
+      }
+  
+    })
+  }
+
+  Reset(){
+    this.selectedCam=' '
+    this.selectedCamera=null
+    this.selectedCoin=' '
+    this.selectedCoinId=null
+    this.selectedMoments=null
+    this.selectedDate=' '
+    this.GetViolData()
+  }
+  GetViolData(){
+    return  this.SmartVideoService.GetSensgizViolByFilters(this.selectedDate?this.selectedDate:' ',this.selectedCam?this.selectedCam:' ',this.selectedCoin?this.selectedCoin:' ').subscribe((response:any)=>{
+      console.log(response)
+     this.table? this.table.classList.remove('loading'):''
+      if(response.success===true){
+  this.tempData=response.message
+  this.sliceData()
+      }
+      else{
+        this.tempData=[]
+        this.sliceData()
+   this.SmartVideoService.notification(response.message,'Retry')
+      }
+    },
+    (Err:any)=>{
+     this.table? this.table.classList.remove('loading'):''
+      this.SmartVideoService.notification('Error while Fetching the Data','Retry')
+    })
+  }
   sliceData(){
+    this.total = of((this.tempData.slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize)).length)
+    this.total = of(this.tempData.length)
+    this.violationDetails = of((this.tempData.map((div: any, SINo: number) => ({ SNo: SINo + 1, ...div })).slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize)))
 
   }
 
 
+  GetApplicationStatus(){
+    this.SmartVideoService.CheckApplicationStatus().subscribe((response:any)=>{
+      if(response.success){
+        {
+          
+          var process2 = response.message.find((el: any) => {
+  
+            return el.process_name == 'smrec' ? el : ''
+          })
+  
+          this.isLive = process2.process_status
+        }
+      }
+    })
+  }
+  datesUpdated(event:any){
+    this.table.classList.add('loading')
+    console.log(event)
+    this.selectedDate=event.startDate !=null? event.startDate.format('YYYY-MM-DD'):this.Datepipe.transform(new Date,'YYYY-MM-dd')
+    console.log(this.selectedDate)
+    this.GetViolData()
+  }
+
+
+  OnCoinSelect(event:any){
+this.selectedCoin=this.selectedCoinId.data
+console.log(this.selectedCoin)
+this.table.classList.add('loading')
+this.GetViolData()
+  
+  }
+  onCameraSelect(event:any){
+    this.selectedCam=this.selectedCamera.data
+    this.table.classList.add('loading')
+    this.GetViolData()
+  }
   StartApplication(){
     this.SmartVideoService.StartApplication().subscribe((response:any)=>{
       this.SmartVideoService.notification(response.message)
        
     })
   }
+
+
 }

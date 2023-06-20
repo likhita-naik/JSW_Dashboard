@@ -2,6 +2,7 @@
      "IP":"http://192.168.1.77:5000",
     "hooterDelay":250,
     "relayDelay":15000,
+    "logInterval":5000,
     "dashboardInterval":30000,
     "jobSheetStatusInterval":30000
 

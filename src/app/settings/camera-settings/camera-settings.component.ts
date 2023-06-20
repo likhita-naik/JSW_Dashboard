@@ -194,7 +194,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
         localStorage.setItem('appStatus', response.message[0].process_status)
         var process = response.message.find((el: any) => {
 
-          return el.process_name == 'docketrun-app' ? el : ''
+          return el.process_name == 'phaseone-app' ? el : ''
         })
         this.isActive = process.process_status
 
@@ -460,8 +460,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     }))
 
     this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
-    this.sensgiz.controls[index].get('coinLocation').setValue(value.location)
-    this.sensgiz.controls[index].get('presetId').setValue(value.location)
+    this.sensgiz.controls[index].get('coinLocation').setValue(value.coin_location)
+    this.sensgiz.controls[index].get('presetId').setValue(value.preset_id)
 
 
   });
@@ -620,7 +620,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
             setTimeout(() => {
               this.modalService.dismissAll()
 
-            }, 1000);
+            }, 500);
             this.GetCameraList()
           }
           else {
@@ -736,7 +736,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
             setTimeout(() => {
               this.modalService.dismissAll()
-            }, 1000);
+            }, 500);
             this.GetCameraList()
           }
           else {
@@ -1148,9 +1148,11 @@ EditCameraModal(modal:any,data:any){
       presetId:new FormControl('',Validators.required)
     }))
 
+
+    console.log('value in edit function',value,index)
     this.sensgiz.controls[index].get('coinId').setValue(value.coin_id)
-    this.sensgiz.controls[index].get('coinLocation').setValue(value.location)
-    this.sensgiz.controls[index].get('presetId').setValue(value.location)
+    this.sensgiz.controls[index].get('coinLocation').setValue(value.coin_location)
+    this.sensgiz.controls[index].get('presetId').setValue(Number( value.preset_id))
 
 
   });
@@ -1355,7 +1357,7 @@ OnEditCameraDetails() {
           setTimeout(() => {
             this.modalService.dismissAll()
 
-          }, 1000);
+          }, 500);
           this.GetCameraList()
         }
         else {

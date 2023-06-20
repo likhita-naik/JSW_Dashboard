@@ -13,6 +13,7 @@ export class ServerService {
   relayDelay:number
   dashboardInterval:number
   jobsheetInterval:number
+  logInterval:number
   isCollapse:Subject<boolean>=new Subject()
   constructor(public http:HttpClient,
     public   snackbar:MatSnackBar
@@ -27,6 +28,7 @@ export class ServerService {
   this.relayDelay=res.relayDelay
   this.dashboardInterval=res.dashboardInterval
   this.jobsheetInterval=res.jobSheetStatusInterval
+   this.logInterval=res.logInterval
 
   console.log(this.dashboardInterval)
   }
@@ -183,6 +185,12 @@ EditAlarm(details:any){
   return this.http.post(this.IP+'/edit_alarmdetails',details)
 }
 
+//sensgiz violation details
+
+GetSensegizViol(){
+  return this.http.get(this.IP+'/get_coin_violationData')
+}
+
 
 
 //camera analytics api
@@ -247,7 +255,7 @@ RAViolCountCamWise(){
 }
 
 StartApplication(){
-  return this.http.get(this.IP+'/create_common_config')
+  return this.http.get(this.IP+'/create_phaseone_config')
 }
 
 StartESIApp(){
@@ -488,9 +496,9 @@ GetConveyorImg(data:any){
 }
 
 stopApp(){
-  return this.http.get(this.IP+'/stop_app_common')
+  // return this.http.get(this.IP+'/stop_app_common')
+  return this.http.get(this.IP+'/stop_phaseoneapp')
 }
-
 StartSmartApp(){
   return this.http.get(this.IP+'/create_smart_config')
 }

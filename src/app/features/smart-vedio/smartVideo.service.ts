@@ -44,6 +44,24 @@ export class  SmartVedioService{
       }
     }
 
+    CheckApplicationStatus(){
+      return this.http.get(this.IP+'/check_process')
+    }
+    GetSensegizViol(){
+      return this.http.get(this.IP+'/get_coin_violationData')
+    }
+
+    GetCoinIdList(){
+      return this.http.get(this.IP+'/getcoinidlist')
+    }
+    
+    GetCameraList(){
+      return this.http.get(this.IP+'/getcoinidcameralist')
+
+    }
+    GetSensgizViolByFilters(date:any,cameraName:any,coinID:any){
+      return date=='' && cameraName=='' && coinID==''?this.http.get(this.IP+'/get_coin_violationData'):this.http.post(this.IP+'/get_coin_violationData',{date:date,camera_name:cameraName,coin_id:coinID})
+    }
 notification(message: string, action?: string,duration?:number) {
     console.log('snackbar')
     this.snackbar.open(message, action ? action : '', ({

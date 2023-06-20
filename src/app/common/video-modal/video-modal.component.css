@@ -16,8 +16,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
- width: 50rem;
- height: 35rem;
+ width: 60rem;
+ height: 47rem;
+ padding:2rem !important;
 
 
 
@@ -37,4 +38,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.custom-video{
+    width: 60rem !important;
+    height:30rem;
+    /* border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f2f2f2; */
 }
