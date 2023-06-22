@@ -1,0 +1,245 @@
+<div class="container-fluid dashboard-content">
+  <div class="page-header mb-3">
+    <h3>Report Settings</h3>
+  </div>
+  <div class="row  col-12">
+    <div class="col">
+      <button class="btn default" (click)="AddReport(reportAddModal)">
+        &nbsp;&nbsp; <fa-icon icon="plus" class="me-1"></fa-icon>Add&nbsp;&nbsp;
+      </button>
+      <button class="btn default-outline ms-2" (click)="AddReport(smtpAddModal)">
+        <fa-icon icon="plus" class="me-1"></fa-icon>Add SMTP
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th style="width:3rem !important" scope="col">
+              SI No
+            </th>
+            <th>
+              Emails
+            </th>
+            <th>
+              Reports </th>
+            <th>
+              Report Time
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of AllReportDetails;let i=index;">
+            <td>{{i+1}}</td>
+            <td>
+              <b>To</b>
+              <div *ngFor="let emails of report.to_email;">
+                {{emails}}
+              </div>
+              <b>CC</b>
+              <div *ngFor="let emails of report.cc_email;">
+                {{emails}}
+              </div>
+
+            </td>
+            
+            <td>
+              <ul>
+                <li *ngIf="report.violation_report">Violation Report</li>
+                <li *ngIf="report.esi_report">ESI Report</li>
+              </ul>
+
+            </td>
+            <td>{{report.report_time}}</td>
+
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- <ng-template let-modal #reportAddModal1>
+  <div class="modal-header">
+    <h5>Add Report</h5>
+  </div>
+  <div class="modal-body p-3">
+    <form action="" class="mb-3" id="reportAddForm">
+      <div class="wrapper-two">
+        <div class="form-floating">
+          <div class="input-group">
+            <input [formControl]="emailControl" type="email" class="form-control" id="email">
+            <button class="btn default" (click)="OnAddEmail()" type="submit"
+              [disabled]="emailControl.invalid">Add</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="reportDetails.length>0;else elsep">
+      <div class="mt-3" *ngFor="let report of reportDetails;let i=index">
+        <div class="container mb-3">
+          <div class="row">{{report.email}}</div>
+          <div class="row">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="checkbox" [id]="'violAlert'+i" [checked]="report.violation_alert" [value]="'violAlert'"
+                defaultValue="" (change)="PPEConfig($event,i)" class="form-check-input">
+              <label [for]="'violAlert'+i" class="form-check-label text-muted">Violation Report</label>
+            </div>
+          </div>
+          <div class="row" id="custome">
+            <div class="form-check form-check-inline" id="custome">
+              <input type="checkbox" [id]="'esiAlert'+i" [checked]="report.esi_alert" [value]="'ESIAlert'"
+                defaultValue="" (change)="PPEConfig($event,i)" class="form-check-input">
+              <label [for]="'esiAlert'+i" class="form-check-label text-muted">ESI Report</label>
+            </div>
+          </div>
+
+        <div class="row col-5">
+          <span>reporting time :<ngb-timepicker [(ngModel)]="reportTime" [spinners]="false"></ngb-timepicker>
+          </span><span class="container-sm"> </span> 
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-centent-center" id="submit">
+    <button style="width:90% ;" class="btn default mb-3" *ngIf="reportDetails.length>0">Submit</button>
+  </div>
+
+</ng-template> -->
+
+<ng-template let-modal #reportAddModal>
+  <div class="modal-header">
+    <h5>Add Report</h5>
+  </div>
+  <div class="modal-body p-3">
+    <form action="" class="mb-3" [formGroup]="reportForm" id="reportAddForm">
+      <div class="border p-3" style="border-radius: 8.5px;">
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Emails(To) :</b></label>
+          <input formControlName="toEmail" placeholder="email" type="emails" class="form-control" id="email">
+        </div>
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Emails (CC) :</b></label>
+          <input formControlName="ccEmail" placeholder="email" type="emails" class="form-control" id="email">
+        </div>
+        <div class="row m-3">
+          <div class="mb-2"><b> Select Reports:</b></div>
+          <div class="form-check form-check-inline" id="custome">
+            <input type="checkbox" [id]="'violAlert'" formControlName="violationReport" [value]="'violAlert'"
+              defaultValue="" class="form-check-input">
+            <label [for]="'violAlert'" class="form-check-label text-muted">Violation Report</label>
+
+            <div class="mb-3 mt-3 ms-2 d-flex justify-content-center align-items-center"
+              *ngIf="this.reportForm.get('violationReport').value">
+              <div *ngFor="let solution of aiSolutions;let i=index" class="me-2" id="subCheckbox">
+                <input type="checkbox" [id]="'solution'+i" (change)="OnReportAnalytics($event)" [value]="solution.value"
+                  defaultValue="" class="form-check-input">
+                <label [for]="'solution'+i" class="form-check-label text-muted me-4">{{solution.name}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-check form-check-inline" id="custome">
+            <input type="checkbox" formControlName="esiJobsheet" [id]="'esiAlert'" [value]="'ESIAlert'" defaultValue=""
+              class="form-check-input">
+            <label [for]="'esiAlert'" class="form-check-label text-muted">ESI Report</label>
+          </div>
+        </div>
+
+
+        <div class="row m-3">
+          <span class="mb-2"><b>Reporting time :</b></span>
+          <span> <ngb-timepicker [(ngModel)]="reportTime" [ngModelOptions]="{standalone: true}"
+              [spinners]="false"></ngb-timepicker>
+          </span>
+        </div>
+      </div>
+
+
+    </form>
+
+
+  </div>
+  <div class="d-flex justify-centent-center" id="submit">
+    <button style="width:90% ;" class="btn default mb-3"
+      [disabled]="!(reportForm.get('violationReport').value || reportForm.get('esiJobsheet').value)"
+      (click)="submitDetails()">Submit</button>
+  </div>
+
+</ng-template>
+
+<ng-template #elsep>
+  <p class="container">No emails are added for the report</p>
+</ng-template>
+<ng-template #noMail>
+  <p class="">No emails</p>
+</ng-template>
+
+
+<ng-template let-modal #smtpAddModal>
+  <div class="modal-header">
+    <h5>Add SMTP Email</h5>
+  </div>
+  <div class="modal-body p-3">
+    <form action="" class="mb-3" [formGroup]="reportForm" id="reportAddForm">
+      <div class="border p-3" style="border-radius: 8.5px;">
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Email</b></label>
+          <input formControlName="toEmail" placeholder="email" type="emails" class="form-control" id="email">
+        </div>
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Domain</b></label>
+          <input formControlName="toEmail" placeholder="Domain name" type="emails" class="form-control" id="email">
+        </div>
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Port</b></label>
+          <input formControlName="ccEmail" placeholder="Port" type="emails" class="form-control" id="email">
+        </div>
+        <div class="m-3">
+          <label for="email" class="mb-2"><b>Password</b></label>
+          <input formControlName="ccEmail" placeholder="Password" type="password" class="form-control" id="email">
+        </div>
+        <!-- <div class="row m-3">
+          <div class="mb-2"><b> Select Reports:</b></div>
+          <div class="form-check form-check-inline" id="custome">
+            <input type="checkbox" [id]="'violAlert'" formControlName="violationReport" [value]="'violAlert'"
+              defaultValue="" class="form-check-input">
+            <label [for]="'violAlert'" class="form-check-label text-muted">Violation Report</label>
+
+            <div class="mb-3 mt-3 ms-2 d-flex justify-content-center align-items-center"
+              *ngIf="this.reportForm.get('violationReport').value">
+              <div *ngFor="let solution of aiSolutions;let i=index" class="me-2" id="subCheckbox">
+                <input type="checkbox" [id]="'solution'+i" (change)="OnReportAnalytics($event)" [value]="solution.value"
+                  defaultValue="" class="form-check-input">
+                <label [for]="'solution'+i" class="form-check-label text-muted me-4">{{solution.name}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-check form-check-inline" id="custome">
+            <input type="checkbox" formControlName="esiJobsheet" [id]="'esiAlert'" [value]="'ESIAlert'" defaultValue=""
+              class="form-check-input">
+            <label [for]="'esiAlert'" class="form-check-label text-muted">ESI Report</label>
+          </div>
+        </div> -->
+
+
+      
+      </div>
+
+
+    </form>
+
+
+  </div>
+  <div class="d-flex justify-centent-center" id="submit">
+    <button style="width:90% ;" class="btn default mb-3"
+      [disabled]="!(reportForm.get('violationReport').value || reportForm.get('esiJobsheet').value)"
+      (click)="submitDetails()">Submit</button>
+  </div>
+
+</ng-template>

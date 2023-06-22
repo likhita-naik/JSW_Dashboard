@@ -89,10 +89,12 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 deleteField:any=''
   CCObjectCounts:any[]=[]
   CCObjectsCount:any[]=[]
+  alarmSelectedViol:any[]=[{analytics_type:'RA',classes:[],alarm:false, roi_key_ids:[]},{analytics_type:'PPE',alarm:false,classes:[]},{analytics_type:'fire'}]
   fireROIS:any[]=[]
   TCKeyId:number=0
   CCKeyId:number=0
   RAKeyId:number=0
+  AlarmAITypes:any[]=[]
   isAlertFormValid:boolean=false
   isFail:boolean=false
   isSuccess:boolean=false
@@ -2171,6 +2173,8 @@ console.log(this.raObjects)
       var index = this.raAlarmObjects.indexOf(event.target.defaultValue)
       this.raAlarmObjects.splice(index, 1)
     }
+   this.alarmSelectedViol[0].classes=[...this.raAlarmObjects]
+     
     console.log(this.raAlarmObjects)
   }
 
@@ -2189,7 +2193,9 @@ console.log(this.raObjects)
       var index = this.ppeAlarmObjects.indexOf(event.target.defaultValue)
       this.ppeAlarmObjects.splice(index, 1)
     }
-    console.log(this.ppeAlarmObjects)
+
+    this.alarmSelectedViol[1].classes=[...this.ppeAlarmObjects]
+    console.log(this.alarmSelectedViol)
   }
 
 
@@ -2233,6 +2239,30 @@ console.log(this.raObjects)
     console.log(this.ppeConfig)
 
   }
+
+
+   OnAlarmAISelect(event:any){
+    console.log(event.target.defaultValue)
+    if(event.target.checked){
+      this.AlarmAITypes.push(event.target.value)
+    event.target.value=='RA' ?(this.alarmRAObjects.get('person').setValue(true),this.alarmSelectedViol[0].alarm=true ):''
+    event.target.value=='PPE' ?(this.alarmPPEObjects.get('helmet').setValue('helmet'),this.alarmPPEObjects.get('vest').setValue('vest'),this.alarmSelectedViol[1].alarm=true ):''
+  
+    }
+
+    else{
+      event.target.defaultValue=='RA' ?(this.alarmSelectedViol[0].alarm=true ):''
+      event.target.defaultValue=='PPE' ?(this.alarmSelectedViol[1].alarm=true ):''
+
+      var index=this.AlarmAITypes.indexOf(event.target.defaultValue)
+      this.AlarmAITypes.splice(index,1)
+    }
+    console.log(this.AlarmAITypes)
+   }
+
+
+
+
   VehicleConfig(event: any) {
 
     console.log(event.target.value)
@@ -2960,6 +2990,12 @@ OnEditAlertDetails() {
         console.log(this.cameraData)
       
       })
+
+    }
+
+
+    SetRelayOrHooter(event:any){
+      console.log(event)
 
     }
 

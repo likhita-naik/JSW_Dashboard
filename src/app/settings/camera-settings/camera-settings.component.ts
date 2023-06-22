@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faL } from '@fortawesome/free-solid-svg-icons';
@@ -1437,6 +1437,10 @@ GetCameraSampleSheet(){
     this.server.notification('Error while Downloading the Sheet','Retry')
   })
 }
+ 
+NextControl(el:any){
+console.log(el)}
+
 
   ngOnDestroy(): void {
     this.modalService.dismissAll()

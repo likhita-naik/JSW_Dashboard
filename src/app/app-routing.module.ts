@@ -30,6 +30,10 @@ const routes: Routes =
                 {
                   path:'WaterColorChange',loadChildren:()=>import('./features/water-color-change/water-color-change.module').then(m => m.WaterColorModule),
                   },
+                  {
+                    path:'reportSettings',loadChildren:()=>import('./settings/report-alert/report-alert.module').then(m => m.ReportAlertModule),
+                    },
+                  
                 
               
                 {

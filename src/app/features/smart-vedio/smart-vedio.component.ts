@@ -41,8 +41,26 @@ constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioSer
  this.IP=this.SmartVideoService.IP
 }
 ngOnInit(): void {
-  this.GetViolData()
-  this.GetApplicationStatus()
+  this.SmartVideoService.GetSensgizViolByFilters(this.selectedDate?this.selectedDate:' ',this.selectedCam?this.selectedCam:' ',this.selectedCoin?this.selectedCoin:' ').subscribe((response:any)=>{
+    console.log(response)
+   this.table? this.table.classList.remove('loading'):''
+    if(response.success===true){
+this.tempData=response.message
+this.sliceData()
+    }
+    else{
+      this.SmartVideoService.notification(response.message)
+      this.tempData=[]
+      this.sliceData()
+    }
+  },
+  (Err:any)=>{
+    this.SmartVideoService.notification('Error while fetching the data','Retry')
+
+   this.table? this.table.classList.remove('loading'):''
+    this.SmartVideoService.notification('Error while Fetching the Data','Retry')
+  })
+    this.GetApplicationStatus()
 this.interval= setInterval(()=>{
 this.GetViolData()
 this.GetApplicationStatus()
@@ -164,7 +182,6 @@ this.GetCameraList()
       else{
         this.tempData=[]
         this.sliceData()
-   this.SmartVideoService.notification(response.message,'Retry')
       }
     },
     (Err:any)=>{

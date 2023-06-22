@@ -2,13 +2,15 @@
     <h3 class="page-header">
         Smart Video Recording
     </h3>
-<div class="row"><div class="col-12">
+<div class="row">
+    <div class="col-12">
    <div class="float-end"><span class="text-muted">Application Status :</span><span [ngClass]="isLive!=null?isLive ?'success-badge':'danger-badge':''">{{isLive?'Running':'Stopped'}}</span></div> 
-</div></div>
+</div>
+</div>
     <div class="row mb-3">
         <div class="col-xl-12 mb-3">
 
-            <div class="d-flex flex-row align-items-center mb-2 mt-4 card p-2" id="data-card">
+            <div class="d-flex flex-row align-items-center mb-2 mt-4 card p-2" id="data-card" style="border-radius:7px !important;">
 
 
 
@@ -20,7 +22,7 @@
                 <div class="col-5">
                     <div class="row d-flex align-items-center">
                         <span class="col-4">
-                            <div class="me-2 ms-2 date-picker">
+                            <div class="me-1 ms-2 date-picker">
                                 <input ngxDaterangepickerMd #datepicker (datesUpdated)="dateUpdated($event)"
                                     [timePicker]="true" placeholder="Select Date" (datesUpdated)="datesUpdated($event)"
                                     class="form-control" [singleDatePicker]="true" [timePicker]="false"
@@ -31,14 +33,14 @@
                         </span>
                         <span class="col-4" id="filter">
 
-                            <p-treeSelect containerStyleClass="w-full" class="w-100 me-2" [(ngModel)]="selectedCoinId"
+                            <p-treeSelect containerStyleClass="w-full" class="w-100" [(ngModel)]="selectedCoinId"
                                 [ngModelOptions]=" 
                 {standalone: true}" [options]="coinIdList|async" (onNodeSelect)="OnCoinSelect($event)"
                                 placeholder="Select Coin Id"></p-treeSelect>
 
                         </span>
                         <span class="col-4" id="filter">
-                            <p-treeSelect containerStyleClass="w-full" class="w-100 me-2" [(ngModel)]="selectedCamera"
+                            <p-treeSelect containerStyleClass="w-full" class="w-100" [(ngModel)]="selectedCamera"
                                 [ngModelOptions]=" 
                 {standalone: true}" [options]="cameraList|async" (onNodeSelect)="onCameraSelect($event)"
                                 placeholder="Select Camera Name"></p-treeSelect>
