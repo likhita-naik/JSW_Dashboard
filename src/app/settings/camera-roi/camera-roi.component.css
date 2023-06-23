@@ -91,4 +91,24 @@ h2 {
   display:grid;
   grid-template-columns: 1fr 1fr;
 }
+.box-container{
+width:100%;
+max-width:100%;
+overflow-x: auto;
+display: block;
+transition: all 0.5s;
 
+}
+.box-md{
+  display:inline-flex;
+  justify-content: center;
+  align-items: center;
+  width:10rem;
+  height:5rem;
+  max-width:100%;
+  overflow: scroll;
+  border: 1px solid #ccc;
+  padding:0.3rem;
+  margin:0.2rem;
+  border-radius: 7px;
+}

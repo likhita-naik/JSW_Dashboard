@@ -5,9 +5,9 @@
 
 
     <div class="row mb-5" id=cameraStatus>
-           
-            <h5 class="sub-header ms-2"> Cameras</h5>
-                <div class="col-xl-3 col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
+
+        <h5 class="sub-header ms-2"> Cameras</h5>
+        <div class="col-xl-3 col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
             <div class="card card-body ">
                 <div class="statusGrid">
                     <div>
@@ -43,7 +43,8 @@
             <div class="card card-body">
                 <div class="statusGrid">
                     <div>
-                        <div class="" (click)="cameraStatus.disable_data_count?openDCDetailsModal(disabledCameraDetails):null">
+                        <div class=""
+                            (click)="cameraStatus.disable_data_count?openDCDetailsModal(disabledCameraDetails):null">
                             <h1>{{cameraStatus.disable_data_count}}</h1>
                         </div>
                         <div class="font-primary"><small>Solution Disabled Cameras</small></div>
@@ -59,7 +60,8 @@
             <div class="card card-body">
                 <div class="statusGrid">
                     <div>
-                        <div class="" (click)="cameraStatus.not_working_cam_count ? openNWCDetailsModal(NWCameraDetails):null">
+                        <div class=""
+                            (click)="cameraStatus.not_working_cam_count ? openNWCDetailsModal(NWCameraDetails):null">
                             <h1>{{cameraStatus.not_working_cam_count}}</h1>
                         </div>
                         <div class="font-primary"><small>Not Working Cameras</small></div>
@@ -75,54 +77,34 @@
     </div>
 
     <div class="row mb-5" id="violationCount">
-       
-            <h5 class="sub-header">Violations</h5>
-     
-            <!-- <div class="offset-9 row" id="dateRange">
-                <div class="col-xl-3 ">
+        <h5 class="float-start sub-header">Violations</h5>
 
-                    <div class="float-end">
 
-                        <span>
-                            <div id="reportrange" #reportrange (click)="openDatePicker($event)"
-                                class="ngx-daterangepicker-action"
-                                style="background: #fff; cursor: pointer; padding: 5px 10px;border-radius: 4px;; border: 1px solid #ccc; width: 100%">
-                                <span> </span>
-                                <span id="dateSpan" class="">
-                                    <input type="text" style="right: 5px;" id="spanDateInput" ngxDaterangepickerMd
-                                        #datepicker class="" (datesUpdated)="dateUpdated($event)"
-                                        [showCustomRangeLabel]="true" [ranges]="ranges" [timePicker]="true"
-                                        placeholder="Select Date" [(ngModel)]="selectedMoments" required />
-                                </span>
-                            </div>
+
+
+        <div class="d-flex flex-row-reverse justify-content-between">
+
+            <div class="float-end" *ngIf="isDatewise">
+                <button class="btn default ms-2" (click)="RefreshData()">
+                    <fa-icon icon="rotate"></fa-icon>
+                </button>
+            </div>
+            <span class="col-xs-6 col-xl-3 col-md-6 col-sm-6 col-lg-4">
+                <div class="dl-date-time-picker">
+                <div class="mb-3 date-picker" >
+                    <span class="w-100">
+                    <input ngxDaterangepickerMd #datepicker (datesUpdated)="dateUpdated($event)"
+                        [showCustomRangeLabel]="true" [ranges]="ranges" [timePicker]="true" placeholder="Select Date"
+                        class="form-control" style="width:100%;" [(ngModel)]="selectedMoments" required>
                         </span>
-                    </div>
+                        <span>
+                    <fa-icon icon="calendar"></fa-icon>
+                    </span>
                 </div>
-            </div> -->
-            <!-- 
-<fa-icon icon="caret-down"c>
-
-</fa-icon>                </div> -->
-
-            <!-- <input type="text" id="dateInput" ngxDaterangepickerMd #datepicker [timePicker]="true"
-                    placeholder="Select Date" [(ngModel)]="selectedMoments" required class="form-control" /> -->
-
-                <div class="col-xl-12">
-                    <div class="float-end" *ngIf="isDatewise">
-                    <button class="btn default ms-2" (click)="RefreshData()">
-                        <fa-icon icon="rotate"></fa-icon>
-                      </button>
-                    </div>
-                    <div class="float-end mb-3 col-xl-3 col-xs-6 col-md-6 col-sm-6 col-lg-4" id="dateInput">
-                        <!-- <form class="search-form"> -->
-                         <input   ngxDaterangepickerMd
-                         #datepicker   (datesUpdated)="dateUpdated($event)"
-                         [showCustomRangeLabel]="true" [ranges]="ranges" [timePicker]="true"
-                         placeholder="Select Date" class="form-control" [(ngModel)]="selectedMoments" required>
-                      <!-- <label><fa-icon icon="calendar"></fa-icon> </label>
-                        </form> -->
-                     </div>
-                </div>    
+                </div>
+                
+            </span>
+        </div>
         <div class="col-xl-4 col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3"
             [ngClass]="{'col-xl-3':violationList.length==3, 'col-xl-4':violationList.length==2,'col-xl-6':violationList.length==1}">
             <div class="card card-body">
@@ -141,7 +123,8 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="violationList.indexOf('RA')>=0" [ngClass]="{'col-xl-3':violationList.length==3, 'col-xl-4':violationList.length==2,'col-xl-6':violationList.length==1}"
+        <div *ngIf="violationList.indexOf('RA')>=0"
+            [ngClass]="{'col-xl-3':violationList.length==3, 'col-xl-4':violationList.length==2,'col-xl-6':violationList.length==1}"
             class="col-xl-4 col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
             <div class="card card-body">
                 <div class="statusGrid">
@@ -159,7 +142,8 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="violationList.indexOf('PPE')>=0" [ngClass]="{'col-xl-3':violationList.length==3, 'col-xl-4':violationList.length==2,'col-xl-6':violationList.length==1}"
+        <div *ngIf="violationList.indexOf('PPE')>=0"
+            [ngClass]="{'col-xl-3':violationList.length==3, 'col-xl-4':violationList.length==2,'col-xl-6':violationList.length==1}"
             class="col-xl-4 col-xs-12 col-sm-12 col-md-12 col-lg-6 mb-3">
             <div class="card card-body">
                 <div class="statusGrid">
@@ -201,16 +185,16 @@
     <h5 class="sub-header ms-2">Violations Data Analysis</h5>
 </div>
 <div class="row mb-5" *ngIf="violationsCount">
-   
-        <div class="col-xl-6 col-sm-12 p-2">
-            <canvasjs-chart [options]="chartOptionsPie" [styles]="{ width: '100%', height: '360px' }">
-            </canvasjs-chart>
-        </div>
-        <div class="col-xl-6 col-sm-12 p-2">
-            <canvasjs-chart [options]="chartOptionsBar" [styles]="{ width: '100%', height: '360px' }">
-            </canvasjs-chart>
-        </div>
-        <!-- <div class="col-xl-4 col-sm-12 p-2">
+
+    <div class="col-xl-6 col-sm-12 p-2">
+        <canvasjs-chart [options]="chartOptionsPie" [styles]="{ width: '100%', height: '360px' }">
+        </canvasjs-chart>
+    </div>
+    <div class="col-xl-6 col-sm-12 p-2">
+        <canvasjs-chart [options]="chartOptionsBar" [styles]="{ width: '100%', height: '360px' }">
+        </canvasjs-chart>
+    </div>
+    <!-- <div class="col-xl-4 col-sm-12 p-2">
         <canvasjs-chart
           [options]="chartOptionsline"
           [styles]="{ width: '100%', height: '360px' }"
@@ -252,7 +236,8 @@
                                     <tr *ngFor="let camera of raCamDetails;let i=index">
                                         <td>{{camera.camera_name}}</td>
                                         <td>{{camera.camera_ip}}</td>
-                                        <td><img (click)="OpenCameraImage(camera.imagename)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image"
+                                        <td><img (click)="OpenCameraImage(camera.imagename)"
+                                                [src]="IP+'/get_roi_image/'+camera.imagename" class="image"
                                                 style="border-radius:5px !important;" alt="">
                                         </td>
 
@@ -278,7 +263,9 @@
                                     <tr *ngFor="let cam of ppeCamDetails">
                                         <td>{{cam.camera_name}}</td>
                                         <td>{{cam.camera_ip}}</td>
-                                        <td><img (click)="OpenCameraImage(cam.imagename)" [src]="IP+'/get_roi_image/'+cam.imagename" class="image" alt=""> </td>
+                                        <td><img (click)="OpenCameraImage(cam.imagename)"
+                                                [src]="IP+'/get_roi_image/'+cam.imagename" class="image" alt="">
+                                        </td>
 
                                     </tr>
                                 </tbody>
@@ -351,7 +338,8 @@
                     <tr *ngFor="let camera of disabledCamDetails;let i=index">
                         <td>{{camera.camera_name}}</td>
                         <td>{{camera.camera_ip}}</td>
-                        <td><img (click)="OpenImage(i)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
+                        <td><img (click)="OpenImage(i)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image"
+                                alt=""> </td>
 
                     </tr>
                 </tbody>
@@ -395,7 +383,8 @@
                     <tr *ngFor="let camera of NWCamDetails;let i=index">
                         <td>{{camera.camera_name}}</td>
                         <td>{{camera.camera_ip}}</td>
-                        <td><img (click)="OpenImage(i)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
+                        <td><img (click)="OpenImage(i)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image"
+                                alt=""> </td>
 
                     </tr>
                 </tbody>
@@ -441,7 +430,8 @@
                     <tr *ngFor="let camera of allViolationDetails">
                         <td>{{camera.camera_name}}</td>
                         <td>{{camera.camera_ip}}</td>
-                        <td><img (click)="OpenCameraImage(camera.imagename)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
+                        <td><img (click)="OpenCameraImage(camera.imagename)"
+                                [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
                         <td>{{camera.roi_type_counts}}</td>
 
                         <td>{{camera.ppe_type_counts}}</td>
@@ -488,7 +478,8 @@
                     <tr *ngFor="let camera of ppeViolations">
                         <td>{{camera.camera_name}}</td>
                         <td>{{camera.camera_ip}}</td>
-                        <td><img (click)="OpenCameraImage(camera.imagename)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
+                        <td><img (click)="OpenCameraImage(camera.imagename)"
+                                [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
                         <td>{{camera.ppe_type_counts}}</td>
                     </tr>
                 </tbody>
@@ -530,7 +521,8 @@
                     <tr *ngFor="let camera of RAViolations">
                         <td>{{camera.camera_name}}</td>
                         <td>{{camera.camera_ip}}</td>
-                        <td><img (click)="OpenCameraImage(camera.imagename)" [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
+                        <td><img (click)="OpenCameraImage(camera.imagename)"
+                                [src]="IP+'/get_roi_image/'+camera.imagename" class="image" alt=""> </td>
                         <td>{{camera.roi_type_counts}}</td>
 
                     </tr>

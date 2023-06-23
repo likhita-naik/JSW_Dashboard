@@ -4,7 +4,7 @@
 $grey:  #777;
 $grey2: #dfe3e4;
 $blue:  #2183dd;
-$blue-light:#e5efff;
+$blue-light:#c6dcff;
 $green: #009900;
 $white: #fff;
 $danger:hsl(4, 81%, 41%);
@@ -51,16 +51,21 @@ $disable-background-color: #eceeef;
  
  #subCheckbox .form-check-input:checked
  {
+
   background-color: $blue-light !important;
   border-color:$blue-light  !important ;
   height: 1.2em !important;
   width: 1.2em;
+  color:$base-color !important;
  }
 
  #subCheckbox .form-check-input
  {
   height: 1.2em !important;
   width: 1.2em;
+
+  color:$base-color !important;
+
  }
 
 

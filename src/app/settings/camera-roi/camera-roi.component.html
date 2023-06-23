@@ -363,7 +363,7 @@
 
                                                         <ul class="list-group">
                                                             <li class="list-group-item"
-                                                                *ngIf="cameraData[0].roi_data.length>0">
+                                                                *ngIf="cameraData[0].roi_data.length>0" style="overflow-x: auto;max-width:100%;">
                                                                 <div class="form-check form-check-inline" id="custome">
                                                                     <input type="checkbox" id="RAalert" value="RA"
                                                                         defaultValue="" (change)="OnAlarmAISelect($event)"
@@ -426,6 +426,24 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    <!-- testing -->
+                                                                    <div class="box-container" style="overflow-x:auto;max-width:100%;" *ngIf="AlarmAITypes.indexOf('RA')>=0">
+                                                                         <span class="box-md" *ngFor="let roi of cameraData[0].roi_data">
+                                                                            <span class="form-check-inline form-check-inline">
+                                                                            <input type="checkbox"
+                                                                              class="form-check-input" (change)="OnAlarmRAROISelect($event)" [id]="roi.roi_id" [value]="roi.roi_id"
+                                                                            >
+                                                                            <label [for]="roi.roi_id">{{roi.roi_name}}</label>
+                                                                         </span>
+                                                                         </span>
+
+                                                                    </div>
+
+
+
+
+
                                                                 </div>
                                                             </li>
                                                             <li class="list-group-item"

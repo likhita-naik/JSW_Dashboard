@@ -78,7 +78,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
   ppeObjects:any[]=[]
   raObjects:any[]=[]
   ccObjects:any[]=[]
-  ppeAlarmObjects:any[]=[]
+  ppeAlarmObjects:any[]=['helmet','vest']
   raAlarmObjects:any[]=[]
   CCValid:number=0
    CCpoints:any[]=[]
@@ -89,7 +89,7 @@ export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
 deleteField:any=''
   CCObjectCounts:any[]=[]
   CCObjectsCount:any[]=[]
-  alarmSelectedViol:any[]=[{analytics_type:'RA',classes:[],alarm:false, roi_key_ids:[]},{analytics_type:'PPE',alarm:false,classes:[]},{analytics_type:'fire'}]
+  alarmSelectedViol:any[]=[{analytics_type:'RA',classes:[],alarm:false, roi_key_id:[]},{analytics_type:'PPE',alarm:false,classes:['helmet','vest']},{analytics_type:'fire'}]
   fireROIS:any[]=[]
   TCKeyId:number=0
   CCKeyId:number=0
@@ -140,7 +140,7 @@ deleteField:any=''
 
 
    alarmPPEObjects:FormGroup=new FormGroup({
-    helemet:new FormControl(Validators.requiredTrue),
+    helmet:new FormControl(Validators.requiredTrue),
     vest:new FormControl(Validators.requiredTrue)
    })
    alarmRAObjects:FormGroup=new FormGroup({
@@ -2195,7 +2195,26 @@ console.log(this.raObjects)
     }
 
     this.alarmSelectedViol[1].classes=[...this.ppeAlarmObjects]
-    console.log(this.alarmSelectedViol)
+    console.log(JSON.stringify( this.alarmSelectedViol))
+  }
+
+  OnAlarmRAROISelect(event: any) {
+  
+    console.log(event.target.defaultValue)
+    console.log(event.target.checked)
+    // console.log(this.classIDPerson.value)
+    // console.log(this.classIDCar.value)
+    // console.log(this.classIDBike.value)
+    if (event.target.checked) {
+this.alarmSelectedViol[0].roi_key_id.push(event.target.value)
+    }
+    else {
+      var index = this.alarmSelectedViol[0].roi_key_id.indexOf(event.target.defaultValue)
+      this.alarmSelectedViol[0].roi_key_id.splice(index, 1)
+    }
+
+    console.log(JSON.stringify( this.alarmSelectedViol))
+
   }
 
 
@@ -2251,8 +2270,8 @@ console.log(this.raObjects)
     }
 
     else{
-      event.target.defaultValue=='RA' ?(this.alarmSelectedViol[0].alarm=true ):''
-      event.target.defaultValue=='PPE' ?(this.alarmSelectedViol[1].alarm=true ):''
+      event.target.defaultValue=='RA' ?(this.alarmSelectedViol[0].alarm=false ):''
+      event.target.defaultValue=='PPE' ?(this.alarmSelectedViol[1].alarm=false ):''
 
       var index=this.AlarmAITypes.indexOf(event.target.defaultValue)
       this.AlarmAITypes.splice(index,1)

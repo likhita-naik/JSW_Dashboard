@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Moment } from 'moment';
 import { Observable, interval, of } from 'rxjs';
@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './smart-vedio.component.html',
   styleUrls: ['./smart-vedio.component.css']
 })
-export class SmartVedioComponent implements AfterViewInit ,OnInit{
+export class SmartVedioComponent implements AfterViewInit ,OnInit,OnDestroy{
   selectedMoments: { startDate: Moment | any, endDate: Moment | any }
   fromDate:any
   IP:any=''
@@ -26,6 +26,7 @@ export class SmartVedioComponent implements AfterViewInit ,OnInit{
  selectedCoin:any=''
  selectedCam:any=''
  interval:any
+  dataInterval:any
  isLive:boolean=null
  videoData:any[]=[]
   violationDetails:Observable<any[]>=of([])
@@ -240,5 +241,7 @@ this.GetViolData()
     })
   }
 
-
+ngOnDestroy(): void{
+  clearInterval(this.interval)
+}
 }
