@@ -428,11 +428,12 @@
                                                                     </div>
 
                                                                     <!-- testing -->
+                                                                    <p>ROIS</p>
                                                                     <div class="box-container" style="overflow-x:auto;max-width:100%;" *ngIf="AlarmAITypes.indexOf('RA')>=0">
                                                                          <span class="box-md" *ngFor="let roi of cameraData[0].roi_data">
-                                                                            <span class="form-check-inline form-check-inline">
+                                                                            <span class="form-check-inline form-check-inline m-2" style="display: inline-block !important;width:70%;max-width:70%;overflow-x: scroll;">
                                                                             <input type="checkbox"
-                                                                              class="form-check-input" (change)="OnAlarmRAROISelect($event)" [id]="roi.roi_id" [value]="roi.roi_id"
+                                                                              class="form-check-input m-2" [checked]="alarmSelectedViol[0].roi_key_id.indexOf(roi.roi_id)"  (change)="OnAlarmRAROISelect($event)" [id]="roi.roi_id" [value]="roi.roi_id"
                                                                             >
                                                                             <label [for]="roi.roi_id">{{roi.roi_name}}</label>
                                                                          </span>
@@ -485,7 +486,7 @@
                                                             <li class="list-group-item">
                                                                 <div class="form-check form-check-inline" id="custome">
                                                                     <input type="checkbox" name="" value="fire"
-                                                                        (change)="PPE_Config($event)"
+                                                                       
                                                                         defaultValue="fire" id="fireAlert"
                                                                         class="form-check-input">
                                                                     <label for="fireAlert"
@@ -495,7 +496,7 @@
                                                             <li class="list-group-item">
                                                                 <div class="form-check form-check-inline" id="custome">
                                                                     <input type="checkbox" name="" value="smoke"
-                                                                        (change)="PPE_Config($event)"
+                                                                        
                                                                         defaultValue="smoke" id="smokeAlert"
                                                                         class="form-check-input">
                                                                     <label for="smokeAlert"

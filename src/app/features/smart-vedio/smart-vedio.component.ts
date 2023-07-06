@@ -23,9 +23,10 @@ export class SmartVedioComponent implements AfterViewInit ,OnInit,OnDestroy{
   page=0;
  table:HTMLElement
  selectedDate:any=''
- selectedCoin:any=''
- selectedCam:any=''
+ selectedCoin:any=' '
+ selectedCam:any=' '
  interval:any
+ intervalValue:number
   dataInterval:any
  isLive:boolean=null
  videoData:any[]=[]
@@ -40,6 +41,7 @@ export class SmartVedioComponent implements AfterViewInit ,OnInit,OnDestroy{
   selectedCamera:any
 constructor(public modalService:NgbModal,private SmartVideoService:SmartVedioService,public Datepipe:DatePipe){
  this.IP=this.SmartVideoService.IP
+ this.intervalValue=this.SmartVideoService.intervalValue
 }
 ngOnInit(): void {
   this.SmartVideoService.GetSensgizViolByFilters(this.selectedDate?this.selectedDate:' ',this.selectedCam?this.selectedCam:' ',this.selectedCoin?this.selectedCoin:' ').subscribe((response:any)=>{
@@ -65,7 +67,7 @@ this.sliceData()
 this.interval= setInterval(()=>{
 this.GetViolData()
 this.GetApplicationStatus()
-},30000)
+},this.intervalValue)
 this.GetCoinIdList()
 this.GetCameraList()
 }

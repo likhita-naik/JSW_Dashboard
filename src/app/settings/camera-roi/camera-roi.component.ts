@@ -1940,6 +1940,7 @@ console.log(this.raObjects)
         roi_data: this.cameraData[0].roi_data[id]
 
       }
+      this.alarmSelectedViol[0].roi_key_id.push(element.key_id)
       this.RAKeyId=element.key_id
       this.allCameraData.push(tempObj)
 

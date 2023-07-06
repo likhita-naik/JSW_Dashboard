@@ -1187,12 +1187,6 @@ downloadImage(img: any) {
 
 }
 
-
-
-
-
-
-
 ngOnDestroy() {
   this.modalService.dismissAll()
   clearInterval(this.interval)

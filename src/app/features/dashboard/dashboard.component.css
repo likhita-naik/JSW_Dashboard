@@ -23,8 +23,8 @@ background-color:white !important;
 padding: 5px;
 border-radius: 10px;
   display: flex;
-  height: 2.9rem;
-  width:inherit !important;
+  height: 2.5rem;
+  width:auto !important;
   /* height: 2.5em; */
   justify-content: space-between;
   align-items: center;
@@ -34,10 +34,17 @@ border-radius: 10px;
 
 .date-picker input{
   /* background-color: var(--light-black) !important; */
-   width:100% !important;
+   /* width:100% !important; */
+   /* display: block; */
   border: none !important;
 
 }
+
+.form-control{
+  width:100% !important;
+}
+
+
 
 .date-picker fa-icon{
   margin-right: 0.6rem !important;

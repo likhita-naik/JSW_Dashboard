@@ -84,23 +84,17 @@
 
         <div class="d-flex flex-row-reverse justify-content-between">
 
-            <div class="float-end" *ngIf="isDatewise">
-                <button class="btn default ms-2" (click)="RefreshData()">
-                    <fa-icon icon="rotate"></fa-icon>
-                </button>
-            </div>
+
             <span class="col-xs-6 col-xl-3 col-md-6 col-sm-6 col-lg-4">
-                <div class="dl-date-time-picker">
-                <div class="mb-3 date-picker" >
-                    <span class="w-100">
-                    <input ngxDaterangepickerMd #datepicker (datesUpdated)="dateUpdated($event)"
-                        [showCustomRangeLabel]="true" [ranges]="ranges" [timePicker]="true" placeholder="Select Date"
-                        class="form-control" style="width:100%;" [(ngModel)]="selectedMoments" required>
-                        </span>
-                        <span>
-                    <fa-icon icon="calendar"></fa-icon>
-                    </span>
-                </div>
+                    <button  *ngIf="isDatewise" class="float-end btn default ms-2" (click)="RefreshData()">
+                        <fa-icon icon="rotate"></fa-icon>
+                    </button>
+                    <div class="float-end mb-3 col-xl-10 col-xs-12 col-md-12 col-sm-12 col-lg-12" id="dateInput">
+                         <input   ngxDaterangepickerMd
+                         #datepicker   (datesUpdated)="dateUpdated($event)"
+                         [showCustomRangeLabel]="true" [ranges]="ranges" [timePicker]="true"
+                         placeholder="Select Date" class="form-control" [(ngModel)]="selectedMoments" required>
+                    
                 </div>
                 
             </span>

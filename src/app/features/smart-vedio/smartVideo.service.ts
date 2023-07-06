@@ -9,10 +9,12 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 
 export class  SmartVedioService{
     IP:any=''
+    intervalValue:any
   constructor(public http:HttpClient,  public   snackbar:MatSnackBar){
     var res=this.loadConfigFile('assets/config.json')
     console.log(res)
     res=JSON.parse(res)
+    this.intervalValue=res.SensgizInterval
     this.IP=res.IP
   }
 

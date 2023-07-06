@@ -73,10 +73,16 @@ Interval3:any
       this.cameraStatus = data.message[0]
     })
     this.server.GetLiveViolationCount().subscribe((response: any) => {
-      console.log(response)
+      console.log(response,'live violation count api')
       if (response.success) {
         this.violationsCount = response.message
       }
+      else{
+        this.violationsCount={total_count: 0, ppe_count: 0, ra_count: 0 }
+ 
+      }
+    },Err=>{
+
     })
     this.ChartDraw()
 
@@ -97,6 +103,13 @@ Interval3:any
 
             }
           }
+          else{
+            this.violationsCount={total_count: 0, ppe_count: 0, ra_count: 0 }
+
+          }
+        },Err=>{
+          this.violationsCount={total_count: 0, ppe_count: 0, ra_count: 0 }
+
         })
         this.ChartDraw()
 
@@ -134,12 +147,24 @@ Interval3:any
 
         if (!this.isDatewise) {
           this.violationsCount = response.message
-
           this.ChartDraw()
+
 
 
         }
       }
+
+      else{
+        this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+        this.ChartDraw()
+
+      }
+
+    },
+    Err=>{
+      this.server.notification('Error while fetching the data','Retry')
+      this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+      this.ChartDraw()
     })
 
 
@@ -172,12 +197,12 @@ Interval3:any
           dataPoints: [
             {
               name: 'RA',
-              y: this.violationsCount.ra_count,
+              y: this.violationsCount.ra_count? this.violationsCount.ra_count:0,
               color: '#648eec',
             },
             {
               name: 'PPE',
-              y: this.violationsCount.ppe_count,
+              y: this.violationsCount.ppe_count?this.violationsCount.ppe_count:0,
               color: 'skyblue',
             },
           ],
@@ -216,7 +241,6 @@ Interval3:any
         },
       ],
     };
-    console.log('Chart is drawing')
   }
 
 
@@ -393,11 +417,16 @@ Interval3:any
       console.log(fromDate, toDate)
       this.server.GetViolationCountDatewise(this.selectedMoments.startDate.format('YYYY-MM-DD HH:mm:ss'), this.selectedMoments.endDate.format('YYYY-MM-DD HH:mm:ss')).subscribe((response: any) => {
         console.log(response)
+       
+       if(response.success){
         this.violationsCount = response.message
         this.ChartDraw()
 
-
-        console.log(this.selectedMoments.startDate, new Date().getDate())
+       }
+       else{
+        this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+        this.ChartDraw()
+       }
 
         if (this.selectedMoments.startDate.$D === new Date().getDate()) {
           this.isDatewise = false
@@ -409,6 +438,8 @@ Interval3:any
         }
       },
         err => {
+          this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+           this.ChartDraw()
           this.server.notification('Error while fetching the data', 'Retry')
         })
 
@@ -419,13 +450,23 @@ Interval3:any
 
       this.server.GetViolationCountDatewise(this.server.dateTransform(new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))), this.server.dateTransform(new Date())).subscribe((response: any) => {
         console.log(response)
+        
+        if(response.success){
         this.violationsCount = response.message
         this.ChartDraw()
-
+        }
+        else{
+          this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+          this.ChartDraw()
+        }
 
       },
         err => {
           this.server.notification('Error while fetching the data', 'Retry')
+          this.violationsCount={ total_count: 0, ppe_count: 0, ra_count: 0 }
+
+          this.ChartDraw()
+
         })
 
     }
