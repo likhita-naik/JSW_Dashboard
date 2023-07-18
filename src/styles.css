@@ -251,7 +251,7 @@ body {
 .bg-header {
   /* padding: 10px; */
   height: 5em;
-  background-color: #ffff !important;
+  background-color: rgba(255, 255, 255) !important;
   box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.175); 
   border-left: none;
   border-right: none;
@@ -683,7 +683,7 @@ color:var(--label-color) !important;
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 3000 !important;
+  z-index: 900 !important;
   overflow: auto;
   background: hsl(207, 85%, 33%);
   border-radius: 3px;
@@ -723,6 +723,8 @@ color:var(--label-color) !important;
   left:0 !important;
   transition: all 0.3s ease !important;
 }
+
+
 
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 #sidebar.active .sidebar-header strong {
@@ -1024,7 +1026,7 @@ font-size: 0.5rem;
   .fixed-top {
     margin-left: 0px;
     max-height: 5rem;
-    z-index: 1075;
+    z-index: 900;
   }
   
 

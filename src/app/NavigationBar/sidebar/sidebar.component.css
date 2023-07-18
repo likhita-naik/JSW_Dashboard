@@ -6,10 +6,14 @@
 
 .logo{
     width: 90%;
-    height: 4.5em;
+    height: 5em;
    
 }
 
+
+#CollapseImg .logo{
+    height: 4.5em !important;
+}
 #sidebarWrapper.active{
     width: 5rem;
     position: absolute;

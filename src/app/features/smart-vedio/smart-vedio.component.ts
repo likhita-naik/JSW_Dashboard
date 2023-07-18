@@ -105,9 +105,9 @@ this.GetCameraList()
   ngAfterViewInit(): void {
    this.table=document.getElementById('dataTable')
    this.selectedDate= this.Datepipe.transform(new Date(),'YYYY-MM-dd')
+ }
 
-  }
-
+ 
   GetCoinIdList(){
 
     var coins:any[]=[]
@@ -189,7 +189,6 @@ this.GetCameraList()
     },
     (Err:any)=>{
      this.table? this.table.classList.remove('loading'):''
-      this.SmartVideoService.notification('Error while Fetching the Data','Retry')
     })
   }
   sliceData(){
@@ -216,7 +215,7 @@ this.GetCameraList()
     })
   }
   datesUpdated(event:any){
-    this.table.classList.add('loading')
+   this.table? this.table.classList.add('loading'):''
     console.log(event)
     this.selectedDate=event.startDate !=null? event.startDate.format('YYYY-MM-DD'):this.Datepipe.transform(new Date,'YYYY-MM-dd')
     console.log(this.selectedDate)
@@ -227,7 +226,7 @@ this.GetCameraList()
   OnCoinSelect(event:any){
 this.selectedCoin=this.selectedCoinId.data
 console.log(this.selectedCoin)
-this.table.classList.add('loading')
+this.table? this.table.classList.add('loading'):''
 this.GetViolData()
   
   }

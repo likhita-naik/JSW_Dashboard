@@ -289,7 +289,13 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
 
     var container = document.getElementById('page')
     container.classList.add('loading')
-
+    this.SensGizInfo=[]
+    this.sensgiz=new FormArray([])
+    this.sensgiz.push(new FormGroup({
+      coinId:new FormControl('',Validators.required),
+coinLocation:new FormControl('',Validators.required),
+presetId:new FormControl('',Validators.required)
+    }))
     this.server.CheckLicense().subscribe((response: any) => {
       if (response.success) {
         container.classList.remove('loading')
@@ -310,13 +316,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.isLoading = false
           this.sensgiz.reset()
 
-          this.sensgiz=new FormArray([])
-          this.sensgiz.push(new FormGroup({
-            coinId:new FormControl('',Validators.required),
-      coinLocation:new FormControl('',Validators.required),
-      presetId:new FormControl('',Validators.required)
-          }))
-          this.SensGizInfo.splice(0,this.SensGizInfo.length)
+
+          
           // this.newROIPoints.splice(0,this.newROIPoints.length)
           // this.OnAddingNewROI()
         }, (reason) => {
@@ -331,6 +332,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
       coinLocation:new FormControl('',Validators.required),
       presetId:new FormControl('',Validators.required)
           }))
+         
           console.log('submit')
           this.isLoading = false
           /// this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -340,9 +342,8 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
           this.isFail = false
           this.isSuccess = false
           this.sensgiz.reset()
-          this.SensGizInfo.splice(0,this.SensGizInfo.length)
-
-            ;
+          this.SensGizInfo=[]
+            
         }
         )
       }
@@ -446,7 +447,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
     this.isHooter=false
     this.isRelay=false
     this.isSensgiz=true
-    if(this.SensGizInfo!=null){
+    if(this.SensGizInfo!=null || this.SensGizInfo.length>0){
 
  
 
@@ -1075,10 +1076,17 @@ AddSensgizData(){
     coinLocation:new FormControl('',Validators.required),
     presetId:new FormControl('',Validators.required)
   }))
+ // this.sensgiz.valueChanges.subscribe ((value:any)=>{
+   // this.sensgiz.updateValueAndValidity()
+
+ //q })
+ 
+ 
 }
 
 DeleteSensgizData(i:number){
   this.sensgiz.controls.splice(i,1)
+ // this.sensgiz.updateValueAndValidity()
 }
 
 SensgizModal(modal:any){
@@ -1118,6 +1126,7 @@ EditCameraModal(modal:any,data:any){
     this.isHooter=true
     this.isRelay=false
     this.isSensgiz=false
+    this.EditCameraForm.get('hooterIp').setValue(data.alarm_ip_address?data.alarm_ip_address:'')
     this.EditCameraForm.get('isHooter').setValue('hooter')
   }
 
@@ -1125,6 +1134,8 @@ EditCameraModal(modal:any,data:any){
     this.isHooter=false
     this.isRelay=true
     this.isSensgiz=false
+    this.EditCameraForm.get('relayIp').setValue(data.alarm_ip_address?data.alarm_ip_address:'')
+
     this.EditCameraForm.get('isHooter').setValue('relay')
   }
 
