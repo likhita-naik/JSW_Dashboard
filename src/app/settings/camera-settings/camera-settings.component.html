@@ -29,15 +29,15 @@
       </button>
       <button *ngIf="!isActive2" class="float-end ms-2 btn primary" (click)="StartAppModal(startHydroAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Start  Smart Record App
+        Start Smart Record App
       </button>
       <button *ngIf="isActive" class="float-end ms-2 btn danger" (click)="StopAppModal(stopAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Stop  DocketRun Main App
+        Stop DocketRun Main App
       </button>
-      <button *ngIf="isActive2" class="float-end ms-2 btn danger" (click)="StopAppModal(stopHydroAppModal)" >
+      <button *ngIf="isActive2" class="float-end ms-2 btn danger" (click)="StopAppModal(stopHydroAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Stop  Smart Record App
+        Stop Smart Record App
       </button>
       <button class="float-end btn default" (click)=openCameraAddModal(cameraAddModal)>
         <fa-icon icon="plus" class="me-2"></fa-icon>Add
@@ -50,7 +50,8 @@
     <h5 class="sub-header mb-2 ms-3 col-12">Upload Excel</h5>
     <div style="border-radius:4px" class="col-12 p-3">
       <div class="float-end mb-2">
-        <button class="btn default-outline float-end" (click)="GetCameraSampleSheet()"><fa-icon icon="file-arrow-down"></fa-icon> Download Sample
+        <button class="btn default-outline float-end" (click)="GetCameraSampleSheet()"><fa-icon
+            icon="file-arrow-down"></fa-icon> Download Sample
           Sheet</button>
       </div>
       <div class="container p-2">
@@ -88,7 +89,7 @@
           </ng-multiselect-dropdown>
         </div>
       </div>
-      <div class="table-responsive"  id="dataTable">
+      <div class="table-responsive" id="dataTable">
         <table class="table">
           <thead>
             <tr>
@@ -120,9 +121,14 @@
 
               <td style="text-align:center;" *ngIf="showPlant">{{camera.plant}}</td>
               <td style="text-align:center;" *ngIf="showArea">{{camera.area}}</td>
-              <td style="text-align:center;" *ngIf="showAlarmType">{{camera.alarm_type?camera.alarm_type:'none'}}</td>
+              <td style="text-align:center;" *ngIf="showAlarmType"> {{camera.alarm_type?camera.alarm_type:'none'}}</td>
               <td style="text-align:center;" *ngIf="showAlarmIp">
-                {{camera.alarm_ip_address?camera.alarm_ip_address:'none'}}</td>
+                <div *ngIf="camera.alarm_type!='sensegiz'"> {{camera.alarm_ip_address?camera.alarm_ip_address:'none'}}
+                </div>
+                <div *ngIf="camera.alarm_type=='sensegiz'"> <span class="info-badge"
+                    (click)="ViewSenseInfo(camera,ShowSensegiz)" style="cursor:pointer;">Details</span></div>
+
+              </td>
 
 
               <td style="text-align:center;" *ngIf="showCamBrand">{{camera.camera_brand}}</td>
@@ -180,7 +186,8 @@
           <div class="form-floating">
             <input type="text"
               [ngClass]="AddCameraForm.get('cameraname').invalid && AddCameraForm.get('cameraname').touched?'is-invalid':''"
-              formControlName="cameraname" placeholder="Camera name" class="form-control" (keydown.enter)="NextControl(singleSelect)"  id="cameraname">
+              formControlName="cameraname" placeholder="Camera name" class="form-control"
+              (keydown.enter)="NextControl(singleSelect)" id="cameraname">
             <label for="cameraname">Camera Name</label>
           </div>
           <div class="form-floating" id="cameraBrand">
@@ -188,8 +195,9 @@
             [ngClass]="AddCameraForm.get('camera_brand').invalid && AddCameraForm.get('camera_brand').touched?'is-invalid':''"
             formControlName="camera_brand" placeholder="Camera brand" class="form-control" id="camerabrand">
           <label for="camerabrand">Camera Brand</label> -->
-            <ng-multiselect-dropdown #singleSelect [placeholder]="'Camera Brand'" #camera_brand (keydown.enter)="NextControl(plant)" [settings]="dropdownSettings2|async"
-              [data]="cameraBrandList|async" formControlName="camera_brand">
+            <ng-multiselect-dropdown #singleSelect [placeholder]="'Camera Brand'" #camera_brand
+              (keydown.enter)="NextControl(plant)" [settings]="dropdownSettings2|async" [data]="cameraBrandList|async"
+              formControlName="camera_brand">
             </ng-multiselect-dropdown>
             <!-- <label>Camera brand</label> -->
           </div>
@@ -733,7 +741,7 @@
 
 <ng-template #sensgizDetails let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Sensgiz Details</h4>
+    <h4 class="modal-title" id="modal-basic-title">Sensegiz Details</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Cross click')"></button>
   </div>
   <div class="modal-body p-3">
@@ -745,20 +753,21 @@
         <div class="form-inline d-flex align-items-center justify-content-between">
           <div class="form-floating">
 
-          <input class="form-control w-20 me-2" id="coinId" placeholder="Coin ID" formControlName="coinId">
-          <label for="coinId">Coin Id</label>
+            <input class="form-control w-20 me-2" id="coinId" placeholder="Coin ID" formControlName="coinId">
+            <label for="coinId">Coin Id</label>
 
           </div>
           <div class="form-floating">
-          <input type="number" class="form-control w-20 me-2" id="number-input" placeholder="Preset Id"  formControlName="presetId">
-          <label for="number-input">Preset Id</label>
+            <input type="number" class="form-control w-20 me-2" id="number-input" placeholder="Preset Id"
+              formControlName="presetId">
+            <label for="number-input">Preset Id</label>
 
-        </div>
+          </div>
 
 
-        <div class="form-floating">
-          <input class="form-control w-20 me-2" id="loc" placeholder="Location" formControlName="coinLocation">
-          <label for="loc">Location</label>
+          <div class="form-floating">
+            <input class="form-control w-20 me-2" id="loc" placeholder="Location" formControlName="coinLocation">
+            <label for="loc">Location</label>
           </div>
           <!-- <span class="circle"> -->
           <fa-icon icon="circle-minus" style="cursor:pointer;color:#BD1F14" size="lg" class="ms-2"
@@ -770,7 +779,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn default float-end" [disabled]="sensgiz.valid"  (click)="SaveSensgizInfo()">
+    <button class="btn default float-end" (click)="SaveSensgizInfo()">
       Save
     </button>
   </div>
@@ -807,6 +816,42 @@
       Save
     </button>
   </div>
+</ng-template>
+
+<ng-template #ShowSensegiz let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Sensegiz Details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Cross click')"></button>
+  </div>
+  <div class="modal-body p-3">
+
+
+    <ng-container class="d-flex justify-centent-center">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">SI No</th>
+            <th scope="col">Coin ID</th>
+            <th scope="col">Preset ID</th>
+            <th scope="col">Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of selectedSense;let i=index">
+            <td scope="col">{{data.coin_key_id+1}}</td>
+            <td scope="col">{{data.coin_id}}</td>
+            <td scope="col">{{data.preset_id}}</td>
+
+            <td scope="col">{{data.coin_location}}</td>
+
+
+          </tr>
+        </tbody>
+      </table>
+
+</ng-container>
+  </div>
+
 </ng-template>
 
 

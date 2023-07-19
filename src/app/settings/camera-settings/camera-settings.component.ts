@@ -24,6 +24,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
   RACameraList: Observable<any[]> = of([])
   responseMessage: string = ''
   IP: string = ''
+  selectedSense:any[]=[]
   isFail: boolean = false
   isSuccess: boolean = false
   isLoading: boolean = false
@@ -1453,6 +1454,10 @@ NextControl(el:any){
 console.log(el)}
 
 
+ViewSenseInfo(data:any,modal:any){
+  this.selectedSense=data.coin_details
+  this.modalService.open(modal,{centered:true})
+}
   ngOnDestroy(): void {
     this.modalService.dismissAll()
   }

@@ -17,11 +17,11 @@ export class VideoModalComponent implements OnInit,AfterViewInit {
   @ViewChild('carousal') carousal:NgbCarousel
 
 constructor(private modalService:NgbModal,public config: NgbCarouselConfig){
-  
+ 
   config.wrap=false
   config.pauseOnFocus=true
   config.pauseOnHover=true
-
+  config.interval=0
 }
 
 ngOnInit(): void {

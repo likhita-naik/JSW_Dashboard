@@ -4,18 +4,16 @@
         </button>
     </div> -->
     <div class="d-flex justify-centent-center align-items-center" style="width:inherit;height: inherit;">
-        <div class="">
-            
-        </div>
+
         <div class="video-modal" >
            
-            <ngb-carousel #carousal="ngbCarousel" *ngIf="Data" class="" >
+            <ngb-carousel data-interval="false" #carousal="ngbCarousel" *ngIf="Data" class="" style="height:100%;width: 100%;">
                 <ng-container *ngFor="let data of Data;let i=index">
 
                 <ng-template ngbSlide [id]="i|json" >
-                    <div class="video-container" *ngIf="data.video_name!=null;else noVideo">
-                        <video  height="70%" width="70%" preload="none" style="width:70% !important;height: 70% !important;" class="custom-video" controls>
-                            <source [src]="IP+'/getviolationvideo/'+ data.video_name" type="video/quicktime">
+                    <div class="video-container d-flex justify-centent-center" *ngIf="data.video_name!=null;else noVideo">
+                        <video  height="70%" width="70%" preload="none" style="width:90% !important;height: 75% !important;" class="custom-video" controls>
+                            <source [src]="IP+'/getviolationvideo/'+ data.video_name" type="video/mp4">
 
                         </video>
                     </div>
