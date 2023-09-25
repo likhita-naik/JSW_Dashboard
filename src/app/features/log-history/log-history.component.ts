@@ -724,7 +724,7 @@ export class LogHistoryComponent implements OnDestroy {
   }
 
   //fucntion to create and download the excel as per the given dates and other inputs
-  submitForm() {
+  async submitForm() {
     this.isalert = false
     this.excelLoad = true
     this.isExcel = false
@@ -737,6 +737,12 @@ export class LogHistoryComponent implements OnDestroy {
       cameraname: this.selectedCameraId ? this.selectedCameraId : 'none',
       violation_type: this.selectedViolType ? this.selectedViolType : 'none'
     }
+
+    let dataLength:number=await this.GetViolationLength(body.from_date,body.to_date,body.cameraname!='none'?body.cameraname:null,body.violation_type!='none'?body.violation_type:null)
+    if(dataLength>100){
+      alert("huge Amount of Data found")
+    }
+    else{
     var date1 = new Date(this.excelFromDate.value)
     var date2 = new Date(this.excelToDate.value)
     var Difference_In_Time = date2.getTime() - date1.getTime();
@@ -797,24 +803,19 @@ export class LogHistoryComponent implements OnDestroy {
 
     formData.append('location', this.loc2.value)
   }
+  }
 
   //-------METHOD TO DOWNLOAD THE EXCEL--------
-  OnDownload() {
+   GetViolationLength(fromDate:any,toDate:any,cameraName:any,violationType:any) {
     this.excelLoader = true
-    this.webServer.SampleExcelDownload().subscribe(
-      (response: any) => {
-        this.excelLoader = false
-     
-        var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        const blob = new Blob([response.body], { type: contentType });
-        //var fileName =  response.headers.get('content-disposition').split(';')[0];
-        var fileName = "violation report" + " " + this.datepipe.transform(new Date, 'YYYY_MM_dd_h_mm_ss')
-        const file = new File([blob], fileName, { type: '.xlsx' });
-        saveAs(file);
-      },
-      err => {
-        this.excelLoader = false
-      })
+    var length
+    this.webServer.DatewiseViolations(fromDate, toDate, null, null, cameraName?cameraName:null,violationType?violationType:null).subscribe((Response: any) => {
+      if (Response.success) {
+         
+       length= Response.message.length
+      }
+    })
+    return length;
   }
 
 

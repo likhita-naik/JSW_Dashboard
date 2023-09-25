@@ -66,6 +66,15 @@
 
                    <span>Water</span></a>
             </li> -->
+
+            <li class="mt-4">
+                <a [ngbPopover]="isCollapse?'Traffic Count':''" popoverTitle="" popoverClass="custom-popover"
+                    triggers="mouseenter:mouseleave" routerLink="/app/trafficCount" routerLinkActive="active">
+                    <!-- <fa-icon icon="exclamation-triangle" class="me-2"></fa-icon> -->
+                    <fa-icon icon="person-walking-dashed-line-arrow-right" class="me-2"></fa-icon>
+
+                    <span> Traffic Count</span></a>
+            </li>
             <li class="mt-4">
                 <a [ngbPopover]="isCollapse?'Camera Settings':''" popoverTitle="" popoverClass="custom-popover"
                     triggers="mouseenter:mouseleave" routerLink="/app/CameraSettings" routerLinkActive="active">
@@ -85,7 +94,7 @@
 
                     <span>Settings</span> </a>
             </li>
-
+            <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
 
           
               

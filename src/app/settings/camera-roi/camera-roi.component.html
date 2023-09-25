@@ -48,53 +48,30 @@
     </div>
     <div class="card card-body mb-3">
         <div class="row mb-3">
-            <div class="col-12">
-                <div class="">
-                    <div class="row">
-                        <div class="col-9 d-flex justify-content-start p-2 border-bottom">
+
+                        <div class="col-9 p-2 border-bottom">
                             <div class="row">
-                                <div class="btn-wrap">
-                                    <p-menubar styleClass="w-full btn default text-white"
+                                <div class="d-flex justify-content-start">
+                                    <div>
+                                    <p-menubar styleClass="btn default text-white"
                                         (onClick)="onCCTypeSelect($event)"
                                         [style]="{'width':'inherit','color':'white','padding':'0px','background':'#42a8a8 !important'}"
                                         [model]="ccTypeList|async">
                                     </p-menubar>
-                                    <!-- <p-menubar styleClass="w-full btn default text-white"
-                                    (onClick)="onCCTypeSelect($event)"
-                                    [style]="{'width':'inherit','color':'white','padding':'0px','background':'#42a8a8 !important'}"
-                                    [model]="fireSmoke">
-                                   </p-menubar> -->
-
+                                  </div>
                                     <button class="ms-2 me-2 btn success text-black"
                                         style="background-color: rgb(189, 189, 38) !important" (click)="AddNewROI()">
                                         <fa-icon icon="plus" class="me-1"></fa-icon>Danger Zone ROI
                                     </button>
-
+                               
                                     <button class="me-2 btn success" (click)="AddNewLine()">
                                         <fa-icon icon="plus" class="me-1"></fa-icon>
                                         Traffic Count ROI
                                     </button>
-                                    <!-- <button class="me-2 btn success"
-                                        style="background-color: rgb(224,129,25) !important;" (click)="AddFireROI()">
-                                        <fa-icon icon="plus" class="me-1"></fa-icon>
-                                        Water ROI
-                                    </button> -->
-
-                                    <!-- <button class="btn default me-2" style="background-color:#42a8a8 !important"
-                            (click)="AddCCRoi()"> <fa-icon icon="plus" class="me-1"></fa-icon> Crowd Count ROI</button> -->
-                                    <!-- <p-treeSelect class="text-white" (onSelect)="onCCTypeSelect($event)"  containerStyleClass="btn default" [(ngModel)]="selectedCCType" [options]="ccTypeList" placeholder="Select Crowd Count"></p-treeSelect> -->
-                                    <!-- <div class="row"> -->
-
-                                    <!-- </div> -->
+</div>
                                 </div>
-                            </div>
                         </div>
-                        <!-- <div class="col-4 p-2 border-bottom">
-                
-                        <button class="me-2 btn"> <fa-icon icon="trash" class="me-1"></fa-icon>Delete
-                        </button>
-
-                    </div> -->
+                     
                         <div class="col-3 p-2 border-bottom">
                             <div class="float-end">
                                 <!-- <button class="btn default me-2" *ngIf="isEdit" (click)="SaveEditedRoi()">Save
@@ -118,9 +95,7 @@
                     </div> -->
 
                         <!-- <div class="col-3 alert alert-secondary">Right click to confirm the roi</div> -->
-                    </div>
-                </div>
-            </div>
+                   
         </div>
 
         <div class="row mb-3">
@@ -134,85 +109,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-3" *ngIf="false">
-        <div class="col-12" *ngIf="allCameraData.length>0;else noRoi">
-            <!-- *ngIf="allCameraData.length>0" -->
-            <div class="card">
-                <div class="card-header"><b> ROI list</b></div>
-                <div class="">
-                    <table class="table">
-                        <thead>
-                            <tr style="text-align:center;">
-                                <th scope="col">SI no</th>
-                                <th scope="col">ROI name</th>
-                                <th scope="col">Object</th>
-                                <th scope="col">
-                                    <fa-icon class="me-2" icon="cog"></fa-icon>Settings
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="text-align:center;" *ngFor="let ROIs of allCameraData;let i=index">
-                                <td>{{i+1}}</td>
-                                <td (dblclick)="AlterROIName(i)">{{ROIs.roi_name}}</td>
-                                <td>
-                                    <div class="" *ngFor="let label of ROIs.roi_data.label_name">
-                                        {{label}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <!-- <button class="btn btn-sm default me-2" (click)="Edit(i)">Edit</button> -->
-                                    <button class="btn btn-sm danger me-2"
-                                        (click)="isDelete(i,deleteModal,'RA')">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                </div>
-                <!--traffic count details  -->
-                <div class="class-header">Traffic Count Details</div>
-                <table>
-                    <thead>
-                        <tr>
-
-                            <th scope="col">Index</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Objects</th>
-                            <th></th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let tc of cameraData[0].tc_data;let in=index">
-                            <td>{{in+1}}</td>
-                            <td>{{tc.area_name}}</td>
-                            <td>
-                                <div *ngFor="let class of tc.class_name">{{class}}
-
-                                </div>
-                            </td>
-                            <td><button (click)="OnDeleteTCROI()" class="btn btn-default">
-                                    <fa-icon icon="trash"></fa-icon>
-                                </button> </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <ng-template #noRoi>
-            <div class="col-12">
-                <div class="card card-body">
-                    <!-- <div class="d-flex justify-content-center"> -->
-                    <div class="alert alert-info">
-                        <h5> No roi is added,click add button to add ROI and right click to confirm the ROI</h5>
-                    </div>
-                    <!-- </div> -->
-                </div>
-            </div>
-        </ng-template>
-    </div>
-
+   
     <div class="row">
         <div class="col-12">
             <div class="card card-body">
@@ -224,7 +121,7 @@
                 <p-tabView styleClass="tabview-custom">
                     <p-tabPanel>
                         <ng-template pTemplate="header">
-                            <span>Danger Zone ROIS</span>
+                            <span>Danger Zone </span>
                         </ng-template>
                         <table class="table" *ngIf="cameraData[0].roi_data.length>0">
 
@@ -258,7 +155,7 @@
                     </p-tabPanel>
                     <p-tabPanel header="Header II">
                         <ng-template pTemplate="header">
-                            <span>Traffic Count ROIS</span>
+                            <span>Traffic Count</span>
                         </ng-template>
                         <div *ngIf="cameraData.length>0">
                             <table class="table" *ngIf="cameraData[0].tc_data.length>0">
@@ -289,7 +186,7 @@
                         </div>
                     </p-tabPanel>
                     <p-tabPanel header="Header III">
-                        <ng-template pTemplate="header"> <span>Crowd Count ROIS</span>
+                        <ng-template pTemplate="header"> <span>Crowd Count</span>
                         </ng-template>
                         <div *ngIf="cameraData.length>0">
                             <table class="table" *ngIf="cameraData[0].cr_data.length>0">
@@ -372,19 +269,19 @@
                                     <div class="" [formGroup]="fireSmokeForm" style="pointer-events:all;">
                                         <div class="form-check form-check-inline" id="custome">
                                             <input type="checkbox" id="fire" value="fire" defaultValue="helmet"
-                                                (change)="PPE_Config($event)" formControlName="fire"
+                                                 formControlName="fire"
                                                 class="form-check-input">
                                             <label for="fire" class="form-check-label text-muted">Fire</label>
                                         </div>
                                         <div class="form-check form-check-inline" id="custome">
                                             <input type="checkbox" formControlName="smoke" name="" value="smoke"
-                                                (change)="PPE_Config($event)" defaultValue="smoke" id="smoke"
+                                                 defaultValue="smoke" id="smoke"
                                                 class="form-check-input">
                                             <label for="smoke" class="form-check-label text-muted">Smoke</label>
                                         </div>
                                     </div>
-                                    <span class="float-left"> <button class="me-2 btn success"
-                                            style="background-color: rgb(180, 96, 5) !important;"
+                                    <span class="float-end"> <button class="me-2 btn success"
+                                            style=""
                                             (click)="AddFireROI()">
                                             <fa-icon icon="plus" class="me-1"></fa-icon>
                                             ROI
@@ -413,40 +310,7 @@
 </div>
                     </p-tabPanel>
 
-                    <p-tabPanel>
-                        <ng-template pTemplate="header">
-                            <span>Water Color Change ROIS</span>
-                        </ng-template>
-                        <table class="table" *ngIf="true">
-
-                            <thead>
-                                <tr style="text-align:center;">
-                                    <th scope="col">SI no</th>
-                                    <th scope="col">ROI name</th>
-                                    <!-- <th scope="col">Objects</th> -->
-                                    <th scope="col">
-                                        <fa-icon class="me-2" icon="cog"></fa-icon>Settings
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="text-align:center;" *ngFor="let ROIs of WaterROIData;let i=index">
-                                    <td>{{i+1}}</td>
-                                    <td (dblclick)="AlterROIName(i)">{{ROIs.roi_name}}</td>
-                                    <!-- <td>
-                                    <div class="" *ngFor="let label of ROIs.roi_data.label_name">
-                                        {{label}}
-                                    </div>
-                                </td> -->
-                                    <td>
-                                        <button class="btn btn-sm danger me-2"
-                                            (click)="isDelete(i,deleteModal,'Water')">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-                    </p-tabPanel>
+                    
 
 
 

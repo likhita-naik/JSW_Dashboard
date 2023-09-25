@@ -366,6 +366,7 @@ deleteField:any=''
 
   ngAfterViewInit(): void {
     this.canvasSetup()
+    console.log(this.fireSmokeForm.value)
     // this.sensgiz.valueChanges((value:any)=>{
 
     // })
@@ -2229,6 +2230,40 @@ this.alarmSelectedViol[0].roi_key_id.push(event.target.value)
   }
 
   PPE_Config(event: any) {
+    console.log(this.ppeForm)
+    console.log(event.target.value)
+    if (event.target.checked) {
+      if (event.target.value === 'helmet') {
+        this.isEdit = true
+        this.ppeConfig.helmet = true
+        console.log(this.ppeConfig)
+      }
+      if (event.target.value === 'vest') {
+        this.isEdit = true
+        this.ppeConfig.vest = true
+      }
+
+    }
+    else {
+      this.isEdit = true
+      if (event.target.value === 'helmet') {
+
+        this.ppeConfig.helmet = false
+      }
+      if (event.target.value === 'vest') {
+        this.ppeConfig.vest = false
+      }
+
+    }
+    this.savePpeConfig()
+    console.log('fire',this.fireSmokeForm.get('fire').value,'smoke',this.fireSmokeForm.get('smoke').value)
+    console.log(this.ppeConfig)
+
+  }
+
+
+
+  FireSmokeConfig(event: any) {
     console.log(this.ppeForm)
     console.log(event.target.value)
     if (event.target.checked) {
