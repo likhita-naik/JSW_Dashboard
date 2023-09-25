@@ -12,15 +12,16 @@ import { LightboxModule } from 'ngx-lightbox';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import FileSaver from 'file-saver';
 import { VideoModalComponent } from './video-modal/video-modal.component';
+import { DateFormaterPipe } from './date-formater.pipe';
 
 
 
 @NgModule({
   declarations: [
     // NgbdSortableHeader,
+    DateFormaterPipe
 
   
-    VideoModalComponent
   ],
   imports: [
     CommonModule,
@@ -34,14 +35,14 @@ import { VideoModalComponent } from './video-modal/video-modal.component';
     
    ],
    exports:[
+    DateFormaterPipe,
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonModule,
     NgxImageZoomModule,
     NgMultiSelectDropDownModule,LightboxModule,
     FormsModule,
-    NgbModule,
-    VideoModalComponent
+    NgbModule
            
             
             ]

@@ -203,6 +203,26 @@ a.article:hover {
     transition: all 0.3s;
 }
 
+.icon-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .file-icon {
+    display: inline-block;
+  position: relative;
+  /* font-size: 24px; */
+  margin-right: 10px; /* Add spacing between icons */
+  }
+  
+  .cog-icon {
+    position: absolute;
+    top: 0;
+    right: 0; /* Push the cog icon to the right edge */
+   /* Customize icon color */
+  }
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

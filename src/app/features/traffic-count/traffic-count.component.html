@@ -1,29 +1,43 @@
 <div class="dashboard-content">
-    <h5>Traffic Count</h5>
+  <h5>Traffic Count</h5>
 
 
 
-    <div class="row card">
-      <div class="float-end mb-3 col-xl-3 col-xs-6 col-md-6 col-sm-6 col-lg-4" id="dateInput">
+  <div class="row">
+    <div class="float-end">
+      <div class="mb-3 col-xl-2 col-xs-6 col-md-6 col-sm-6 col-lg-4 float-end" id="dateInput">
         <!-- <form class="search-form"> -->
-          <div class="input calendar">
-         <input ngxDaterangepickerMd
-         #datepicker   (datesUpdated)="dateUpdated($event)"
-         [showCustomRangeLabel]="true"  [timePicker]="true"
-         placeholder="Select Date" class="form-control" [(ngModel)]="selectedMoments" required>
-         <fa-icon icon="calendar" ></fa-icon>
-         </div>
-      <!-- <label><fa-icon icon="calendar"></fa-icon> </label>
-        </form> -->
-     </div>
-        <div class="chart-wrapper">
-            <canvas baseChart 
-            [datasets]="barChartData"
-            [labels]="barChartLabels"
-            [options]="barChartOptions"
-            [plugins]="barChartPlugins"
-            [legend]="barChartLegend"
-            [type]="barChartType">
+        <div class="ms-3 date-picker">
+          <input ngxDaterangepickerMd #datepicker (datesUpdated)="dateUpdated($event)" [showCustomRangeLabel]="true"
+            [timePicker]="true" placeholder="Select Date" class="form-control" [(ngModel)]="selectedMoments" required>
+          <fa-icon icon="calendar"></fa-icon>
+        </div>
+        <!-- <label><fa-icon icon="calendar"></fa-icon> </label>
+          </form> -->
+      </div>
+      <div class="me-3 ms-2 my-2">
+        <!-- <div class="col-xl-2 co mel-sm-4 col-lg-4 col-xs-4 col-md-4 mb-3"> -->
+        <span class="float-end"> <span class="spinner-grow spinner-grow-sm me-2" style="background-color: #3FCA56;"
+            role="status" aria-hidden="true"></span>Live</span>
+      </div>
+
+    </div>
+    <div class="card">
+      <div class="card-header">
+Entry and Exit Analysis        </div>
+      <div class="row card-body">
+      <div class="col-6">
+        <div class="chart-wrapper mt-3">
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [plugins]="barChartPlugins" [legend]="barChartLegend" [type]="barChartType">
           </canvas>
         </div>
-</div>
+
+      </div>
+      <div class="col-6">
+        <app-heatmap></app-heatmap>
+      </div>
+      </div>
+    </div>
+
+  </div>

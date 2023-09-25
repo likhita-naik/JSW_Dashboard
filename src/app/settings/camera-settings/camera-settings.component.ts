@@ -195,7 +195,7 @@ export class CameraSettingsComponent implements OnInit, OnDestroy, AfterViewInit
         localStorage.setItem('appStatus', response.message[0].process_status)
         var process = response.message.find((el: any) => {
 
-          return el.process_name == 'phaseone-app' ? el : ''
+          return el.process_name =='docketrun-app' ? el : ''
         })
         this.isActive = process.process_status
 

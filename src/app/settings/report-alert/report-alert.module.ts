@@ -2,13 +2,16 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { CommonModules } from "src/app/common/common.module";
 import { ReportAlertComponent } from "./report-alert.component";
-
+import { ChipsModule } from 'primeng/chips';
+import { FieldsetModule } from 'primeng/fieldset';
+import { ReportService } from "./report-alert.server";
+import { SliderModule } from 'primeng/slider';
 
 const routes:Routes=[{path:'',component:ReportAlertComponent}]
 @NgModule({
     declarations:[ReportAlertComponent],
-
- imports:[CommonModules,RouterModule.forChild(routes)],
+   providers:[ReportService],
+ imports:[CommonModules,RouterModule.forChild(routes),ChipsModule,FieldsetModule,SliderModule],
 
 })
 

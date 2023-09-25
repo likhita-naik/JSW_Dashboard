@@ -269,7 +269,7 @@
                 <div *ngIf="data.type=='HT';else noHT">
                 {{data.board}}</div></td>
               <td *ngIf="showIP">
-                {{data.data.ip_address?data.data.ip_address:"--"}}&nbsp;&nbsp;
+               <div><fa-icon icon="video"class="m-1" ></fa-icon>  {{data.data.ip_address?data.data.ip_address:"--"}}&nbsp;&nbsp;</div> 
 
               </td>
               <td *ngIf="showPanel">

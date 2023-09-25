@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BarControllerChartOptions, ChartOptions, ChartConfiguration,ChartType, LabelItem } from 'chart.js';
-import { BarController } from 'chart.js/dist';
+import { BarController, Chart } from 'chart.js/dist';
 import { Moment } from 'moment';
+import chart from 'chart.js/dist';
 import { utils } from 'xlsx';
+import { ChartComponent } from 'ng-apexcharts';
 // import { Label } from 'ng2-charts';
+import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
 
 @Component({
   selector: 'app-traffic-count',
@@ -15,11 +18,13 @@ export class TrafficCountComponent implements OnInit {
 
   barChartOptions: any= {
     // barThickness:30,
-    borderRadius:4,
+    scaleShowVerticalLines: false,
+
+    borderRadius:10,
     spacing:0.2,//not worked
     spanGaps:5,
-    categoryPercentage:0.5,
-    barPercentage:0.5,
+    categoryPercentage:0.75,
+    barPercentage:0.9,
 
     
     // barThickness:3,
@@ -29,44 +34,87 @@ export class TrafficCountComponent implements OnInit {
       line: {
               fill: false
       },
-    bar:{
-      datasets:{
-        barThickness:3,
-        barPercentage:0.5
-      }
+    
     },
-    scales:{
+    scales: {
 
-      x: {
-        border: {
-          display: false
-        },
-        lineWidth:10,
-        grid: {
-          display: false,
-          drawOnChartArea: true,
-          drawTicks: false,
-        }},
-        y: {
-          border: {
-            display: false
-          },
+        x: {
           grid: {
-            color: '#000000'
-  
-          
-            
+            display: false,
+            stacked: true,
+          }
+        },
+        y: {
+          grid: {
+            display: false,
+            stacked: true,
           },
-    },
+        },
+        
+      },
    
     plugins: {
+      // title: {
+      //   display: true,
+      //   text: 'Chart.js Bar Chart - Stacked'
+      // },
       legend: {
         display: true,
       },
       
     }
+    
     }
-    }}
+
+    barChartOptions2: any= {
+      // barThickness:30,
+      scaleShowVerticalLines: false,
+  
+      borderRadius:10,
+      spacing:0.2,//not worked
+      spanGaps:5,
+      categoryPercentage:0.75,
+      barPercentage:0.9,
+  
+      
+      // barThickness:3,
+      
+      responsive: true,
+      elements: {
+        line: {
+                fill: false
+        },
+      
+      },
+  
+        scales: {
+          x: {
+            display: false,
+            min: 0.5,
+            max: 2.5,
+            offset: false
+          },
+          y: {
+            display: false,
+            min: 0.5,
+            max: 2.5
+          }
+        }
+     
+        ,
+     
+      plugins: {
+        // title: {
+        //   display: true,
+        //   text: 'Chart.js Bar Chart - Stacked'
+        // },
+        legend: {
+          display: true,
+        },
+        
+      }
+      
+      }
    
   
   barControllerChartOptions:any={barThickness:6}
@@ -75,9 +123,35 @@ export class TrafficCountComponent implements OnInit {
   barChartLegend = true;
   barChartPlugins:any = [];
   barChartData: any[] = [
-    { data: [45, 37, 60, 70, 46, 33], label: 'Best Fruits',backgroundColor:'#da688a',barThickness:5 },
-    { data: [45, 37, 60, 70, 46, 33], label: 'Best Fruits',backgroundColor:'#134276',barThickness:5}
+    { data: [49, 30, 89, 90, 15, 33],label:'Occupiency', type:'line', borderColor:'orange',backgroundColor:'white', pointStyle: 'circle',
+    pointRadius: 4,
+    pointHoverRadius: 8},
+  
+    { data: [45, 37, 60, 70, 46, 33], label: 'Entry', stack: 'Stack 0',backgroundColor:'#ccc',barThickness:12,borderRadius:7},
+    { data: [45, 37, 60, 70, 46, 33], label: 'Entry', stack: 'Stack 0',backgroundColor:'#D8D8D9',barThickness:12,borderRadius:7},
+
+    { data: [78, 60, 40, 102, 34, 39], label: 'Exit', stack: 'Stack 1',backgroundColor:'#134276',barThickness:10,borderRadius:7},
+    { data: [78, 60, 40, 102, 34, 39], label: 'Exit', stack: 'Stack 1',backgroundColor:'#82beff',barThickness:10,borderRadius:7},
+
+   
   ];
+
+  barChartData2: any[] = [
+    { data: [49, 30, 89, 90, 15, 33],label:'Occupiency', type:'line', borderColor:'orange',backgroundColor:'white', pointStyle: 'circle',
+    pointRadius: 4,
+    pointHoverRadius: 8},
+  
+    {  data: [{x: 1, y: 1}, {x: 2, y: 1}, {x: 1, y: 2}, {x: 2, y: 2}],
+     label: 'Entry',backgroundColor:'#ccc',barThickness:12,borderRadius:7,  width: (chart:any) => (chart.chartArea || {}).width / 2 - 1,
+     height: (chart:any) => (chart.chartArea || {}).height / 2 - 1,},
+    // { data: [45, 37, 60, 70, 46, 33], label: 'Entry', stack: 'Stack 0',backgroundColor:'#D8D8D9',barThickness:12,borderRadius:7},
+
+    // { data: [78, 60, 40, 102, 34, 39], label: 'Exit', stack: 'Stack 1',backgroundColor:'#134276',barThickness:10,borderRadius:7},
+    // { data: [78, 60, 40, 102, 34, 39], label: 'Exit', stack: 'Stack 1',backgroundColor:'#82beff',barThickness:10,borderRadius:7},
+
+   
+  ];
+
   constructor() { }
 
   ngOnInit(): void {

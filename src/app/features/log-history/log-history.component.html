@@ -116,48 +116,7 @@
 
 
 
-    <!-- <div class="row">
-        <div class="col-12">
-            <div class="card filters">
-                <div class="card-header">Filters</div>
-                <div class="row p-3">
-                    <div class="col-2">
-                        <ng-multiselect-dropdown [placeholder]="'violation type'" [settings]="dropdownSettings2"
-                            (onDeSelect)="onViolationTypeDeSelect($event)" [data]="violationTypeList|async"
-                            [(ngModel)]="selectedViolation" (onSelect)="onViolationTypeSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                    <div class="col-2">
-                        <ng-multiselect-dropdown [placeholder]="'select the Plant'" [settings]="dropdownSettings"
-                            [data]="plantData|async" [(ngModel)]="selectedPlant" (onSelect)="onPlantSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                    <div class="col-2">
-                        <ng-multiselect-dropdown [placeholder]="'select the Area'" [settings]="dropdownSettings"
-                            [data]="areaData|async" [(ngModel)]="selectedArea" (onSelect)="onAreaSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                    <div class="col-2">
-                        <ng-multiselect-dropdown [placeholder]="'select the panel'" [settings]="dropdownSettings"
-                            [data]="panelData|async" [(ngModel)]="selectedPanel" (onSelect)="onAreaSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                    <div class="col-2">
-                        <ng-multiselect-dropdown [placeholder]="'violation type'" [settings]="dropdownSettings2"
-                            (onDeSelect)="onViolationTypeDeSelect($event)" [data]="violationTypeList|async"
-                            [(ngModel)]="selectedViolation" (onSelect)="onViolationTypeSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                    <div class="col-xl-2 col-sm-6 col-lg-2 col-xs-6 col-md-4 mb-3 float-start">
-                        <ng-multiselect-dropdown [placeholder]="'select the camera'" [settings]="dropdownSettings"
-                            (onDeSelect)="onCameraIdDeSelect($event)" [data]="dropdownList|async"
-                            [(ngModel)]="selectedItems" (onSelect)="onCameraIdSelect($event)">
-                        </ng-multiselect-dropdown>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
+    
     <!-- ============================================================== -->
     <!-- DATA TABLE -->
 
@@ -204,18 +163,6 @@
 
                         <div class="">
 
-                            <!-- <div class="col-xl-2 col-sm-6 col-lg-2 col-xs-6 col-md-4 mb-3 float-start">
-                            <ng-multiselect-dropdown [placeholder]="'violation type'" [settings]="dropdownSettings2"
-                                (onDeSelect)="onViolationTypeDeSelect($event)" [data]="violationTypeList|async"
-                                [(ngModel)]="selectedViolation" (onSelect)="onViolationTypeSelect($event)">
-                            </ng-multiselect-dropdown>
-                        </div>
-                        <div class="col-xl-2 col-sm-6 col-lg-2 col-xs-6 col-md-4 mb-3 float-start">
-                            <ng-multiselect-dropdown [placeholder]="'select the camera'" [settings]="dropdownSettings"
-                                (onDeSelect)="onCameraIdDeSelect($event)" [data]="dropdownList|async"
-                                [(ngModel)]="selectedItems" (onSelect)="onCameraIdSelect($event)">
-                            </ng-multiselect-dropdown>
-                        </div> -->
                             <button *ngIf="!isdatewise" (click)=getLatestData()
                                 class="btn default ms-3 me-2 text-white float-start">
                                 <span class="spinner-border spinner-border-sm me-2 ms-1" role="status"
@@ -223,7 +170,6 @@
                                 <fa-icon icon="filter" *ngIf="!loaderLatest" class="ms-1 me-2 text-white"
                                     style="cursor: pointer;"></fa-icon>Latest
                             </button>
-                            <!-- <button class="btn default" (click)="ToggleEdit()">Edit</button> -->
 
                         </div>
 
@@ -264,7 +210,7 @@
                                     </b></th>
                                 <th scope="col"><b>
                                         <!-- <fa-icon icon="camera-retro" class="font-custome me-1"></fa-icon> -->
-                                        Violation Type
+                                        Violation Details
                                     </b></th>
                                 <th scope="col"><b>
                                         <fa-icon icon="camera-retro" class="font-custome me-1"></fa-icon>Camera Name
@@ -331,11 +277,10 @@
                                         
                                       </label> -->
                                                             <div class="items"
-                                                                *ngIf="(key==='Helmet'?object[key]==='none'?false:object[key]===false?true:false:key==='Vest'?object[key]==='no_ppe'?true:false:false)">
+                                                                *ngIf="(key==='Helmet'?object[key]==='none'?false:object[key]===false?true:false:key.toLowerCase()==='vest'?object[key]!=='vest'?true:false:false)">
                                                                 <input id="item1" type="checkbox"
-                                                                    [checked]="key==='Vest'?object[key]=='arc_jacket'?true:false:object[key]">
-                                                                <label for="item1">{{key==='Vest'?'Arc
-                                                                    Jacket':key}}</label>
+                                                                    [checked]="key==='Vest'?object[key].toLowerCase()=='vest'?true:false:object[key]">
+                                                                <label for="item1">{{key==='Vest'?'Vest':key}}</label>
                                                             </div>
 
                                                         </div>
@@ -346,23 +291,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <ngb-highlight [result]="d.camera_name?d.camera_name:'null'"
-                                        [term]="filterOut.value">
-                                    </ngb-highlight>
+                                    {{d.camera_name?d.camera_name:'null'}}
                                 </td>
-                                <!-- <td>
-                                    <ngb-highlight [result]="d.deviceid" [term]="filterOut.value"></ngb-highlight>
-                                </td> -->
-                                <!-- <td>
-                                <ngb-highlight [result]="d.roi_violation_name" [term]="filterOut.value">
-                                </ngb-highlight>
-                            </td> -->
-                                <!-- <td>
-                                <ngb-highlight [result]="d.camerName" [term]="filterOut.value"></ngb-highlight>
-                            </td> -->
+                             
                                 <td>
-                                    <ngb-highlight [result]="d.timestamp" [term]="filterOut.value">
-                                    </ngb-highlight>
+                                {{d.timestamp|dateFormater}}
                                 </td>
 
                                 <td *ngIf="isEditTable"id="verify" style="width:3rem">
@@ -471,12 +404,12 @@
                                 <img [src]="API+'/image/'+currentViol.imagename" alt="" class="violImage" width="100%"
                                     style="width:30%;height: 30%;object-fit: fill;border-radius:5px 5px 5px 5px ;">
                             </div>
-                            <div class="col-xl-12 col-md-12 col-lg-12 col-xs-12 text-dark">
+                            <div class="col-xl-12 col-md-12 col-lg-12 col-xs-12 text-white mt-2">
                                 <!-- <h5><b> <span></span> ID : </b>
                                     <span class="text-muted">{{currentViol.cameraid ?currentViol.cameraid:0}}</span>
                                 </h5> -->
                                 <h5><span class="text-muted"> Camera Name :</span>
-                                    <b><span class="text-dark">{{currentViol.camera_name
+                                    <b><span class="text-white">{{currentViol.camera_name
                                             ?currentViol.camera_name:'null'}}</span></b>
                                 </h5>
                                 <!-- <h5><b> Device Name : </b>
@@ -485,7 +418,7 @@
 
                                 <h5><span class="text-muted"> Detected Time : </span>
                                     <b><span
-                                            class="text-dark">{{currentViol.timestamp?currentViol.timestamp:'--'}}</span></b>
+                                            class="text-white">{{currentViol.timestamp?currentViol.timestamp:'--'}}</span></b>
                                 </h5>
 
 
@@ -518,75 +451,7 @@
 
 
         <!-----------------------------------MODAL TEMPLATE FOR EXCEL DOWNLOAD------------------------------------------------------------>
-        <ng-template #selectfile let-modal>
-            <!-- <div class="row"><div class="col-md-12 col-xl-12 col-lg-12 col-xs-12"> -->
-            <div class="modal-header">
-                <h4 class="modal-title">Download Excel</h4>
-                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mx-auto" style="text-align: center;">
-                <div class="">
-                    <div class="container">
-
-
-                        <div class="mb-3">
-                            <app-date-time-picker [formControl]="excelFromDate" name="activeEndDate">
-                            </app-date-time-picker>
-                        </div>
-                        <br />
-                        <div class="mt-2">
-                            <app-date-time-picker [formControl]="excelToDate" name="activeEndDate">
-                            </app-date-time-picker>
-                        </div>
-                        <br />
-
-                        <div class="mt-2">
-                            <div class="form-group">
-                                <select class="custom-select mt-3" id="location" [formControl]="loc2" #location>
-                                    <option value="" hidden>Location </option>
-                                    <option value="jsw">JSW</option>
-
-
-                                </select>
-
-                            </div>
-                        </div>
-                        <br /><br />
-                        <div class="row">
-                            <div class="mx-auto">
-                                <div class="form-group">
-                                    <button type="submit" class="btn default" (click)="submitForm()"
-                                        [disabled]="!excelFromDate||!excelToDate||!loc2.valid">
-                                        <span class="spinner-border spinner-border-sm me-1" role="status"
-                                            aria-hidden="true" *ngIf="excelLoad"></span> Submit
-                                    </button>&nbsp;
-
-                                    <button class="default" (click)="OnDownload()" *ngIf="isExcel">
-                                        <span *ngIf="!(excelLoader)">
-                                            <fa-icon icon="download" class="mr-2"></fa-icon>
-                                        </span><span *ngIf="excelLoader" class="spinner-border spinner-border-sm me-2"
-                                            role="status" aria-hidden="true"></span>Excel</button>
-                                </div><br />
-                                <!-- </form> -->
-                                <span class="alert alert-danger alert-dismissible fade show mx-auto" *ngIf="isalert"
-                                    role="alert">{{ alertmessage}}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </span>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="default btn-light" (click)="modal.close('Close click')">Close</button>
-            </div>
-        </ng-template>
-
+       
 
         <ng-template let-modal #editViolation>
             <div class="card p-2">
@@ -615,10 +480,10 @@
                                                     <div *ngFor="let key of objectKeys(object);">
 
                                                         <div style="width:5rem" class="d-inline" id="editViol"
-                                                            *ngIf="(key==='Helmet'?object[key]==='none'?false:object[key]===false?true:false:key==='Vest'?object[key]==='no_ppe'?true:false:false)">
+                                                            *ngIf="(key==='Helmet'?object[key]==='none'?false:object[key]===false?true:false:key==='Vest'?object[key]==='no_vest'?true:false:false)">
                                                             <input  class="me-4" id="item1" type="checkbox"
-                                                                [checked]="key==='Vest'?object[key]=='arc_jacket'?true:false:object[key]">
-                                                            <label for="item1" class="ms-4">{{key==='Vest'?'Arc Jacket':key}}</label>
+                                                                [checked]="key==='Vest'?object[key]=='no_vest'?true:false:object[key]">
+                                                            <label for="item1" class="ms-4">{{key==='Vest'?'Vest':key}}</label>
                                                         </div>
 
                                                     </div>

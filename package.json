@@ -31,6 +31,7 @@
     "@sweetalert2/ngx-sweetalert2": "^11.0.0",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.2.1",
+    "chartjs-chart-matrix": "^2.0.1",
     "dayjs": "^1.11.5",
     "fabric": "^5.2.1",
     "file-saver": "^2.0.5",

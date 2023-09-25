@@ -22,6 +22,8 @@
   /* scrollbar-c */
   --base-color: hsl(212, 49%, 49%);
   --label-color: hsl(212, 59%, 29%);
+  --light-label-color:hsl(210, 67%, 96%);
+
   --background-color: hsl(208, 38%, 93%);
   --danger-color:#BD1F14;
   --bg-white: hsl(240, 71%, 97%);
@@ -672,6 +674,7 @@ color:var(--label-color) !important;
 
 .sub-header{
   border-left:4px solid var(--prime-color);
+  padding-left:0.2rem;
   margin-bottom: 2rem;
 }
 

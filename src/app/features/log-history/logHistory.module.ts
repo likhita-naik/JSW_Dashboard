@@ -19,7 +19,7 @@ const routes:Routes=[{path:'',component:LogHistoryComponent}]
     declarations:[LogHistoryComponent],
     imports:[CommonModules, RouterModule.forChild(routes),LightboxModule,TreeSelectModule,
         NgMultiSelectDropDownModule.forRoot(),ToastrModule.forRoot({
-            timeOut: 2000000,
+            timeOut: 5000,
             toastComponent: alertComponent,
             progressBar: true,
             newestOnTop: true,
@@ -34,7 +34,5 @@ const routes:Routes=[{path:'',component:LogHistoryComponent}]
 })
 
 export class LogHistoryModule{
-    // constructor(lib: FaIconLibrary) {
-    //     lib.addIconPacks(fas);
-    //   }
+    
 }

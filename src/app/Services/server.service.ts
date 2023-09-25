@@ -257,6 +257,10 @@ RAViolCountCamWise(){
 StartApplication(){
   return this.http.get(this.IP+'/create_phaseone_config')
 }
+// StartApplication(){
+//   return this.http.get(this.IP+'/create_common_config')
+// }
+
 
 StartESIApp(){
   return this.http.get(this.IP+'/create_esi_config')
@@ -505,6 +509,11 @@ StartSmartApp(){
 
 StopSmartApp(){
 return this.http.get(this.IP+'/stop_smart_record')
+}
+
+AddReportDetails(data:any){
+  return this.http.post(this.IP+'/insert_email_details',data)
+
 }
 }
 

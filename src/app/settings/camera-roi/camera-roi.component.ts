@@ -33,7 +33,7 @@ export interface ROI {
 })
 
 export class CameraRoiComponent implements OnInit, AfterViewInit,OnDestroy {
-  cameraData: any = {}
+  cameraData: any []
   CameraDataObservable: Observable<any> = of({})
   ID: string
   IP: string
@@ -2337,14 +2337,6 @@ this.alarmSelectedViol[0].roi_key_id.push(event.target.value)
       console.log(this.TCCanvasData)
 
     }
-
-
-
-
-
-
-
-
     console.log(this.trafficCountLineROIS)
   }
 

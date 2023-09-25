@@ -16,8 +16,9 @@ import {
     selector: '[alertComponent]',
     styles: [`
     :host {
-      background-color:hsl(0, 44%, 91%);
+      background-color:hsl(216, 9%, 21%);
       position: relative;
+      color:white !important;
       overflow: hidden;
       border:none;
       margin-bottom:15px;

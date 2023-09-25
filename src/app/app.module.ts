@@ -37,6 +37,7 @@ import { NgChartsConfiguration, NgChartsModule } from 'ng2-charts';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AlertSettingsComponent } from './settings/alert-settings/alert-settings.component';
 import { SmartVedioService } from './features/smart-vedio/smartVideo.service';
+import { ConfigarationComponent } from './settings/configaration/configaration.component';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 @NgModule({
@@ -49,6 +50,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
    
     alertComponent,
         AlertSettingsComponent,
+        ConfigarationComponent,
 
    // RackEditComponent,
   ],
@@ -64,7 +66,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     BrowserAnimationsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
-      timeOut: 2000000,
+      timeOut: 5000,
       toastComponent: alertComponent,
       progressBar: true,
       newestOnTop: true,

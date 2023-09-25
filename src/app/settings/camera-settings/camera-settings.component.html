@@ -25,20 +25,18 @@
     <div class="float-end">
       <button *ngIf="!isActive" class="float-end ms-2 btn primary" (click)="StartAppModal(startAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Start DocketRun Main App
+        Start Application
       </button>
-      <button *ngIf="!isActive2" class="float-end ms-2 btn primary" (click)="StartAppModal(startHydroAppModal)">
-        <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
+      <!-- <button *ngIf="!isActive2" class="float-end ms-2 btn primary" (click)="StartAppModal(startHydroAppModal)">
         Start Smart Record App
-      </button>
+      </button> -->
       <button *ngIf="isActive" class="float-end ms-2 btn danger" (click)="StopAppModal(stopAppModal)">
         <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
-        Stop DocketRun Main App
+        Stop Application
       </button>
-      <button *ngIf="isActive2" class="float-end ms-2 btn danger" (click)="StopAppModal(stopHydroAppModal)">
-        <!-- <fa-icon icon="plus" class="me-2"></fa-icon> -->
+      <!-- <button *ngIf="isActive2" class="float-end ms-2 btn danger" (click)="StopAppModal(stopHydroAppModal)">
         Stop Smart Record App
-      </button>
+      </button> -->
       <button class="float-end btn default" (click)=openCameraAddModal(cameraAddModal)>
         <fa-icon icon="plus" class="me-2"></fa-icon>Add
       </button>
@@ -293,7 +291,7 @@
               <input type="radio" formControlName="isHooter" value="sensegiz"
                 (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensgiz" id="sensegiz"
                 class="form-check-input">
-              <label for="sensegiz" class="form-check-label text-muted">Sensegiz</label>
+              <label for="sensegiz" class="form-check-label text-muted">Preset</label>
             </div>
             <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
@@ -319,7 +317,7 @@
             <div class="form-control">
               <div class="">
 
-                <span>Sensegiz Details</span>
+                <span>Preset Details</span>
                 <span class="float-end">
                   <fa-icon icon="pen-to-square" style="cursor: pointer;"
                     (click)="editSensgiz(sensgizDetails)"></fa-icon>
@@ -475,12 +473,12 @@
                 defaultValue="relay" id="relay" class="form-check-input">
               <label for="relay" class="form-check-label text-muted">Relay</label>
             </div>
-            <div class="form-check form-check-inline" id="custome">
+            <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="sensegiz"
                 (change)="hooterOrRelayConfig($event,sensgizDetails)" defaultValue="sensegiz" id="sensegiz"
                 class="form-check-input">
               <label for="sensegiz" class="form-check-label text-muted">Sensegiz</label>
-            </div>
+            </div> -->
             <!-- <div class="form-check form-check-inline" id="custome">
               <input type="radio" formControlName="isHooter" value="voiceAlert" (change)="hooterOrRelayConfig($event)"
                 defaultValue="voiceAlert" id="voiceAlert" class="form-check-input">
@@ -500,7 +498,7 @@
               id="relayIp">
             <label for="relayIp">Relay IP</label>
           </div>
-          <div class="form-floating" *ngIf="isSensgiz">
+          <!-- <div class="form-floating" *ngIf="isSensgiz">
 
             <div class="form-control">
               <div>
@@ -512,7 +510,7 @@
                 </span>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- altered -->
           <!-- <div class="form-floating" id="cameraBrand" *ngIf="isVoiceAlert">
             <ng-multiselect-dropdown #singleSelect [placeholder]="'Language'" [settings]="dropdownSettings2|async"
@@ -741,7 +739,7 @@
 
 <ng-template #sensgizDetails let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Sensegiz Details</h4>
+    <h4 class="modal-title" id="modal-basic-title">Preset Details</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Cross click')"></button>
   </div>
   <div class="modal-body p-3">
